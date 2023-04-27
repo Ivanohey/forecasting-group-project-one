@@ -4,26 +4,47 @@ output: html_document
 date: "`r Sys.Date()`"
 ---
 
-```{r setup, include=FALSE}
+```{r setup}
+library(tidyr)
+library(tidyverse)
+library(dplyr)
+
 knitr::opts_chunk$set(echo = TRUE)
+wd = getwd()
+print(cat("Current working directory: ", wd))
+setwd(wd)
 ```
 
-## R Markdown
+## Project 1: Electricity export
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r import_data}
+raw_data = read.csv("data/electricity_exports.csv", header = TRUE, fill=TRUE, encoding = "UTF-8")
+raw_data = data.frame(raw_data)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
+# Data cleaning
+We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns.
+```{r data_cleaning, echo=FALSE, include=FALSE}
+colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichtenstein', 'total')
 
-You can also embed plots, for example:
+#Removing first rows
+raw_data = raw_data[-c(1:4),] 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+#Selecting columns and removing NAs
+clean_data= select(raw_data, date, germany, france, italy, austria, lichtenstein, total) %>% drop_na()
+#Removing empty rows
+clean_data = clean_data[!clean_data$date=="",]
+
+head(clean_data)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r EDA}
+
+#Histogram of average exports over the whole period of time across all countries
+
+
+#Histogram of exports per country per year
+
+
+```
