@@ -1,0 +1,11 @@
+## Exploratory Analysis
+
+```{r EDA, echo=FALSE}
+
+#Histogram of average exports over the whole period of time across all countries
+
+print("Helloooo")
+#Histogram of exports per country per year
+
+
+```
