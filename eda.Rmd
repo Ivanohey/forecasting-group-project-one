@@ -4,7 +4,7 @@
 
 #Histogram of average exports over the whole period of time across all countries
 
-print("Helloooo")
+print("Hello world")
 #Histogram of exports per country per year
 
 
