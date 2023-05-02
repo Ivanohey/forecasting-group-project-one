@@ -117,10 +117,10 @@ ets_fit1 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
 ```{r}
 
 #The following is an ANN model with an alpha of 0.2, to show that less weight is put on more recent observations
-ets_fit1 <- data_elec %>%
+ets_fit2 <- data_elec %>%
   model(ETS(Total ~ error("A") + trend("N", alpha = 0.2) + season("N")))
 
-ets_fit1 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
+ets_fit2 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
   theme(legend.position = "none") +
   ggtitle("ETS ANN forecast with alpha = 0.2")
 
@@ -130,6 +130,31 @@ From both of these ETS forecast graphs, you can see that the forecast is flat. T
 
 Also, what's important to notice is that the forecast when alpha is large (0.8) is much closer to the last observation, but the forecast with a smaller alpha (0.2) is further away from the last observation. This is because the higher the value of alpha, the more weight is put to more recent data, as explained above. 
 
-This forecast is very simple, so we will have to make things a bit more complicated. 
+There is an automated way to select the optimal alpha: 
+
+```{r}
+ets_fitopt <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N") + season("N"), opt_crit = "mse"))
+coefficients(ets_fitopt)
+```
+
+The alpha that minimizes the mean squared error, is an alpha with value 0.310. Here's how that forecast looks: 
+
+```{r}
+
+
+ets_fitopt %>% forecast(h = 12) %>% autoplot(data_elec) +
+  geom_line(aes(y = .fitted, colour = "Fitted"),  data=augment(ets_fitopt)) +
+  ylab("Total") + 
+  xlab("Month") + 
+  ggtitle("ETS ANN forecast with optimal alpha = 0.31")
+
+```
+
+In the graph above, you can see in black the actual data, and in red the smoothed values of the data, based on the optimal alpha that was calculated. On the right side of the graph, you can see the forecast for the next 12 period, as well as a 95% and 80% confidence interval. The confidence intervals are huge, which is not good. We can no accurately forecast this time series using this model. 
+
+This forecast is also very simple, so we will have to make things a bit more complicated. Let's now try playing with the parameters for Error, Trend and Seasonality, because until now we have assumed that the errors Additive, and that there is not trend and no seasonality in the data.
+
+
 
 
