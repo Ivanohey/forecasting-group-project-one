@@ -4,6 +4,10 @@
 
 - Naive model forecast is not showing me historical data, only the forecast
 - Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
+- I don't get it: we don't want our data to have a trend/seasonality, but then when we select the parameters for ETS, we set them to Additive, Multiplicative etc. In the end do we want there to be a trend/seasonality or not? 
+
+IMPORTANT 
+- What I am basically doing, is first trying to find the best forecasting method, and THEN I will apply it to the total + all countries individually.
 
 # Building models - Only looking at Total exports for now
 
@@ -16,8 +20,8 @@ The naive model we are going to use is simply a forecast that is equal to the la
 ```{r}
 #Creating and Plotting the naive model
 
-elec_fit <- data_elec %>% model(NAIVE(Total))
-augment(elec_fit) %>% ggplot(aes(x = Date)) +
+naive_fit <- data_elec %>% model(NAIVE(Total))
+augment(naive_fit) %>% ggplot(aes(x = Date)) +
   geom_line(aes(y = Total, colour = "Data")) +
   geom_line(aes(y = .fitted, colour = "Fitted")) +
   scale_color_manual(values = c(Data = "blue", Fitted = "orange")
@@ -33,7 +37,7 @@ This test checks for the presence of autocorrelation in the residuals, by testin
 
 ```{r}
 #plotting the residuals of the naive method
-aug <- elec_fit %>% augment()
+aug <- naive_fit %>% augment()
 autoplot(aug, .resid) +
   labs(x = "Month", y = "Residual", title = "Residuals from naïve method")
 
@@ -53,19 +57,19 @@ Now that we have built the naive model, and explained that it might be inaccurat
 
 ```{r}
 
-elec_fc <- fabletools::forecast(elec_fit, h = 6)
+naive_fc <- fabletools::forecast(naive_fit, h = 6)
 
-autoplot(elec_fc) + 
+autoplot(naive_fc) + 
   xlab("Date") + 
   ylab("Electricity Exports") + 
   ggtitle("Naive Forecast for 6 months - Total Electricity Exports")
 
 # Convert the forecast object to a tibble to be able to use it with the kable function
-forecast_tbl <- elec_fc %>% as_tibble() %>% 
+forecast_tbl_naive <- naive_fc %>% as_tibble() %>% 
   select(Date, .mean)
 
 # Use the kable function to display the table
-kable(forecast_tbl, format = "markdown", 
+kable(forecast_tbl_naive, format = "markdown", 
       col.names = c("Date", "Forecast"), 
       align = "cccc")
 ```
@@ -94,16 +98,38 @@ This version of Exponential smoothing, assumes that the data has no Trend and no
 
 The classical exponential smoothing function, will require a variable alpha ($\alpha$) which determines the weight on different observations over time. The higher the value of alpha, the more weight is given on more recent observations. Let's look at the forecast of an ETS model which gives a lot of weight on recent observations, and much less on those further back in time.
 
+#### Big weight on more recent data in order to create a forecast (Alpha = 0.8)
+
 ```{r}
 
-fit <- algeria_economy %>%
-  model(ETS(Exports ~ error("A") + trend("N", alpha = 0.1) + season("N")))
-fit %>% forecast(h = 12) %>% autoplot(algeria_economy, level = 0) +
-theme(legend.position = "none")
+#The following is an ANN model with an alpha of 0.8, to show that a lot of weight is put on more recent observations
+ets_fit1 <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N", alpha = 0.8) + season("N")))
+
+ets_fit1 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
+  theme(legend.position = "none") +
+  ggtitle("ETS ANN forecast with alpha = 0.8")
 
 ```
 
+#### Less weight on more recent data in order to create a forecast (Alpha = 0.2)
 
+```{r}
 
+#The following is an ANN model with an alpha of 0.2, to show that less weight is put on more recent observations
+ets_fit1 <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N", alpha = 0.2) + season("N")))
+
+ets_fit1 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
+  theme(legend.position = "none") +
+  ggtitle("ETS ANN forecast with alpha = 0.2")
+
+```
+
+From both of these ETS forecast graphs, you can see that the forecast is flat. This is because to make these two, we assumed no Trend and no Seasonality in the data. 
+
+Also, what's important to notice is that the forecast when alpha is large (0.8) is much closer to the last observation, but the forecast with a smaller alpha (0.2) is further away from the last observation. This is because the higher the value of alpha, the more weight is put to more recent data, as explained above. 
+
+This forecast is very simple, so we will have to make things a bit more complicated. 
 
 
