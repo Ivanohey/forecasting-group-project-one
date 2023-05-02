@@ -3,80 +3,13 @@
 # Questions
 
 - Naive model forecast is not showing me historical data, only the forecast
+- Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
 
-# Autocorrelation
-
-Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
-
-
-### Let's first look at a specific country: Germany 
-
-```{r}
-
-#Let's look at Germany first
-
-#Getting the acf for 12 lagged months
-data_elec %>% 
-  ACF(Germany, lag_max = 12)
-
-#Graph of 12 lagged months
-data_elec %>% 
-  gg_lag(Germany, lags = 1:12, geom="point") + 
-  ggtitle("Germany 12-period lag graph")
-
-```
-
-From the first table produced, we can see that the autocorrelation is highest with a lag of 1 month, and then it again goes up as we approach the 12-month lag. This shows that our data is highly correlated on a monthly basis (every month's exports heavily depend on the previous month's exports) and we can also see a slight "seasonality" of 12 months, because every 12 months the data is highly correlated (January of this year is very similar to January of last year)
-
-From the first graph produced, we can again see the same thing, but visualized. Here it's a lot cleared that the autocorrelation is the highest for the 1-month lag, and the 12-month lag. We can see this because the points in the scatterplots approach the 45-degree line, indicating the similarity in magnitude of two observations. 
-
-To visualize auto correlation differently, we can plot the acf for each lagged period: 
-
-```{r}
-#Still looking at Germany
-
-#Another graphical view of Acf
-data_elec %>% ACF(Germany) %>% autoplot() 
-
-```
-
-On this chart the autocorrelation coefficients are plotted by bars, along with a 95% confidence interval. To interpret this graph, it's important to know that whenever a line exceeds the 95% confidence interval, we can say that there is statistically significant autocorrelation for a given period. Based on this, we see that:
-
-- The highest autocorrelation is at a 1-month lag. 
-- Every 6 months, we see that the data is strongly inversely auto correlated. This means that every 6 months, the data is consistently moving in opposite directions (If exports are high in July, we expect them to be consistently lower 6 months later). This is something that we only explored now, and was not so easy to see from the previous graph/table.
-- Every 12 months, the data is strongly positively auto correlated. 
-
-### Total exports autocorrelation 
-
-```{r}
-
-#Getting the acf for 12 lagged months
-data_elec %>% 
-  ACF(Total, lag_max = 12)
-
-#Graph of 12 lagged months
-data_elec %>% 
-  gg_lag(Total, lags = 1:12, geom="point") + 
-  ggtitle("Total exports 12-period lag graph")
-
-#Another graphical view of Acf
-data_elec %>% ACF(Total) %>% autoplot() 
-
-
-```
-
-From the graphical analysis above, we can see that when aggregating the electricity exports to the 5 countries, we there is still a significant autocorrelation with a lag of 1-month (each month's exports depend on the previous month's exports). However, now this auto correlation is much smaller compared to that of Germany alone (which is a good sign for us in order to make models). Furthermore, we see a strong auto correlation every 12 months. 
-
-
-### Important: 
-The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't directly use forecasting models. We need to make some adjustments to the data.
-
-
-# Building models 
+# Building models - Only looking at Total exports for now
 
 In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
 
-## Naive model for Total exports
+## Naive model 
 
 The naive model we are going to use is simply a forecast that is equal to the latest observation. 
 
@@ -138,5 +71,39 @@ kable(forecast_tbl, format = "markdown",
 ```
 
 As expected, the output of the Naive forecast is a flat line. This is because in this model, each forecast is equal to the value in the previous period. This isn't very useful and accurate, so we have to use more complicated and sophisticated models for the rest of this analysis.
+
+## ETS model - Exponential Smoothing
+
+ETS stands for Error-Trend-Seasonality, and is one of the most robust and commonly used forecasting methods in the industry. 
+
+ETS is based on the idea that more recent observations should be given more importance when creating a forecast. It's a method that allocates weights to each observation, and the weights are bigger, the more recent the data is. As we go back in time, the weights become exponentially smaller, giving less and less weight/importance on older data.
+
+In our case, the most recent data (2020-2022) were probably heavily impacted by Covid-19 and the war between Russia and Ukraine. This means that an ETS model, will put more weight on more recent data, hence will give us a biased forecast based on those two big events. We have to be careful when selecting the weights of the ETS model, so that not too much weight is put on the most recent data. 
+
+
+### Simple Exponential Smoothing 
+
+This version of Exponential smoothing, assumes that the data has no Trend and no Seasonality:
+
+```{r}
+
+
+```
+
+### Exponential smoothing with different alpha parameters
+
+The classical exponential smoothing function, will require a variable alpha ($\alpha$) which determines the weight on different observations over time. The higher the value of alpha, the more weight is given on more recent observations. Let's look at the forecast of an ETS model which gives a lot of weight on recent observations, and much less on those further back in time.
+
+```{r}
+
+fit <- algeria_economy %>%
+  model(ETS(Exports ~ error("A") + trend("N", alpha = 0.1) + season("N")))
+fit %>% forecast(h = 12) %>% autoplot(algeria_economy, level = 0) +
+theme(legend.position = "none")
+
+```
+
+
+
 
 
