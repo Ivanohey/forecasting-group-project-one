@@ -1,1 +1,9 @@
 ## Models
+
+
+# Autocorrelation
+
+```{r}
+
+```
+
