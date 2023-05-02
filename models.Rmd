@@ -6,8 +6,15 @@
 - Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
 - I don't get it: we don't want our data to have a trend/seasonality, but then when we select the parameters for ETS, we set them to Additive, Multiplicative etc. In the end do we want there to be a trend/seasonality or not? 
 
+
 IMPORTANT 
 - What I am basically doing, is first trying to find the best forecasting method, and THEN I will apply it to the total + all countries individually.
+
+# Todo next: 
+- More models (Better ETS, models introduced later in the course)
+- Decomposition (haven't done anything on this yet)
+
+
 
 # Building models - Only looking at Total exports for now
 
