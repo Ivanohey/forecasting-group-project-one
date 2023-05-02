@@ -7,6 +7,23 @@ Before moving on with the models and in order to be able to use them, we must ch
 
 ```{r}
 
+#Let's look at Germany first
 
+#Getting the acf for 12 lagged months
+data_elec %>% 
+  ACF(Germany, lag_max = 12)
+
+#Graph of 9 lagged months
+data_elec %>% 
+  gg_lag(Germany, lags = 1:12, geom="point")
 ```
+
+From the first table produced, we can see that the autocorrelation is highest with a lag of 1 month, and then it again goes up as we approach the 12-month lag. This shows that our data is highly correlated on a monthly basis (every month's exports heavily depend on the previous month's exports) and we can also see a slight "seasonality" of 12 months, because every 12 months the data is highly correlated (January of this year is very similar to January of last year)
+
+From the graph produced, we can again see the same thing, but visualized.
+
+
+
+
+
 
