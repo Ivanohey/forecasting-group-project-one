@@ -3,88 +3,32 @@
 # Questions
 
 - Naive model forecast is not showing me historical data, only the forecast
-
-# Autocorrelation
-
-Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
+- Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
+- I don't get it: we don't want our data to have a trend/seasonality, but then when we select the parameters for ETS, we set them to Additive, Multiplicative etc. In the end do we want there to be a trend/seasonality or not? 
 
 
-### Let's first look at a specific country: Germany 
+IMPORTANT 
+- What I am basically doing, is first trying to find the best forecasting method, and THEN I will apply it to the total + all countries individually.
 
-```{r}
-
-#Let's look at Germany first
-
-#Getting the acf for 12 lagged months
-data_elec %>% 
-  ACF(Germany, lag_max = 12)
-
-#Graph of 12 lagged months
-data_elec %>% 
-  gg_lag(Germany, lags = 1:12, geom="point") + 
-  ggtitle("Germany 12-period lag graph")
-
-```
-
-From the first table produced, we can see that the autocorrelation is highest with a lag of 1 month, and then it again goes up as we approach the 12-month lag. This shows that our data is highly correlated on a monthly basis (every month's exports heavily depend on the previous month's exports) and we can also see a slight "seasonality" of 12 months, because every 12 months the data is highly correlated (January of this year is very similar to January of last year)
-
-From the first graph produced, we can again see the same thing, but visualized. Here it's a lot cleared that the autocorrelation is the highest for the 1-month lag, and the 12-month lag. We can see this because the points in the scatterplots approach the 45-degree line, indicating the similarity in magnitude of two observations. 
-
-To visualize auto correlation differently, we can plot the acf for each lagged period: 
-
-```{r}
-#Still looking at Germany
-
-#Another graphical view of Acf
-data_elec %>% ACF(Germany) %>% autoplot() 
-
-```
-
-On this chart the autocorrelation coefficients are plotted by bars, along with a 95% confidence interval. To interpret this graph, it's important to know that whenever a line exceeds the 95% confidence interval, we can say that there is statistically significant autocorrelation for a given period. Based on this, we see that:
-
-- The highest autocorrelation is at a 1-month lag. 
-- Every 6 months, we see that the data is strongly inversely auto correlated. This means that every 6 months, the data is consistently moving in opposite directions (If exports are high in July, we expect them to be consistently lower 6 months later). This is something that we only explored now, and was not so easy to see from the previous graph/table.
-- Every 12 months, the data is strongly positively auto correlated. 
-
-### Total exports autocorrelation 
-
-```{r}
-
-#Getting the acf for 12 lagged months
-data_elec %>% 
-  ACF(Total, lag_max = 12)
-
-#Graph of 12 lagged months
-data_elec %>% 
-  gg_lag(Total, lags = 1:12, geom="point") + 
-  ggtitle("Total exports 12-period lag graph")
-
-#Another graphical view of Acf
-data_elec %>% ACF(Total) %>% autoplot() 
+# Todo next: 
+- More models (Better ETS, models introduced later in the course)
+- Decomposition (haven't done anything on this yet)
 
 
-```
 
-From the graphical analysis above, we can see that when aggregating the electricity exports to the 5 countries, we there is still a significant autocorrelation with a lag of 1-month (each month's exports depend on the previous month's exports). However, now this auto correlation is much smaller compared to that of Germany alone (which is a good sign for us in order to make models). Furthermore, we see a strong auto correlation every 12 months. 
-
-
-### Important: 
-The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't directly use forecasting models. We need to make some adjustments to the data.
-
-
-# Building models 
+# Building models - Only looking at Total exports for now
 
 In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
 
-## Naive model for Total exports
+## Naive model 
 
 The naive model we are going to use is simply a forecast that is equal to the latest observation. 
 
 ```{r}
 #Creating and Plotting the naive model
 
-elec_fit <- data_elec %>% model(NAIVE(Total))
-augment(elec_fit) %>% ggplot(aes(x = Date)) +
+naive_fit <- data_elec %>% model(NAIVE(Total))
+augment(naive_fit) %>% ggplot(aes(x = Date)) +
   geom_line(aes(y = Total, colour = "Data")) +
   geom_line(aes(y = .fitted, colour = "Fitted")) +
   scale_color_manual(values = c(Data = "blue", Fitted = "orange")
@@ -100,7 +44,7 @@ This test checks for the presence of autocorrelation in the residuals, by testin
 
 ```{r}
 #plotting the residuals of the naive method
-aug <- elec_fit %>% augment()
+aug <- naive_fit %>% augment()
 autoplot(aug, .resid) +
   labs(x = "Month", y = "Residual", title = "Residuals from naïve method")
 
@@ -120,23 +64,104 @@ Now that we have built the naive model, and explained that it might be inaccurat
 
 ```{r}
 
-elec_fc <- fabletools::forecast(elec_fit, h = 6)
+naive_fc <- fabletools::forecast(naive_fit, h = 6)
 
-autoplot(elec_fc) + 
+autoplot(naive_fc) + 
   xlab("Date") + 
   ylab("Electricity Exports") + 
   ggtitle("Naive Forecast for 6 months - Total Electricity Exports")
 
 # Convert the forecast object to a tibble to be able to use it with the kable function
-forecast_tbl <- elec_fc %>% as_tibble() %>% 
+forecast_tbl_naive <- naive_fc %>% as_tibble() %>% 
   select(Date, .mean)
 
 # Use the kable function to display the table
-kable(forecast_tbl, format = "markdown", 
+kable(forecast_tbl_naive, format = "markdown", 
       col.names = c("Date", "Forecast"), 
       align = "cccc")
 ```
 
 As expected, the output of the Naive forecast is a flat line. This is because in this model, each forecast is equal to the value in the previous period. This isn't very useful and accurate, so we have to use more complicated and sophisticated models for the rest of this analysis.
+
+## ETS model - Exponential Smoothing
+
+ETS stands for Error-Trend-Seasonality, and is one of the most robust and commonly used forecasting methods in the industry. 
+
+ETS is based on the idea that more recent observations should be given more importance when creating a forecast. It's a method that allocates weights to each observation, and the weights are bigger, the more recent the data is. As we go back in time, the weights become exponentially smaller, giving less and less weight/importance on older data.
+
+In our case, the most recent data (2020-2022) were probably heavily impacted by Covid-19 and the war between Russia and Ukraine. This means that an ETS model, will put more weight on more recent data, hence will give us a biased forecast based on those two big events. We have to be careful when selecting the weights of the ETS model, so that not too much weight is put on the most recent data. 
+
+
+### Simple Exponential Smoothing 
+
+This version of Exponential smoothing, assumes that the data has no Trend and no Seasonality:
+
+```{r}
+
+
+```
+
+### Exponential smoothing with different alpha parameters
+
+The classical exponential smoothing function, will require a variable alpha ($\alpha$) which determines the weight on different observations over time. The higher the value of alpha, the more weight is given on more recent observations. Let's look at the forecast of an ETS model which gives a lot of weight on recent observations, and much less on those further back in time.
+
+#### Big weight on more recent data in order to create a forecast (Alpha = 0.8)
+
+```{r}
+
+#The following is an ANN model with an alpha of 0.8, to show that a lot of weight is put on more recent observations
+ets_fit1 <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N", alpha = 0.8) + season("N")))
+
+ets_fit1 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
+  theme(legend.position = "none") +
+  ggtitle("ETS ANN forecast with alpha = 0.8")
+
+```
+
+#### Less weight on more recent data in order to create a forecast (Alpha = 0.2)
+
+```{r}
+
+#The following is an ANN model with an alpha of 0.2, to show that less weight is put on more recent observations
+ets_fit2 <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N", alpha = 0.2) + season("N")))
+
+ets_fit2 %>% forecast(h = 12) %>% autoplot(data_elec, level = 0) +
+  theme(legend.position = "none") +
+  ggtitle("ETS ANN forecast with alpha = 0.2")
+
+```
+
+From both of these ETS forecast graphs, you can see that the forecast is flat. This is because to make these two, we assumed no Trend and no Seasonality in the data. 
+
+Also, what's important to notice is that the forecast when alpha is large (0.8) is much closer to the last observation, but the forecast with a smaller alpha (0.2) is further away from the last observation. This is because the higher the value of alpha, the more weight is put to more recent data, as explained above. 
+
+There is an automated way to select the optimal alpha: 
+
+```{r}
+ets_fitopt <- data_elec %>%
+  model(ETS(Total ~ error("A") + trend("N") + season("N"), opt_crit = "mse"))
+coefficients(ets_fitopt)
+```
+
+The alpha that minimizes the mean squared error, is an alpha with value 0.310. Here's how that forecast looks: 
+
+```{r}
+
+
+ets_fitopt %>% forecast(h = 12) %>% autoplot(data_elec) +
+  geom_line(aes(y = .fitted, colour = "Fitted"),  data=augment(ets_fitopt)) +
+  ylab("Total") + 
+  xlab("Month") + 
+  ggtitle("ETS ANN forecast with optimal alpha = 0.31")
+
+```
+
+In the graph above, you can see in black the actual data, and in red the smoothed values of the data, based on the optimal alpha that was calculated. On the right side of the graph, you can see the forecast for the next 12 period, as well as a 95% and 80% confidence interval. The confidence intervals are huge, which is not good. We can no accurately forecast this time series using this model. 
+
+This forecast is also very simple, so we will have to make things a bit more complicated. Let's now try playing with the parameters for Error, Trend and Seasonality, because until now we have assumed that the errors Additive, and that there is not trend and no seasonality in the data.
+
+
 
 
