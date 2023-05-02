@@ -1,8 +1,19 @@
 ```{r setup, include=FALSE}
+
+#read excel file
+library(readxl)
+
 library(tidyr)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+
+#fpp3 related 
+library(fpp3)
+library(tsibble)
+
+#Cleaning and visualizations
+library(DataExplorer)
 
 knitr::opts_chunk$set(echo = TRUE)
 wd = getwd()

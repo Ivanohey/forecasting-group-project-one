@@ -2,12 +2,63 @@
 
 ```{r EDA, echo=FALSE}
 
-#Histogram of average exports over the whole period of time across all countries
+# Plots of exports from Switzerland to all countries over time (recreating those from the slides)
+data_elec %>% autoplot(Germany) + 
+  ggtitle("Exports from Switzerland to Germany") +
+  ylab("GWt") + xlab("Month")
 
-print("Hello world")
-#Histogram of exports per country per year
+data_elec %>% autoplot(France) + 
+  ggtitle("Exports from Switzerland to France") +
+  ylab("GWt") + xlab("Month")
 
-print("konstantinos")
+data_elec %>% autoplot(Italy) + 
+  ggtitle("Exports from Switzerland to Italy") +
+  ylab("GWt") + xlab("Month")
 
+
+data_elec %>% autoplot(Austria) + 
+  ggtitle("Exports from Switzerland to Austria") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(Lichtenstein) + 
+  ggtitle("Exports from Switzerland to Lichtenstein") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(Total) + 
+  ggtitle("Exports from Switzerland to All countries") +
+  ylab("GWt") + xlab("Month")
 
 ```
+
+To further analyze the data, we created monthly historical graphs (Seasonal Subseries plots)
+
+```{r}
+
+#Seasonal Subseries Plots
+
+data_elec %>% gg_subseries(Germany) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Germany")
+
+data_elec %>% gg_subseries(France) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to France")
+
+data_elec %>% gg_subseries(Italy) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Italy")
+
+data_elec %>% gg_subseries(Austria) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Austria")
+
+data_elec %>% gg_subseries(Lichtenstein) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Lichtenstein")
+
+data_elec %>% gg_subseries(Total) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to All countries")
+
+```
+

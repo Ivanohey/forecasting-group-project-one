@@ -6,6 +6,11 @@ raw_data = data.frame(raw_data)
 
 ```
 
+# Questions 
+
+- Do we need to convert things in the long format to merge all the countries in one column? Maybe not since we are not using any other data
+
+
 # Data cleaning
 We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns. Here is a sample of our data:
 ```{r data_cleaning, echo=FALSE}
@@ -15,9 +20,54 @@ colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichten
 raw_data = raw_data[-c(1:4),] 
 
 #Selecting columns and removing NAs
-clean_data= select(raw_data, date, germany, france, italy, austria, lichtenstein, total) %>% drop_na()
+clean_data =  select(raw_data, date, germany, france, italy, austria, lichtenstein, total) %>% drop_na()
+
 #Removing empty rows
 clean_data = clean_data[!clean_data$date=="",]
 
 head(clean_data)
+```
+
+
+
+
+# Data import 
+
+We directly import the data from the excel file, selecting only the range that contains the data, and then setting the column names accordingly. 
+
+```{r}
+#importing data directly from excel
+data_elec <- read_excel("data/Electricity export Switzerland.xlsx", 
+    range = "A6:G280", col_names = FALSE)
+
+#Setting column names
+colnames(data_elec) = c('Date','Germany','France','Italy','Austria','Lichtenstein','Total')
+```
+
+
+
+# Data cleaning
+
+Looking at the data we see that October is written with a "k", so we change that in the Date column. Then we check for missing values, before proceeding. 
+
+```{r}
+# replace "Oktober" with "October" in the Date column
+data_elec$Date <- str_replace_all(data_elec$Date, "Oktober", "October")
+
+#This uses the "DataExplorer" package
+plot_intro(data_elec)
+
+```
+
+# Converting to tsibble so that we can use the fpp3 and tsibble package functions
+
+```{r}
+#Convert to tsibble 
+data_elec <- data_elec %>%
+  mutate(Date = yearmonth(Date)) %>% #need to do this before converting to get proper format
+  as_tsibble(index = Date)
+
+#check that it's a tsibble now, and we can see it recognized the data is monthly because of the [1M] 
+is_tsibble(data_elec)
+data_elec
 ```
