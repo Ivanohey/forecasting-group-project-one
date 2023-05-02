@@ -1,5 +1,8 @@
-## Models
+# Models
 
+# Questions
+
+- Naive model forecast is not showing me historical data, only the forecast
 
 # Autocorrelation
 
@@ -43,7 +46,7 @@ On this chart the autocorrelation coefficients are plotted by bars, along with a
 - Every 6 months, we see that the data is strongly inversely auto correlated. This means that every 6 months, the data is consistently moving in opposite directions (If exports are high in July, we expect them to be consistently lower 6 months later). This is something that we only explored now, and was not so easy to see from the previous graph/table.
 - Every 12 months, the data is strongly positively auto correlated. 
 
-### Before moving on to model building, let's also look at the total exports to all countries to see if they differ compared to those of a single country: 
+### Total exports autocorrelation 
 
 ```{r}
 
@@ -65,9 +68,75 @@ data_elec %>% ACF(Total) %>% autoplot()
 From the graphical analysis above, we can see that when aggregating the electricity exports to the 5 countries, we there is still a significant autocorrelation with a lag of 1-month (each month's exports depend on the previous month's exports). However, now this auto correlation is much smaller compared to that of Germany alone (which is a good sign for us in order to make models). Furthermore, we see a strong auto correlation every 12 months. 
 
 
-#### Important: The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't direclty use forecasting models. We need to make some adjustments to the data.
+### Important: 
+The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't directly use forecasting models. We need to make some adjustments to the data.
 
 
 # Building models 
 
-In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how 
+In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
+
+## Naive model for Total exports
+
+The naive model we are going to use is simply a forecast that is equal to the latest observation. 
+
+```{r}
+#Creating and Plotting the naive model
+
+elec_fit <- data_elec %>% model(NAIVE(Total))
+augment(elec_fit) %>% ggplot(aes(x = Date)) +
+  geom_line(aes(y = Total, colour = "Data")) +
+  geom_line(aes(y = .fitted, colour = "Fitted")) +
+  scale_color_manual(values = c(Data = "blue", Fitted = "orange")
+  ) + guides(colour = guide_legend(title = "Series"))
+
+```
+
+This plot is basically shows the original data, and then a copy of it which is moved one period in the future. 
+
+Now let's look at the residuals of the naive forecasting model, and search for autocorrelation. It is important to do so, because if there is autocorrelation in a the residuals of a forecasting model, this means that the model is not capturing some of the important features of the data, and might be leading to an inaccurate forecast. We will use the Portmanteau (Ljung-box) test:
+
+This test checks for the presence of autocorrelation in the residuals, by testing the following null hypothesis: $H_0:$ The residuals are independently and identically distributed (IID) with a normal distribution. If the p-value of the test is less than the chosen significance level (example $\alpha= 0.05$), then we reject the null hypothesis and conclude that there is evidence of autocorrelation in the residuals.
+
+```{r}
+#plotting the residuals of the naive method
+aug <- elec_fit %>% augment()
+autoplot(aug, .resid) +
+  labs(x = "Month", y = "Residual", title = "Residuals from naïve method")
+
+#Box-pierce test
+aug %>% features(.resid, box_pierce, lag = 10, dof = 0) #The degrees of freedom (dof) are 0 for the naive method
+
+#Ljung test
+aug %>% features(.resid, ljung_box, lag = 10, dof = 0)
+
+```
+
+From both the Box-pierce and Ljung tests, we can see that the p-value is very small (very close to 0) which indicates the presence of autocorrelation in the residuals. This means that the residuals are not white noise, which is not good and we will have to work around it.
+
+### Forecast for the next 6 months using the Naive model: 
+
+Now that we have built the naive model, and explained that it might be inaccurate due to the presence of autocorrelation, let's create a forecast using it: 
+
+```{r}
+
+elec_fc <- fabletools::forecast(elec_fit, h = 6)
+
+autoplot(elec_fc) + 
+  xlab("Date") + 
+  ylab("Electricity Exports") + 
+  ggtitle("Naive Forecast for 6 months - Total Electricity Exports")
+
+# Convert the forecast object to a tibble to be able to use it with the kable function
+forecast_tbl <- elec_fc %>% as_tibble() %>% 
+  select(Date, .mean)
+
+# Use the kable function to display the table
+kable(forecast_tbl, format = "markdown", 
+      col.names = c("Date", "Forecast"), 
+      align = "cccc")
+```
+
+As expected, the output of the Naive forecast is a flat line. This is because in this model, each forecast is equal to the value in the previous period. This isn't very useful and accurate, so we have to use more complicated and sophisticated models for the rest of this analysis.
+
+

@@ -15,6 +15,10 @@ library(tsibble)
 #Cleaning and visualizations
 library(DataExplorer)
 
+#Tables
+library(knitr)
+library(fable)
+
 knitr::opts_chunk$set(echo = TRUE)
 wd = getwd()
 cat("Current working directory: ",wd)
