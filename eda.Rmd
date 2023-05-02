@@ -1,5 +1,9 @@
 ## Exploratory Analysis
 
+# Questions
+
+- Explain why the peak electricity exports happen in the summer months instead of the winter months.
+
 ```{r EDA, echo=FALSE}
 
 # Plots of exports from Switzerland to all countries over time (recreating those from the slides)
@@ -30,7 +34,19 @@ data_elec %>% autoplot(Total) +
 
 ```
 
+Some observations: 
+
+- Germany: Energy exports seem to be varying in variance over time, being a lot more volatile since 2012. This suggests multiplicative errors? 
+- France: Similarly to Germany, exports become more volatile over time. Big peak in 2011? 
+- Italy: Less variability in the variance over time compared to the precious two. 
+- Austria: Big peak in 2002ish, could be an outliar. Exports oscillating close to 0 until 2014, since then much more volatile and higher in volume.
+- Lichtenstein: Big drop in level of exports during 2008-2009. Why did that happen? Should probably only use more recent data for predictions, because older data is very different. 
+- Total: Data oscillating around the same level, no signs of seasonality which indicates white noise data. This is good for making the models. 
+
+
 To further analyze the data, we created monthly historical graphs (Seasonal Subseries plots)
+
+Before looking at the following graphs, we would expect that more energy is needed in the winter months compared to the winter months, because in winter there are less hours of sunlight (people need to light up their houses for longer) and people also need to warm up their homes more because it's colder outside compared to the summer months. 
 
 ```{r}
 
@@ -62,3 +78,20 @@ data_elec %>% gg_subseries(Total) +
 
 ```
 
+Some observations: 
+
+- Germany: It looks like Germany consistently receives more electricity during the summer months (May, June, July, August). Why is that? Is it because German electricity production is lower during the summer months and they decide to import from Switzerland? Or that Germany has a higher energy need in the summer?
+- France: It looks like there are two peaks in energy exported to France during the year, one in July, and one in December.  
+- Italy: Another peak for energy in July. Why are all countries importing the most electricity in the summer months? 
+- Austria: Same trend, with a single peak in the summer months, and then relatively constant energy for the other months.
+- Lichtenstein: This country shows the opposite trend, with a very smooth peak in the coldest winter months (Jan,Feb), and the lowest energy exports during the summer months.  
+- Total: Clearly seeing the peak in energy exports to countries in the summer, and specifically in July. The other months are at similar level for the total electricity exports.
+
+
+Conclusion on monthly subplots: 
+
+- We can't think of why Lichtenstein experiences a different peak in energy imports from Switzerland 
+- It is clear that all the other countries peak in electricity imports in the summer months, and specifically in July. 
+
+This goes against our initial hypothesis about energy consumption over the months of the year, so let's try to explain why. 
+- One explanation could be that heating in the winter is powered by gas/oil which does not require electricity directly. However, in the warm summer months, people tend to use air-conditioning to cool their houses/buildings down, which can only be powered directly by electricity. This would explain why we don't see a peak of electricity exports in the winter months, but instead see it in the summer. 

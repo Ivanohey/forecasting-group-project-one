@@ -3,7 +3,10 @@
 
 # Autocorrelation
 
+Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
+
 ```{r}
+
 
 ```
 
