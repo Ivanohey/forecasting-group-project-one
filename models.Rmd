@@ -5,6 +5,9 @@
 
 Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
 
+
+### Let's first look at a specific country: Germany 
+
 ```{r}
 
 #Let's look at Germany first
@@ -13,17 +16,58 @@ Before moving on with the models and in order to be able to use them, we must ch
 data_elec %>% 
   ACF(Germany, lag_max = 12)
 
-#Graph of 9 lagged months
+#Graph of 12 lagged months
 data_elec %>% 
-  gg_lag(Germany, lags = 1:12, geom="point")
+  gg_lag(Germany, lags = 1:12, geom="point") + 
+  ggtitle("Germany 12-period lag graph")
+
 ```
 
 From the first table produced, we can see that the autocorrelation is highest with a lag of 1 month, and then it again goes up as we approach the 12-month lag. This shows that our data is highly correlated on a monthly basis (every month's exports heavily depend on the previous month's exports) and we can also see a slight "seasonality" of 12 months, because every 12 months the data is highly correlated (January of this year is very similar to January of last year)
 
-From the graph produced, we can again see the same thing, but visualized.
+From the first graph produced, we can again see the same thing, but visualized. Here it's a lot cleared that the autocorrelation is the highest for the 1-month lag, and the 12-month lag. We can see this because the points in the scatterplots approach the 45-degree line, indicating the similarity in magnitude of two observations. 
+
+To visualize auto correlation differently, we can plot the acf for each lagged period: 
+
+```{r}
+#Still looking at Germany
+
+#Another graphical view of Acf
+data_elec %>% ACF(Germany) %>% autoplot() 
+
+```
+
+On this chart the autocorrelation coefficients are plotted by bars, along with a 95% confidence interval. To interpret this graph, it's important to know that whenever a line exceeds the 95% confidence interval, we can say that there is statistically significant autocorrelation for a given period. Based on this, we see that:
+
+- The highest autocorrelation is at a 1-month lag. 
+- Every 6 months, we see that the data is strongly inversely auto correlated. This means that every 6 months, the data is consistently moving in opposite directions (If exports are high in July, we expect them to be consistently lower 6 months later). This is something that we only explored now, and was not so easy to see from the previous graph/table.
+- Every 12 months, the data is strongly positively auto correlated. 
+
+### Before moving on to model building, let's also look at the total exports to all countries to see if they differ compared to those of a single country: 
+
+```{r}
+
+#Getting the acf for 12 lagged months
+data_elec %>% 
+  ACF(Total, lag_max = 12)
+
+#Graph of 12 lagged months
+data_elec %>% 
+  gg_lag(Total, lags = 1:12, geom="point") + 
+  ggtitle("Total exports 12-period lag graph")
+
+#Another graphical view of Acf
+data_elec %>% ACF(Total) %>% autoplot() 
 
 
+```
+
+From the graphical analysis above, we can see that when aggregating the electricity exports to the 5 countries, we there is still a significant autocorrelation with a lag of 1-month (each month's exports depend on the previous month's exports). However, now this auto correlation is much smaller compared to that of Germany alone (which is a good sign for us in order to make models). Furthermore, we see a strong auto correlation every 12 months. 
 
 
+#### Important: The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't direclty use forecasting models. We need to make some adjustments to the data.
 
 
+# Building models 
+
+In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how 
