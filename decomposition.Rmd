@@ -1,0 +1,157 @@
+## Decomposition
+As time series data often consists of different patterns, it is helpful to split time series into components, each representing a pattern category. As a result, we can understand how each element behaves over time and model each of them separately for greater forecasting accuracy results. 
+
+For this purpose we use different types of decomposition techniques:
+* Classical Decomposition assumes seasonal component repeats from year to year which usually is not the case in the reality, over smoothes rapid rises (is not recommended to use, but still...).
+* STL Decomposition versatile and robust method, handles any type of seasonality, seasonal component is allowed to change, smootheness can be controlled.
+* X-11 method originated in the US Census Bureau and was further developed by Statistics Canada, based on classical decomposition, slightly improved version of classical decomposition, seasonal component is allowed to vary slowly over time, highly robust to outliers and level shifts in the time series.
+
+# Decomposition_Germany
+```{r}
+#Classical Decomposition_Germany
+data_elec %>%
+  model(classical_decomposition(Germany, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_Germany
+data_elec %>%
+  model(STL(Germany ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_Germany
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(Germany ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+
+```
+# STL Decomposition_France
+```{r}
+#Classical Decomposition_France
+data_elec %>%
+  model(classical_decomposition(France, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_France
+data_elec %>%
+  model(STL(France ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_France
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(France ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+```
+# Decomposition_Italy
+```{r}
+#Classical Decomposition_Italy
+data_elec %>%
+  model(classical_decomposition(Italy, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_Italy
+data_elec %>%
+  model(STL(Italy ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_Italy
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(Italy ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+```
+# Decomposition Austria
+```{r}
+#Classical Decomposition_Austria
+data_elec %>%
+  model(classical_decomposition(Austria, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_Austria
+data_elec %>%
+  model(STL(Austria ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_Austria
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(Austria ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+
+```
+# Decomposition_Lichtenstein
+```{r}
+#Classical Decomposition_Lichtenstein
+data_elec %>%
+  model(classical_decomposition(Lichtenstein, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_Lichtenstein
+data_elec %>%
+  model(STL(Lichtenstein ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_Lichtenstein
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(Lichtenstein ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+```
+# Decomposition_Total
+```{r}
+#Classical Decomposition_Total
+data_elec %>%
+  model(classical_decomposition(Total, type = "additive")) %>%
+  components() %>%
+  autoplot() + xlab("Year")
+
+#STL Decomposition_Total
+data_elec %>%
+  model(STL(Total ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+
+#X-11 method_Total
+x11_dcmp <- data_elec %>%
+  model(x11 = X_13ARIMA_SEATS(Total ~ x11())) %>%
+  components()
+autoplot(x11_dcmp)
+```
+
+```{r, echo=TRUE, fig.height = 2}
+#Seasonality_Germany
+data_elec %>% gg_season(Germany, size = 1)
+
+#Seasonality_France
+data_elec %>% gg_season(France, size = 1)
+
+#Seasonality_Italy
+data_elec %>% gg_season(Italy, size = 1)
+
+#Seasonality_Austria
+data_elec %>% gg_season(Austria, size = 1)
+
+#Seasonality_Lichtenstein
+data_elec %>% gg_season(Lichtenstein, size = 1)
+
+#Seasonality_Total
+data_elec %>% gg_season(Total, size = 1)
+
+```
