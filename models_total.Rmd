@@ -1,0 +1,75 @@
+
+## Total 
+
+### S-Naive Model
+
+
+
+
+
+
+
+
+
+
+### ETS Model 
+
+Visualizing Total
+
+```{r}
+data_elec %>% autoplot(Total) + 
+  ggtitle("Exports from Switzerland to all countries") +
+  ylab("GWt") + xlab("Month")
+```
+
+
+
+```{r}
+#Investigating Total closely since 2015
+Total_since_2015 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2015-01-01"))
+autoplot(Total_since_2015)
+
+#Modelling ets automatically
+ets_total <- data_elec %>%
+  select(Total) %>%
+  model(ETS(Total))
+
+#Getting the Accuracy scores for models
+report(ets_total)
+
+#Forecasting using the models
+forecast_ets_total<- ets_total %>% forecast(h = 13)
+
+#Graphing the forecast
+ets_total %>% forecast(h = 13) %>% autoplot(Total_since_2015)+
+  labs(title = "ETS ANA Forecast for all countries")
+
+#Extracting the forecasted values
+forecast_values_ets_total <- forecast_ets_total$mean
+
+
+forecast_table_total <- data.frame(Model = c("ETS (ANA)"),
+                              Forecast_Values = c(forecast_ets_total))
+
+forecast_table_total <- forecast_table_total %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_total)[1] <- "All_countries_ets_ANA"
+
+
+#components(ets_total) %>% autoplot()
+```
+
+
+
+
+
+
+
+
+
+### S-ARIMA
+
+
+
+
+

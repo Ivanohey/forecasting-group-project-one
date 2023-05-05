@@ -16,7 +16,7 @@
 
 ### ETS Model 
 
-Visualizing Lichtenstein again -> 
+Visualizing Lichtenstein again -> clearly need to use piecewise around 2019
 
 
 ```{r}
