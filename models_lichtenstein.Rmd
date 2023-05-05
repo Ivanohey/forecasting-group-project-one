@@ -1,0 +1,74 @@
+## Lichtenstein
+
+- ETS creates a negative value forecast, I will just set the negative forecast values to 0.
+- Maybe should find a better way to use ETS (by not allowing it to drop below 0) or just use other models
+
+### S-Naive Model
+
+
+
+
+
+
+
+
+
+
+### ETS Model 
+
+Visualizing Lichtenstein again -> 
+
+
+```{r}
+data_elec %>% autoplot(Lichtenstein) + 
+  ggtitle("Exports from Switzerland to Lichtenstein") +
+  ylab("GWt") + xlab("Month")
+```
+
+
+
+```{r}
+#Investigating Lichtenstein closely since 2010, because it seems like something changed -> perhaps should use Piecewise!!!
+Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
+autoplot(Lichtenstein_since_2010)
+
+#Modelling ets automatically
+ets_lichtenstein <- data_elec %>%
+  select(Lichtenstein) %>%
+  model(ETS(Lichtenstein))
+
+#Getting the Accuracy scores for models
+report(ets_lichtenstein)
+
+#Forecasting using the models
+forecast_ets_lichtenstein<- ets_lichtenstein %>% forecast(h = 13)
+
+#Graphing the forecast
+ets_lichtenstein %>% forecast(h = 13) %>% autoplot(Lichtenstein_since_2010)+
+  labs(title = "ETS ANA Forecast for Lichtenstein")
+
+#Extracting the forecasted values
+forecast_values_ets_lichtenstein <- forecast_ets_lichtenstein$mean
+
+
+forecast_table_lichtenstein <- data.frame(Model = c("ETS (ANA)"),
+                              Forecast_Values = c(forecast_ets_lichtenstein))
+
+forecast_table_lichtenstein <- forecast_table_lichtenstein %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_lichtenstein)[1] <- "Lichtenstein_ets_ANA"
+
+# replace negative values with 0
+forecast_table_lichtenstein[forecast_table_lichtenstein < 0] <- 0
+
+
+#components(ets_lichtenstein) %>% autoplot()
+```
+
+Since we can't have negative values, I decided to just set the negative ones to 0. 
+
+This forecast actually doesn't look great. I would expect the next upward bounce to be of similar amplitude as the previous ones, but it seems like the forecast of the next bounce is only half the amplitude of the previous ones. 
+
+
+
+### S-ARIMA

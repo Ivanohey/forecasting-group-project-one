@@ -25,7 +25,7 @@ data_elec %>% autoplot(Germany) +
 
 
 ```{r}
-#Investigating Austria closely since 2018, because it seems like something changed -> perhaps should use Piecewise!!!
+#Investigating Germany closely since 2015
 Germany_since_2015 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2015-01-01"))
 autoplot(Austria_since_2015)
 
@@ -56,7 +56,7 @@ forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mea
 colnames(forecast_table_germany)[1] <- "Germany_ets_MAdM"
 
 
-#components(ets_austria) %>% autoplot()
+#components(ets_germany) %>% autoplot()
 ```
 
 
