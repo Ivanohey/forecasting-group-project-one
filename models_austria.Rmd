@@ -18,6 +18,50 @@
 
 ### ETS Model 
 
+```{r}
+#Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
+Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
+
+
+
+#Modelling ets automatically
+ets_italy <- data_elec %>%
+  select(Italy) %>%
+  model(ETS(Italy))
+
+#Modelling ets with trend because I know there is one! 
+ets_italy_AAA <- data_elec %>%
+  select(Italy) %>%
+  model(ETS(Italy ~ error("A") + trend("A") + season("A")))
+
+#Getting the Accuracy scores for models
+report(ets_italy)
+report(ets_italy_AAA)
+
+#Forecasting using the models
+forecast_ets_italy_ANA <- ets_italy %>% forecast(h = 12)
+forecast_ets_italy_AAA <- ets_italy_AAA %>% forecast(h = 12)
+
+#Graphing the forecast
+ets_italy %>% forecast(h = 12) %>% autoplot(Italy_since_2018)+
+  labs(title = "ETS ANA Forecast for Italy")
+ets_italy_AAA %>% forecast(h = 12) %>% autoplot(Italy_since_2018)+
+  labs(title = "ETS AAA Forecast for Italy")
+
+#Extracting the forecasted values
+forecast_values_ets_italy <- forecast_ets_italy_ANA$mean
+forecast_values_ets_italy_AAA <- forecast_ets_italy_AAA$mean
+
+forecast_table <- data.frame(Model = c("ETS (ANA)", "ETS (AAA)"),
+                              Forecast_Values = c(forecast_ets_italy_ANA, forecast_ets_italy_AAA))
+
+forecast_table <- forecast_table %>% select(Forecast_Values..mean,Forecast_Values..mean.1)
+
+colnames(forecast_table)[1] <- "Italy_ets_AAA"
+colnames(forecast_table)[2] <- "Italy_ets_ANA"
+
+#components(ets_italy) %>% autoplot()
+```
 
 
 
