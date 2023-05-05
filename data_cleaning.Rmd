@@ -8,7 +8,8 @@ raw_data = data.frame(raw_data)
 
 # Questions 
 
-- Do we need to convert things in the long format to merge all the countries in one column? Maybe not since we are not using any other data
+- Do we need to convert things in the long format to merge all the countries in one column? Maybe not since we are not using any other data 
+Actually, it depends on the models we want to use. It's not always necessary. 
 
 
 # Data cleaning
