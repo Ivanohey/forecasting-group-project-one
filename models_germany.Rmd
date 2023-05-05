@@ -1,0 +1,81 @@
+## Germany
+
+### S-Naive Model
+
+
+
+
+
+
+
+
+
+
+### ETS Model 
+
+Visualizing Germany again -> looks like volatility really increased during covid, and now going back down. Need to be careful with forecast putting weight on much recent data because it seems heavily influenced by covid...
+
+
+```{r}
+data_elec %>% autoplot(Germany) + 
+  ggtitle("Exports from Switzerland to Germany") +
+  ylab("GWt") + xlab("Month")
+```
+
+
+
+```{r}
+#Investigating Austria closely since 2018, because it seems like something changed -> perhaps should use Piecewise!!!
+Germany_since_2015 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2015-01-01"))
+autoplot(Austria_since_2015)
+
+#Modelling ets automatically
+ets_germany <- data_elec %>%
+  select(Germany) %>%
+  model(ETS(Germany))
+
+#Getting the Accuracy scores for models
+report(ets_germany)
+
+#Forecasting using the models
+forecast_ets_germany<- ets_germany %>% forecast(h = 13)
+
+#Graphing the forecast
+ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
+  labs(title = "ETS MAdM Forecast for Germany")
+
+#Extracting the forecasted values
+forecast_values_ets_germany <- forecast_ets_germany$mean
+
+
+forecast_table_germany <- data.frame(Model = c("ETS (MAdM)"),
+                              Forecast_Values = c(forecast_ets_germany))
+
+forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_germany)[1] <- "Germany_ets_MAdM"
+
+
+#components(ets_austria) %>% autoplot()
+```
+
+
+
+
+
+
+
+
+
+### S-ARIMA
+
+
+
+
+
+
+
+
+
+
+

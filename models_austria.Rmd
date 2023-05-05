@@ -46,10 +46,10 @@ ets_austria <- data_elec %>%
 report(ets_austria)
 
 #Forecasting using the models
-forecast_ets_austria <- ets_austria %>% forecast(h = 12)
+forecast_ets_austria <- ets_austria %>% forecast(h = 13)
 
 #Graphing the forecast
-ets_austria %>% forecast(h = 12) %>% autoplot(Austria_since_2015)+
+ets_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2015)+
   labs(title = "ETS ANA Forecast for Austria")
 
 #Extracting the forecasted values
@@ -61,7 +61,7 @@ forecast_table_austria <- data.frame(Model = c("ETS (ANA)"),
 
 forecast_table_austria <- forecast_table_austria %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_austria)[1] <- "Italy_ets_ANA"
+colnames(forecast_table_austria)[1] <- "Austria_ets_ANA"
 
 
 #components(ets_austria) %>% autoplot()
