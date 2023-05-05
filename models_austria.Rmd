@@ -1,6 +1,8 @@
 
 ## Austria
 
+- Should probably do piecewise for austria since there's a big change in February 2018
+
 ### S-Naive Model
 
 
@@ -18,49 +20,51 @@
 
 ### ETS Model 
 
+Visualizing Austria again -> looks like we shouldn't use the whole data for this forecast, as there is a significant change at around 2016-2018
+
 ```{r}
-#Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
-Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
+data_elec %>% autoplot(Austria) + 
+  ggtitle("Exports from Switzerland to Austria") +
+  ylab("GWt") + xlab("Month")
+```
 
 
+
+```{r}
+#Investigating Austria closely since 2018, because it seems like something changed -> perhaps should use Piecewise!!!
+Austria_since_2015 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2015-01-01"))
+Austria_since_2018 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2018-02-01"))
+autoplot(Austria_since_2015)
+autoplot(Austria_since_2018)
 
 #Modelling ets automatically
-ets_italy <- data_elec %>%
-  select(Italy) %>%
-  model(ETS(Italy))
-
-#Modelling ets with trend because I know there is one! 
-ets_italy_AAA <- data_elec %>%
-  select(Italy) %>%
-  model(ETS(Italy ~ error("A") + trend("A") + season("A")))
+ets_austria <- data_elec %>%
+  select(Austria) %>%
+  model(ETS(Austria))
 
 #Getting the Accuracy scores for models
-report(ets_italy)
-report(ets_italy_AAA)
+report(ets_austria)
 
 #Forecasting using the models
-forecast_ets_italy_ANA <- ets_italy %>% forecast(h = 12)
-forecast_ets_italy_AAA <- ets_italy_AAA %>% forecast(h = 12)
+forecast_ets_austria <- ets_austria %>% forecast(h = 12)
 
 #Graphing the forecast
-ets_italy %>% forecast(h = 12) %>% autoplot(Italy_since_2018)+
-  labs(title = "ETS ANA Forecast for Italy")
-ets_italy_AAA %>% forecast(h = 12) %>% autoplot(Italy_since_2018)+
-  labs(title = "ETS AAA Forecast for Italy")
+ets_austria %>% forecast(h = 12) %>% autoplot(Austria_since_2015)+
+  labs(title = "ETS ANA Forecast for Austria")
 
 #Extracting the forecasted values
-forecast_values_ets_italy <- forecast_ets_italy_ANA$mean
-forecast_values_ets_italy_AAA <- forecast_ets_italy_AAA$mean
+forecast_values_ets_austria <- forecast_ets_austria$mean
 
-forecast_table <- data.frame(Model = c("ETS (ANA)", "ETS (AAA)"),
-                              Forecast_Values = c(forecast_ets_italy_ANA, forecast_ets_italy_AAA))
 
-forecast_table <- forecast_table %>% select(Forecast_Values..mean,Forecast_Values..mean.1)
+forecast_table_austria <- data.frame(Model = c("ETS (ANA)"),
+                              Forecast_Values = c(forecast_ets_austria))
 
-colnames(forecast_table)[1] <- "Italy_ets_AAA"
-colnames(forecast_table)[2] <- "Italy_ets_ANA"
+forecast_table_austria <- forecast_table_austria %>% select(Forecast_Values..mean)
 
-#components(ets_italy) %>% autoplot()
+colnames(forecast_table_austria)[1] <- "Italy_ets_ANA"
+
+
+#components(ets_austria) %>% autoplot()
 ```
 
 

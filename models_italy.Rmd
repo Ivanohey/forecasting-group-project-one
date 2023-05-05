@@ -53,13 +53,13 @@ ets_italy_AAA %>% forecast(h = 12) %>% autoplot(Italy_since_2018)+
 forecast_values_ets_italy <- forecast_ets_italy_ANA$mean
 forecast_values_ets_italy_AAA <- forecast_ets_italy_AAA$mean
 
-forecast_table <- data.frame(Model = c("ETS (ANA)", "ETS (AAA)"),
+forecast_table_italy <- data.frame(Model = c("ETS (ANA)", "ETS (AAA)"),
                               Forecast_Values = c(forecast_ets_italy_ANA, forecast_ets_italy_AAA))
 
-forecast_table <- forecast_table %>% select(Forecast_Values..mean,Forecast_Values..mean.1)
+forecast_table_italy <- forecast_table_italy %>% select(Forecast_Values..mean,Forecast_Values..mean.1)
 
-colnames(forecast_table)[1] <- "Italy_ets_AAA"
-colnames(forecast_table)[2] <- "Italy_ets_ANA"
+colnames(forecast_table_italy)[1] <- "Italy_ets_AAA"
+colnames(forecast_table_italy)[2] <- "Italy_ets_ANA"
 
 #components(ets_italy) %>% autoplot()
 ```
