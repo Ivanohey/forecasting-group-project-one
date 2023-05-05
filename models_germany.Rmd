@@ -45,8 +45,6 @@ ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
   labs(title = "ETS MAdM Forecast for Germany")
 
 #Extracting the forecasted values
-forecast_values_ets_germany <- forecast_ets_germany$mean
-
 
 forecast_table_germany <- data.frame(Model = c("ETS (MAdM)"),
                               Forecast_Values = c(forecast_ets_germany))

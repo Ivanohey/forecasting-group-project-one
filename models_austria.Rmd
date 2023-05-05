@@ -53,8 +53,6 @@ ets_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2015)+
   labs(title = "ETS ANA Forecast for Austria")
 
 #Extracting the forecasted values
-forecast_values_ets_austria <- forecast_ets_austria$mean
-
 
 forecast_table_austria <- data.frame(Model = c("ETS (ANA)"),
                               Forecast_Values = c(forecast_ets_austria))

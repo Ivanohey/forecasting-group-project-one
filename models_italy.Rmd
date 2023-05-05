@@ -50,8 +50,6 @@ ets_italy_AAA %>% forecast(h = 13) %>% autoplot(Italy_since_2018)+
   labs(title = "ETS AAA Forecast for Italy")
 
 #Extracting the forecasted values
-forecast_values_ets_italy <- forecast_ets_italy_ANA$mean
-forecast_values_ets_italy_AAA <- forecast_ets_italy_AAA$mean
 
 forecast_table_italy <- data.frame(Model = c("ETS (ANA)"),
                               Forecast_Values = c(forecast_ets_italy_ANA))

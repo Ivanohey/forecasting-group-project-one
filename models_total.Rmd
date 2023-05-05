@@ -45,8 +45,6 @@ ets_total %>% forecast(h = 13) %>% autoplot(Total_since_2015)+
   labs(title = "ETS ANA Forecast for all countries")
 
 #Extracting the forecasted values
-forecast_values_ets_total <- forecast_ets_total$mean
-
 
 forecast_table_total <- data.frame(Model = c("ETS (ANA)"),
                               Forecast_Values = c(forecast_ets_total))

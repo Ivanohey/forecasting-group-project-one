@@ -48,8 +48,6 @@ ets_lichtenstein %>% forecast(h = 13) %>% autoplot(Lichtenstein_since_2010)+
   labs(title = "ETS ANA Forecast for Lichtenstein")
 
 #Extracting the forecasted values
-forecast_values_ets_lichtenstein <- forecast_ets_lichtenstein$mean
-
 
 forecast_table_lichtenstein <- data.frame(Model = c("ETS (ANA)"),
                               Forecast_Values = c(forecast_ets_lichtenstein))
