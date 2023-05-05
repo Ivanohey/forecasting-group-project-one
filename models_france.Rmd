@@ -1,0 +1,70 @@
+## France
+
+- Looks like piecewise should be used again around 2010 and 2016 because there's a bit downward trend since 2016
+
+
+### S-Naive Model
+
+
+
+
+
+
+
+
+
+
+### ETS Model 
+
+Visualizing France
+
+```{r}
+data_elec %>% autoplot(France) + 
+  ggtitle("Exports from Switzerland to France") +
+  ylab("GWt") + xlab("Month")
+```
+
+Looks like piecewise should be used again around 2010
+
+
+```{r}
+#Investigating Total closely since 2015
+France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
+autoplot(France_since_2015)
+
+#Modelling ets automatically
+ets_france <- data_elec %>%
+  select(France) %>%
+  model(ETS(France))
+
+#Getting the Accuracy scores for models
+report(ets_france)
+
+#Forecasting using the models
+forecast_ets_france<- ets_france %>% forecast(h = 13)
+
+#Graphing the forecast
+ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015)+
+  labs(title = "ETS MNM Forecast for France")
+
+#Extracting the forecasted values
+forecast_table_france <- data.frame(Model = c("ETS (MNM)"),
+                              Forecast_Values = c(forecast_ets_france))
+
+forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_france)[1] <- "France_ets_MNM"
+
+
+#components(ets_france) %>% autoplot()
+```
+
+Looks like it expects a jump upwards on the following month. Might be a bit wrong, let's compare with other models.
+
+
+
+
+### S-ARIMA
+
+
+
