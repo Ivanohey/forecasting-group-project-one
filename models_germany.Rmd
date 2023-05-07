@@ -1,8 +1,49 @@
 ## Germany
 
+Visualizing Germany again -> looks like volatility really increased during covid, and now going back down. Need to be careful with forecast putting weight on much recent data because it seems heavily influenced by covid...
+
+
+```{r}
+data_elec %>% autoplot(Germany) + 
+  ggtitle("Exports from Switzerland to Germany") +
+  ylab("GWt") + xlab("Month")
+```
+```{r}
+#Investigating Germany closely since 2015
+Germany_since_2015 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2015-01-01"))
+autoplot(Germany_since_2015)
+```
+
+
 ### S-Naive Model
 
+```{r}
+# Modelling snaive automatically
+snaive_germany <- data_elec %>% 
+  select(Germany) %>%
+  model(snaive = SNAIVE(Germany))
 
+# Getting the accuracy scores for models
+report(snaive_germany)
+
+# Forecasting using the models
+forecast_snaive_germany <- snaive_germany %>% forecast(h = 13)
+
+# Graphing the forecast
+snaive_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
+  labs(title = "Seasonal Naive Forecast for Germany")
+
+# Extracting the forecasted values
+forecast_table_germany <- data.frame(Model = c("Seasonal Naive"),
+                                     Forecast_Values = c(forecast_snaive_germany))
+
+forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_germany)[1] <- "Germany_snaive"
+
+forecast_table_germany
+
+```
 
 
 
@@ -13,21 +54,8 @@
 
 ### ETS Model 
 
-Visualizing Germany again -> looks like volatility really increased during covid, and now going back down. Need to be careful with forecast putting weight on much recent data because it seems heavily influenced by covid...
-
 
 ```{r}
-data_elec %>% autoplot(Germany) + 
-  ggtitle("Exports from Switzerland to Germany") +
-  ylab("GWt") + xlab("Month")
-```
-
-
-
-```{r}
-#Investigating Germany closely since 2015
-Germany_since_2015 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2015-01-01"))
-autoplot(Austria_since_2015)
 
 #Modelling ets automatically
 ets_germany <- data_elec %>%
@@ -53,6 +81,7 @@ forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mea
 
 colnames(forecast_table_germany)[1] <- "Germany_ets_MAdM"
 
+forecast_table_germany
 
 #components(ets_germany) %>% autoplot()
 ```
@@ -67,7 +96,33 @@ colnames(forecast_table_germany)[1] <- "Germany_ets_MAdM"
 
 ### S-ARIMA
 
+```{r}
+# Modelling ARIMA automatically
+arima_germany <- data_elec %>%
+  select(Germany) %>%
+  model(arima = ARIMA(Germany))
 
+# Getting the Accuracy scores for models
+report(arima_germany)
+
+# Forecasting using the models
+forecast_arima_germany <- arima_germany %>% forecast(h = 13)
+
+# Graphing the forecast
+arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
+  labs(title = "ARIMA Forecast for Germany")
+
+#Extracting the forecasted values
+forecast_table_germany <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_germany))
+
+forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_germany)[1] <- "Germany_arima"
+
+forecast_table_germany
+
+```
 
 
 
