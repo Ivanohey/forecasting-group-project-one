@@ -1,21 +1,6 @@
 ## France
 
 - Looks like piecewise should be used again around 2010 and 2016 because there's a bit downward trend since 2016
-
-
-### S-Naive Model
-
-
-
-
-
-
-
-
-
-
-### ETS Model 
-
 Visualizing France
 
 ```{r}
@@ -26,11 +11,54 @@ data_elec %>% autoplot(France) +
 
 Looks like piecewise should be used again around 2010
 
-
-```{r}
 #Investigating Total closely since 2015
+```{r}
 France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
 autoplot(France_since_2015)
+```
+
+### S-Naive Model
+
+```{r}
+# Modelling SNaive automatically
+snaive_france <- data_elec %>%
+  select(France) %>%
+  model(snaive = SNAIVE(France, h = 13))
+
+# Getting the accuracy scores for models
+report(snaive_france)
+
+# Forecasting using the model
+forecast_snaive_france <- snaive_france %>% forecast(h = 13)
+
+# Graphing the forecast
+snaive_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
+  labs(title = "Seasonal Naive Forecast for France")
+
+# Extracting the forecasted values
+forecast_table_france <- data.frame(Model = c("SNaive"),
+                                    Forecast_Values = c(forecast_snaive_france))
+
+forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_france)[1] <- "France_snaive"
+
+forecast_table_france
+
+
+```
+
+
+
+
+
+
+
+### ETS Model 
+
+
+
+```{r}
 
 #Modelling ets automatically
 ets_france <- data_elec %>%
@@ -66,5 +94,29 @@ Looks like it expects a jump upwards on the following month. Might be a bit wron
 
 ### S-ARIMA
 
+```{r}
+# Modelling ARIMA automatically
+arima_france <- data_elec %>%
+  select(France) %>%
+  model(arima = ARIMA(France))
 
+# Getting the Accuracy scores for models
+report(arima_france)
 
+# Forecasting using the models
+forecast_arima_france <- arima_france %>% forecast(h = 13)
+
+# Graphing the forecast
+arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
+  labs(title = "ARIMA Forecast for France")
+
+#Extracting the forecasted values
+forecast_table_france <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_france))
+
+forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_france)[1] <- "France_arima"
+
+forecast_table_france
+```
