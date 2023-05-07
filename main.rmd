@@ -4,7 +4,7 @@ output: html_document
 date: "`r Sys.Date()`"
 ---
 
-```{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf decomp.rmd','models.rmd')}
+```{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf decomp.rmd','models.rmd', decomposition.rmd)}
 
 
 
