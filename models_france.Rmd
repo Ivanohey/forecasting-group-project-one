@@ -76,13 +76,14 @@ ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015)+
   labs(title = "ETS MNM Forecast for France")
 
 #Extracting the forecasted values
-forecast_table_france <- data.frame(Model = c("ETS (MNM)"),
+forecast_table_france_ets <- data.frame(Model = c("ETS (MNM)"),
                               Forecast_Values = c(forecast_ets_france))
 
-forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+forecast_table_france_ets <- forecast_table_france_ets %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_france)[1] <- "France_ets_MNM"
+colnames(forecast_table_france_ets)[1] <- "France_ets_MNM"
 
+forecast_table_france_ets
 
 #components(ets_france) %>% autoplot()
 ```
@@ -92,7 +93,7 @@ Looks like it expects a jump upwards on the following month. Might be a bit wron
 
 
 
-### S-ARIMA
+### ARIMA
 
 ```{r}
 # Modelling ARIMA automatically
@@ -111,12 +112,45 @@ arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
   labs(title = "ARIMA Forecast for France")
 
 #Extracting the forecasted values
-forecast_table_france <- data.frame(Model = c("ARIMA"),
+forecast_table_france_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_france))
 
-forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_france)[1] <- "France_arima"
+colnames(forecast_table_france_a)[1] <- "France_arima"
 
-forecast_table_france
+forecast_table_france_a
+```
+
+### S-ARIMA
+
+```{r}
+# Modelling SARIMA automatically
+sarima_france <- data_elec %>%
+  select(Date, France) %>%
+  as.data.frame() %>%
+  { auto.arima(ts(.$France, frequency = 12), seasonal = TRUE) }
+
+# Forecasting using the models
+forecast_sarima_france <- forecast(sarima_france, h = 13)
+
+
+# Graphing the forecast
+autoplot(forecast_sarima_france, include = 50) +
+  labs(title = "SARIMA Forecast for France") +
+  xlab("Year") + ylab("Electricity Consumption") 
+  
+
+# Extracting the forecasted values
+forecast_table_france_sa <- data.frame(Model = c("SARIMA"),
+                                     France_sarima = forecast_sarima_france$mean)
+
+
+# Get the accuracy scores
+accuracy_sarima_france <- accuracy(sarima_france)
+
+forecast_table_france_sa
+accuracy_sarima_france
+
+
 ```

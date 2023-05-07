@@ -9,8 +9,11 @@ data_elec %>% autoplot(Germany) +
   ylab("GWt") + xlab("Month")
 ```
 ```{r}
-#Investigating Germany closely since 2015
-Germany_since_2015 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2015-01-01"))
+# Investigating Germany closely since 2015
+Germany_since_2015 <- data_elec %>% 
+  select(Date,Germany) %>% 
+  filter(Date >= as.Date("2015-01-01"))
+
 autoplot(Germany_since_2015)
 ```
 
@@ -74,14 +77,14 @@ ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
 
 #Extracting the forecasted values
 
-forecast_table_germany <- data.frame(Model = c("ETS (MAdM)"),
+forecast_table_germany_ets <- data.frame(Model = c("ETS (MAdM)"),
                               Forecast_Values = c(forecast_ets_germany))
 
-forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+forecast_table_germany_ets <- forecast_table_germany_ets %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_germany)[1] <- "Germany_ets_MAdM"
+colnames(forecast_table_germany_ets)[1] <- "Germany_ets_MAdM"
 
-forecast_table_germany
+forecast_table_germany_ets
 
 #components(ets_germany) %>% autoplot()
 ```
@@ -94,7 +97,7 @@ forecast_table_germany
 
 
 
-### S-ARIMA
+### ARIMA
 
 ```{r}
 # Modelling ARIMA automatically
@@ -113,21 +116,50 @@ arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
   labs(title = "ARIMA Forecast for Germany")
 
 #Extracting the forecasted values
-forecast_table_germany <- data.frame(Model = c("ARIMA"),
+forecast_table_germany_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_germany))
 
-forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_germany)[1] <- "Germany_arima"
+colnames(forecast_table_germany_a)[1] <- "Germany_arima"
 
-forecast_table_germany
+forecast_table_germany_a
 
 ```
 
 
+### S-ARIMA
+
+```{r}
+# Modelling SARIMA automatically
+sarima_germany <- data_elec %>%
+  select(Date, Germany) %>%
+  as.data.frame() %>%
+  { auto.arima(ts(.$Germany, frequency = 12), seasonal = TRUE) }
+
+# Forecasting using the models
+forecast_sarima_germany <- forecast(sarima_germany, h = 13)
 
 
+# Graphing the forecast
+autoplot(forecast_sarima_germany, include = 50) +
+  labs(title = "SARIMA Forecast for Germany") +
+  xlab("Year") + ylab("Electricity Consumption") 
+  
 
+# Extracting the forecasted values
+forecast_table_germany_sa <- data.frame(Model = c("SARIMA"),
+                                     Germany_sarima = forecast_sarima_germany$mean)
+
+
+# Get the accuracy scores
+accuracy_sarima_germany <- accuracy(sarima_germany)
+
+forecast_table_germany_sa
+accuracy_sarima_germany
+
+
+```
 
 
 
