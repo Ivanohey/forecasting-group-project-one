@@ -20,6 +20,8 @@ library(DataExplorer)
 library(knitr)
 library(fable)
 
+library(forecast)
+
 knitr::opts_chunk$set(echo = TRUE)
 wd = getwd()
 cat("Current working directory: ",wd)
