@@ -4,7 +4,7 @@ author:
   - name: K K A I
 date: "`r Sys.Date()`"
 output:
-  rmdformats::html_docco:
+  rmdformats::readthedown:
     code_folding: hide
     highlight: espresso #we can change this to kate, tango, pygments, haddock. 
     self_contained: false
