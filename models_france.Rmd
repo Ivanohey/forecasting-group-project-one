@@ -125,32 +125,52 @@ forecast_table_france_a
 ### S-ARIMA
 
 ```{r}
-# Modelling SARIMA automatically
-sarima_france <- data_elec %>%
-  select(Date, France) %>%
-  as.data.frame() %>%
-  { auto.arima(ts(.$France, frequency = 12), seasonal = TRUE) }
+# Create time series object for France up to end of 2022
+ts_france <- ts(data_elec$France[1:96], start = c(2015, 1), frequency = 12)
 
-# Forecasting using the models
-forecast_sarima_france <- forecast(sarima_france, h = 13)
+# Create SARIMA model for France
+sarima_france <- stats::arima(ts_france, order = c(1,1,1), seasonal = list(order = c(1,0,0), period = 12))
 
+# Getting the accuracy scores for the model
+# Obtain residuals
+residuals <- sarima_france$residuals
+me <- mean(residuals)
+rmse <- sqrt(mean(residuals^2))
+mae <- mean(abs(residuals))
+mape <- mean(abs(residuals/ts_france))
+accuracy_table <- data.frame(ME = me, RMSE = rmse, MAE = mae, MAPE = mape)
+rownames(accuracy_table) <- "SARIMA"
+accuracy_table
 
-# Graphing the forecast
-autoplot(forecast_sarima_france, include = 50) +
-  labs(title = "SARIMA Forecast for France") +
-  xlab("Year") + ylab("Electricity Consumption") 
-  
+# Forecasting using the model
+forecast_sarima_france <- predict(sarima_france, n.ahead = 13, interval = "confidence")
+
+# Graphing the forecast with confidence intervals
+ggplot() + 
+  geom_line(aes(x = time(ts_france), y = ts_france), color = "blue") +
+  geom_line(aes(x = time(forecast_sarima_france$pred), y = forecast_sarima_france$pred), color = "red") +
+  geom_ribbon(aes(x = time(forecast_sarima_france$pred), ymin = forecast_sarima_france$pred - 1.96*forecast_sarima_france$se,
+                  ymax = forecast_sarima_france$pred + 1.96*forecast_sarima_france$se), alpha = 0.3, fill = "orange") +
+  labs(title = "SARIMA Forecast for France", x = "Year", y = "France Electricity Consumption") +
+  scale_x_continuous(breaks = seq(2015, 2023, by = 1)) +
+  theme_bw() +
+  theme(plot.title = element_text(size = 16, face = "bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 12)) +
+  annotate("text", x = 2022.5, y = 535, label = "Historical data", color = "blue", size = 4) +
+  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1], label = "Forecast", color = "red", size = 4) +
+  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1] + 30, label = "95% Confidence Interval", color = "orange", size = 4)
+
 
 # Extracting the forecasted values
 forecast_table_france_sa <- data.frame(Model = c("SARIMA"),
-                                     France_sarima = forecast_sarima_france$mean)
+                                     Forecast_Values = c(forecast_sarima_france$pred))
 
-
-# Get the accuracy scores
-accuracy_sarima_france <- accuracy(sarima_france)
+colnames(forecast_table_france_sa)[2] <- "France_sarima"
 
 forecast_table_france_sa
-accuracy_sarima_france
 
 
 ```
