@@ -19,7 +19,6 @@ autoplot(Austria_since_2015)
 autoplot(Austria_since_2018)
 ```
 
-
 ### S-Naive Model
 
 ```{r}
@@ -82,5 +81,33 @@ colnames(forecast_table_austria)[1] <- "Austria_ets_ANA"
 ```
 
 ### S-ARIMA
+
+```{r}
+
+#Modelling ARIMA automatically
+arima_austria <- data_elec %>%
+  select(Austria) %>%
+  model(ARIMA(Austria, stepwise = FALSE)) #By default, stepwise is set to TRUE, which means the function performs a stepwise search to identify the best model by iteratively considering different model orders and selecting the model with the lowest AIC value.
+#However, this approach also has some potential drawbacks. The stepwise algorithm might not search through all possible models, and therefore might not find the best-fitting model. Additionally, using stepwise selection might lead to overfitting, especially if the algorithm is used iteratively to search for the "best" model among many different time series.
+
+#Getting the Accuracy scores for models
+report(arima_austria) #ARIMA(0,1,3)(2,0,0)
+
+#Forecasting using the models
+forecast_arima_austria <- arima_austria %>% forecast(h = 13)
+
+#Graphing the forecast
+arima_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2015)+
+  labs(title = "SARIMA Forecast for Austria")
+
+#Extracting the forecasted values
+forecast_table_austria_arima <- data.frame(Model = c("SARIMA"),
+                              Forecast_Values = c(forecast_arima_austria))
+
+forecast_table_austria_arima <- forecast_table_austria_arima %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_austria_arima)[1] <- "Austria_Arima"
+
+```
 
 

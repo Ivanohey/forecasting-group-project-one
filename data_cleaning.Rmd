@@ -1,4 +1,6 @@
-## Project 1: Electricity export
+# Project 1: Electricity export
+
+## Data cleaning
 
 ```{r import_data, include=FALSE}
 raw_data = read.csv("data/electricity_exports.csv", header = TRUE, fill=TRUE, encoding = "UTF-8")
@@ -6,13 +8,7 @@ raw_data = data.frame(raw_data)
 
 ```
 
-# Questions 
 
-- Do we need to convert things in the long format to merge all the countries in one column? Maybe not since we are not using any other data 
-Actually, it depends on the models we want to use. It's not always necessary. 
-
-
-# Data cleaning
 We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns. Here is a sample of our data:
 ```{r data_cleaning, echo=FALSE}
 colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichtenstein', 'total')
@@ -29,10 +25,7 @@ clean_data = clean_data[!clean_data$date=="",]
 head(clean_data)
 ```
 
-
-
-
-# Data import 
+### Data import 
 
 We directly import the data from the excel file, selecting only the range that contains the data, and then setting the column names accordingly. 
 
@@ -45,9 +38,7 @@ data_elec <- read_excel("data/Electricity export Switzerland.xlsx",
 colnames(data_elec) = c('Date','Germany','France','Italy','Austria','Lichtenstein','Total')
 ```
 
-
-
-# Data cleaning
+### Data cleaning
 
 Looking at the data we see that October is written with a "k", so we change that in the Date column. Then we check for missing values, before proceeding. 
 
@@ -60,7 +51,7 @@ plot_intro(data_elec)
 
 ```
 
-# Converting to tsibble so that we can use the fpp3 and tsibble package functions
+### Converting to tsibble so that we can use the fpp3 and tsibble package functions
 
 ```{r}
 #Convert to tsibble 

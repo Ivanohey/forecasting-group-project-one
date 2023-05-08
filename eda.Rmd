@@ -1,6 +1,6 @@
-## Exploratory Analysis
+## Exploratory Data Analysis
 
-# Questions
+#### Questions
 
 - Explain why the peak electricity exports happen in the summer months instead of the winter months.
 

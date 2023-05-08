@@ -6,7 +6,7 @@ For this purpose we use different types of decomposition techniques:
 * STL Decomposition versatile and robust method, handles any type of seasonality, seasonal component is allowed to change, smootheness can be controlled.
 * X-11 method originated in the US Census Bureau and was further developed by Statistics Canada, based on classical decomposition, slightly improved version of classical decomposition, seasonal component is allowed to vary slowly over time, highly robust to outliers and level shifts in the time series.
 
-# Decomposition_Germany
+### Decomposition_Germany
 ```{r}
 #Classical Decomposition_Germany
 data_elec %>%
@@ -28,7 +28,7 @@ x11_dcmp <- data_elec %>%
 autoplot(x11_dcmp)
 
 ```
-# STL Decomposition_France
+### STL Decomposition_France
 ```{r}
 #Classical Decomposition_France
 data_elec %>%
@@ -49,7 +49,7 @@ x11_dcmp <- data_elec %>%
   components()
 autoplot(x11_dcmp)
 ```
-# Decomposition_Italy
+### Decomposition_Italy
 ```{r}
 #Classical Decomposition_Italy
 data_elec %>%
@@ -70,7 +70,7 @@ x11_dcmp <- data_elec %>%
   components()
 autoplot(x11_dcmp)
 ```
-# Decomposition Austria
+### Decomposition Austria
 ```{r}
 #Classical Decomposition_Austria
 data_elec %>%
@@ -92,7 +92,7 @@ x11_dcmp <- data_elec %>%
 autoplot(x11_dcmp)
 
 ```
-# Decomposition_Lichtenstein
+### Decomposition_Lichtenstein
 ```{r}
 #Classical Decomposition_Lichtenstein
 data_elec %>%
@@ -113,7 +113,7 @@ x11_dcmp <- data_elec %>%
   components()
 autoplot(x11_dcmp)
 ```
-# Decomposition_Total
+### Decomposition_Total
 ```{r}
 #Classical Decomposition_Total
 data_elec %>%

@@ -1,6 +1,6 @@
-# Models
+## Models
 
-# Questions
+### Questions
 
 - Naive model forecast is not showing me historical data, only the forecast
 - Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
@@ -10,17 +10,17 @@
 IMPORTANT 
 - What I am basically doing, is first trying to find the best forecasting method, and THEN I will apply it to the total + all countries individually.
 
-# Todo next: 
+### Todo next: 
 - More models (Better ETS, models introduced later in the course)
 - Decomposition (haven't done anything on this yet)
 
 
 
-# Building models - Only looking at Total exports for now
+### Building models - Only looking at Total exports for now
 
 In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
 
-## Naive model 
+### Naive model 
 
 The naive model we are going to use is simply a forecast that is equal to the latest observation. 
 
@@ -83,7 +83,7 @@ kable(forecast_tbl_naive, format = "markdown",
 
 As expected, the output of the Naive forecast is a flat line. This is because in this model, each forecast is equal to the value in the previous period. This isn't very useful and accurate, so we have to use more complicated and sophisticated models for the rest of this analysis.
 
-## ETS model - Exponential Smoothing
+### ETS model - Exponential Smoothing
 
 ETS stands for Error-Trend-Seasonality, and is one of the most robust and commonly used forecasting methods in the industry. 
 

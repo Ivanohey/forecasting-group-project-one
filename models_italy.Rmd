@@ -110,10 +110,10 @@ forecast_arima_italy <- arima_italy %>% forecast(h = 13)
 
 #Graphing the forecast
 arima_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018)+
-  labs(title = "ARIMA Forecast for Italy")
+  labs(title = "SARIMA Forecast for Italy")
 
 #Extracting the forecasted values
-forecast_table_italy_arima <- data.frame(Model = c("ARIMA"),
+forecast_table_italy_arima <- data.frame(Model = c("SARIMA"),
                               Forecast_Values = c(forecast_arima_italy))
 
 forecast_table_italy_arima <- forecast_table_italy_arima %>% select(Forecast_Values..mean)
@@ -181,7 +181,7 @@ arima_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Italy residu
 
 ```
 
-From the graph above, we can actually see a lof of things. 
+From the graph above, we can actually see a lot of things. 
 - Heteroskedasticity: At the top, we can see the residuals over time. It seems like there is no significant heteroskedasticity, as the variance of the residuals is more or less constant over time. There seems to be a bit less variance in the early years (2000-2005), but after that the variance seems to be quite constant. This is an indication that our model is doing a good job. 
 - Distribution: The distribution of the residuals (bottom-right graph) seems to be similar to a bell-curve, and very symmetric, which is also a sign that our model has done a good job. 
 - ACF: There is no significant autocorrelation in the early periods, which is again good. 

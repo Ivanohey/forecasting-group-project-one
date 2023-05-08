@@ -1,4 +1,4 @@
-# Autocorrelation
+## Autocorrelation
 
 Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
 
@@ -60,7 +60,3 @@ data_elec %>% ACF(Total) %>% autoplot()
 ```
 
 From the graphical analysis above, we can see that when aggregating the electricity exports to the 5 countries, we there is still a significant autocorrelation with a lag of 1-month (each month's exports depend on the previous month's exports). However, now this auto correlation is much smaller compared to that of Germany alone (which is a good sign for us in order to make models). Furthermore, we see a strong auto correlation every 12 months. 
-
-
-### Important: 
-The presence of auto correlation in our data means that the data is not "white noise", and we therefore can't directly use forecasting models. We need to make some adjustments to the data.
