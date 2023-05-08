@@ -49,14 +49,7 @@ forecast_table_germany
 ```
 
 
-
-
-
-
-
-
 ### ETS Model 
-
 
 ```{r}
 

@@ -117,6 +117,9 @@ ggplot(as.data.frame(pacf_unlist), aes(x=1:length(pacf_unlist), y=pacf_unlist)) 
 
 
 
+
+
+
 ### ETS Model (thank you but not usefull anymore)
 
 Visualizing Lichtenstein again -> clearly need to use piecewise around 2019
@@ -168,6 +171,10 @@ forecast_table_lichtenstein[forecast_table_lichtenstein < 0] <- 0
 Since we can't have negative values, I decided to just set the negative ones to 0. 
 
 This forecast actually doesn't look great. I would expect the next upward bounce to be of similar amplitude as the previous ones, but it seems like the forecast of the next bounce is only half the amplitude of the previous ones. 
+
+
+
+
 
 
 

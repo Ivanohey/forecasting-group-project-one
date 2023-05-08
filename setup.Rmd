@@ -12,10 +12,13 @@ library(ggplot2)
 #fpp3 related 
 library(fpp3)
 library(tsibble)
+library(seasonal)
 
 #Cleaning and visualizations
 library(DataExplorer)
 library(patchwork)
+
+
 
 
 #Tables
