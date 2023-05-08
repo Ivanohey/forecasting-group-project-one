@@ -59,7 +59,7 @@ order_ar <- which(acf_Lich$acf < 0.2)[1] - 1
 ar_model <- ar(ts_Lich, order = order_ar)
 
 # Make predictions
-ar_pred <- predict(ar_model, n.ahead = 10)
+ar_pred <- predict(ar_model, n.ahead = 13)
 
 # Plot the original time series and the predictions
 plot(ts_Lich)
