@@ -3,12 +3,38 @@
 
 ### S-Naive Model
 
+```{r}
+#Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
+Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
+```
 
 
+```{r}
+# Modelling SNaive automatically
+snaive_italy <- data_elec %>%
+  select(Italy) %>%
+  model(snaive = SNAIVE(Italy, h = 13))
 
+# Getting the accuracy scores for models
+report(snaive_italy)
 
+# Forecasting using the model
+forecast_snaive_italy <- snaive_italy %>% forecast(h = 13)
 
+# Graphing the forecast
+snaive_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
+  labs(title = "Seasonal Naive Forecast for Italy")
 
+# Extracting the forecasted values
+forecast_table_italy <- data.frame(Model = c("SNaive"),
+                                    Forecast_Values = c(forecast_snaive_italy))
+
+forecast_table_italy <- forecast_table_italy %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_italy)[1] <- "Italy_snaive"
+
+forecast_table_italy
+```
 
 
 ### ETS Model 
@@ -20,9 +46,6 @@ The most basic variant of exponential smoothing is called Simple Exponential Smo
 It does not make sense to use SES here, as from the decomposition we clearly showed that the data is strongly seasonal and has a trend.
 
 ```{r}
-#Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
-Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
-
 
 
 #Modelling ets automatically
@@ -67,5 +90,9 @@ Performing ETS automatically (ANA) vs doing one manually (AAA), we notice that o
 
 
 ### S-ARIMA
+
+```{r}
+
+```
 
 
