@@ -3,21 +3,123 @@
 - ETS creates a negative value forecast, I will just set the negative forecast values to 0.
 - Maybe should find a better way to use ETS (by not allowing it to drop below 0) or just use other models
 
-### S-Naive Model
+We have selected S-naive,S-ARIMA In general, S-ARIMA is more suitable for complex time series with trends, seasonality, and other patterns, while S-naive is simpler and more appropriate for time series with stable and predictable seasonal patterns.
+
+### Check the Stationarity
+
+```{r}
+# Load the required package
+library(tseries)
+
+# Read the time series data into R
+
+# Convert the data into a time series object
+Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
+ts_Lich <- ts(Lichtenstein_since_2010$Lichtenstein, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_Lich)
+```
+We have observe the stationarity assumption of Lichtenstein time serie. We have run the Augmented Dickey-Fuller (ADF) Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity. Indeed, it's crucial to know the type of time serie, because the  statistical properties such as mean and variance change over time in the case of non-stationarity and stay constant in a stational time serie.
+
+In this case the ADF test was performed on a time series ts_Lich, and the test statistic was -6.5052. The p-value of the test was 0.01 and the lag order used for the test was 5.
+ADF test has the following hypothesis: 
+$$H_0: \Delta y_t = \delta y_{t-1} + \epsilon_t$$
+where $\Delta y_t$ represents the first difference of the time series at time $t$, $\delta$ represents the coefficient on the lagged first difference term in the regression equation, and $\epsilon_t$ is the error term.
+
+$$H_a: \Delta y_t = \alpha + \delta y_{t-1} + \epsilon_t$$
+The alternative hypothesis is stationary, which means that we reject the null hypothesis.
+
+Based on it, our result reject the $$H_0$$ with a 5% level of significance since the p-value is less than 0.05. We can conclude that the time series is stationary. Thus, we can use methods that assume stationarity, such as Exponential smoothing methods, Moving average models, Vector autoregression(VAR), ARIMA,SARIMA.
+
+### Autocorrelation (ACF) and Partial autocorrelation function (PACF)
+
+It's interesting to observe the autocorrelation to assess the correlation between between a time series and its past values at different lags. ACF values range between -1 and 1, with 1 indicating a perfect positive correlation, 0 indicating no correlation, and -1 indicating a perfect negative correlation.
+The Partial Autocorrelation Function (PACF) is similar to the ACF, The PACF is useful in identifying the specific lags that have a direct influence on the current observation. PACF values range also between -1 and 1.
+```{r}
+acf(ts_Lich, main = "Autocorrelation Function")
+pacf(ts_Lich, main = "Partial Autocorrelation Function")
+```
+In this case both ACF and PACF indicating a tendency to have no correlation since the result is closer to 0. Thus there is not a strong correlation between the time series and its past values at that lag. This can be a good indicator that Lichtenstein time series is not highly dependent on its own past values and that other factors may be driving the behavior of the series.
+
+Furthermore, these functions are usefull to observe presence of trend and seasonality. Indeed, A strong positive correlation on lags in the autocorrelation plot suggests the presence of a trend, while a strong correlation at seasonal lags in the partial autocorrelation plot suggests the presence of seasonality. In both case, we do not have high dependent and we are close to no correlation. Thus, the presence of trend and seasonality are low in Lichtenstein time series.
+
+### Model selection
+Based on the previous analysis Lichtenstein data is stationary time series with low presence of trend and seasonality, thus we can consider using a simple autoregressive (AR) or moving average (MA) model. Both AR and MA models are linear models that can capture the temporal dependence in the data.
+
+### AR model
+
+```{r}
+# Determine the order of the AR model
+acf_Lich <- acf(ts_Lich)
+pacf_Lich<- pacf(ts_Lich)
+order_ar <- which(acf_Lich$acf < 0.2)[1] - 1
+
+# Fit the AR model
+ar_model <- ar(ts_Lich, order = order_ar)
+
+# Make predictions
+ar_pred <- predict(ar_model, n.ahead = 10)
+
+# Plot the original time series and the predictions
+plot(ts_Lich)
+lines(ar_pred$pred, col = "red")
+```
+
+### MA model
+
+```{r}
+# Determine the order of the MA model
+order_ma <- which(pacf_Lich$acf < 0.2)[1] - 1
+
+# Fit the MA model
+ma_model <- arima(ts_Lich, order = c(0, 0, order_ma))
+
+# Make predictions
+ma_pred <- predict(ma_model, n.ahead = 10)
+
+# Plot the original time series and the predictions
+plot(ts_Lich)
+lines(ma_pred$pred, col = "blue")
+```
+
+### Which one is the best model
+
+To determine which model to use, you can examine the autocorrelation function (ACF) and partial autocorrelation function (PACF) plots. 
+- If the ACF plot shows a gradual decay and the PACF plot shows a sharp drop-off after the first lag, an AR model may be appropriate. 
+- If the ACF plot shows a sharp drop-off and the PACF plot shows a gradual decay, an MA model may be appropriate. If both plots show a gradual decay, an ARMA model may be appropriate.
+
+```{r}
+#par(mfrow=c(2,1))
+acf(ts_Lich, main = "Autocorrelation Function")
+```
+
+```{r}
+# Plot the PACF
+pacf_Lich<- pacf(ts_Lich, plot = FALSE)
+
+##Acces to the list
+pacf_unlist <- pacf_Lich[[4]]
+
+# Calculate percentage variation between the first and second lags
+variation <- round(((pacf_unlist[2] - pacf_unlist[1])/pacf_unlist[1]) * 100, 2)
+
+# Plot the PACF with variation label
+ggplot(as.data.frame(pacf_unlist), aes(x=1:length(pacf_unlist), y=pacf_unlist)) +
+  geom_hline(yintercept=0, linetype="dashed") +
+  geom_segment(aes(xend=1:length(pacf_unlist), yend=0)) +
+  geom_point() +
+  labs(title = "Partial Autocorrelation Function",
+       x = "Lag", y = "PACF") +
+  annotate("text", x = 2, y = pacf_Lich[2], label = paste0(variation,"%"),
+           color = "red", size = 5)
+```
 
 
 
-
-
-
-
-
-
-
-### ETS Model 
+### ETS Model (thank you but not usefull anymore)
 
 Visualizing Lichtenstein again -> clearly need to use piecewise around 2019
-
 
 ```{r}
 data_elec %>% autoplot(Lichtenstein) + 
@@ -30,7 +132,6 @@ As a remember: remember: Lichtenstein: Big drop in level of exports during 2008-
 
 ```{r}
 #Investigating Lichtenstein closely since 2010, because it seems like something changed -> perhaps should use Piecewise!!!
-Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
 autoplot(Lichtenstein_since_2010)
 
 #Modelling ets automatically
@@ -70,7 +171,7 @@ This forecast actually doesn't look great. I would expect the next upward bounce
 
 
 
-### S-ARIMA
+### S-ARIMA (thank you but not usefull anymore)
 
 ```{r}
 # Modelling S-ARIMA 
