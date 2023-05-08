@@ -25,7 +25,8 @@ data_elec %>% autoplot(Lichtenstein) +
   ylab("GWt") + xlab("Month")
 ```
 
-
+As a remember: remember: Lichtenstein: Big drop in level of exports during 2008-2009. used to have a high export and drop to a certain level approximately 0-10 (exception 2015): 
+- Lichtenstein: This country shows the opposite trend, with a very smooth peak in the coldest winter months (Jan,Feb), and the lowest energy exports during the summer months. 
 
 ```{r}
 #Investigating Lichtenstein closely since 2010, because it seems like something changed -> perhaps should use Piecewise!!!
@@ -70,3 +71,39 @@ This forecast actually doesn't look great. I would expect the next upward bounce
 
 
 ### S-ARIMA
+
+```{r}
+# Modelling S-ARIMA 
+sarima_Lichtenstein <- data_elec %>%
+  select(Date, Lichtenstein) %>%
+  as.data.frame() %>%
+  { auto.arima(ts(.$Lichtenstein, frequency = 12), seasonal = TRUE) }
+
+# Forecasting using the models
+forecast_sarima_Lichtenstein<- forecast(sarima_Lichtenstein, h = 13)
+
+
+# Graphing the forecast
+autoplot(forecast_sarima_Lichtenstein, include = 50) +
+  labs(title = "SARIMA Forecast for Lichtenstein") +
+  xlab("Year") + ylab("Electricity Consumption") 
+  
+
+# Extracting the forecasted values
+forecast_table_Lichtenstein_sa <- data.frame(Model = c("SARIMA"),
+                                     France_sarima = forecast_sarima_Lichtenstein$mean)
+
+
+# Get the accuracy scores
+accuracy_sarima_Lich<- accuracy(sarima_Lichtenstein)
+```
+
+
+```{r}
+forecast_table_Lichtenstein_sa
+```
+
+
+```{r}
+accuracy_sarima_Lich
+````
