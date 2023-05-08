@@ -160,8 +160,8 @@ ggplot() +
         legend.title = element_blank(),
         legend.text = element_text(size = 12)) +
   annotate("text", x = 2022.5, y = 535, label = "Historical data", color = "blue", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1], label = "Forecast", color = "red", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1] + 30, label = "95% Confidence Interval", color = "orange", size = 4)
+  annotate("text", x = 2024, y = forecast_sarima_france$pred[1], label = "Forecast", color = "red", size = 4) +
+  annotate("text", x = 2024, y = forecast_sarima_france$pred[1] + 30, label = "95% Confidence Interval", color = "orange", size = 4)
 
 
 # Extracting the forecasted values
