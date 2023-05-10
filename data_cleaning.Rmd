@@ -7,7 +7,6 @@ raw_data = data.frame(raw_data)
 
 ```
 
-
 We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns. Here is a sample of our data:
 ```{r data_cleaning, echo=FALSE}
 colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichtenstein', 'total')

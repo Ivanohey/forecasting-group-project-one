@@ -18,9 +18,6 @@ library(seasonal)
 library(DataExplorer)
 library(patchwork)
 
-
-
-
 #Tables
 library(knitr)
 library(fable)
