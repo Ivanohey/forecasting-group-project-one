@@ -135,4 +135,4 @@ The ARIMA(2,1,1)(0,0,2)[12] model has an AIC of 3531.14, AICc of 3531.46, and BI
 
 Based on the AIC, AICc, and BIC values, the ARIMA(2,1,1)(0,0,2)[12] model appears to be the better model, as it has lower values for all three criteria.
 
-The time series residuals plot also shows that the ARIMA model best fits the data. The residuals don't follow any pattern and are random and stationary. Autocorrelation indicates that residuals in the ARIMA model are not correlated with their past and future values. We can't observe the same pattern in SNAIVE and ETS models. These models captured all the information in data not that well, as ARIMA did.
+

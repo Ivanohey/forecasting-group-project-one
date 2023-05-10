@@ -11,12 +11,10 @@ output:
     mathjax: false
 ---
 
-<<<<<<< HEAD
-\`\`\`{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf decomp.rmd', 'decomposition.rmd','models_general.rmd','models_italy.rmd','models_austria.rmd','models_france.rmd','models_germany.rmd')}
-=======
+
 ```{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf.rmd', 'decomposition.rmd','models_general.rmd','models_italy.rmd','models_austria.rmd','models_france.rmd','models_germany.rmd')}
 
 
 
 
->>>>>>> 2dee0ced762ff4caa38b8302123a1d4f9e932282
+

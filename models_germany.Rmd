@@ -136,7 +136,6 @@ forecast_table_germany_a
 
 The ARIMA model has an AIC of 3382.65, AICc of 3382.88, and BIC of 3400.51, while the ETS model has an AIC of 4123.569, AICc of 4126.241, and BIC of 4188.671. Lower values of these information criteria indicate a better model fit, so we can conclude that the ARIMA model is better than the ETS model.
 
-The time series residuals plot also shows that the ARIMA model best fits the data. The residuals don't follow any pattern and are random and stationary. Autocorrelation indicates that residuals in the ARIMA model are not correlated with their past and future values. We can't observe the same pattern in SNAIVE and ETS models. These models captured all the information in data not that well, as ARIMA did. 
 
 
 
