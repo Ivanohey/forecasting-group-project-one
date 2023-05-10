@@ -32,6 +32,10 @@ report(snaive_germany)
 # Forecasting using the models
 forecast_snaive_germany <- snaive_germany %>% forecast(h = 13)
 
+#Checking the residuals before forecasting
+snaive_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
+
+
 # Graphing the forecast
 snaive_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
   labs(title = "Seasonal Naive Forecast for Germany")
@@ -45,6 +49,7 @@ forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mea
 colnames(forecast_table_germany)[1] <- "Germany_snaive"
 
 forecast_table_germany
+
 
 ```
 
@@ -63,6 +68,9 @@ report(ets_germany)
 
 #Forecasting using the models
 forecast_ets_germany<- ets_germany %>% forecast(h = 13)
+
+#Checking the residuals before forecasting
+ets_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
 
 #Graphing the forecast
 ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
@@ -104,6 +112,9 @@ report(arima_germany)
 # Forecasting using the models
 forecast_arima_germany <- arima_germany %>% forecast(h = 13)
 
+#Checking the residuals before forecasting
+arima_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Germany residuals analysis")
+
 # Graphing the forecast
 arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
   labs(title = "ARIMA Forecast for Germany")
@@ -121,59 +132,11 @@ forecast_table_germany_a
 ```
 
 
-### S-ARIMA
-```{r}
+## Model Comparison
 
-# Create time series object for Germany up to end of 2022
-ts_germany <- ts(data_elec$Germany[1:96], start = c(2015, 1), frequency = 12)
+The ARIMA model has an AIC of 3382.65, AICc of 3382.88, and BIC of 3400.51, while the ETS model has an AIC of 4123.569, AICc of 4126.241, and BIC of 4188.671. Lower values of these information criteria indicate a better model fit, so we can conclude that the ARIMA model is better than the ETS model.
 
-# Create SARIMA model for Germany
-sarima_germany <- stats::arima(ts_germany, order = c(1,1,1), seasonal = list(order = c(1,0,0), period = 12))
-
-# Getting the accuracy scores for the model
-# Obtain residuals
-residuals <- sarima_germany$residuals
-me <- mean(residuals)
-rmse <- sqrt(mean(residuals^2))
-mae <- mean(abs(residuals))
-mape <- mean(abs(residuals/ts_germany))
-accuracy_table <- data.frame(ME = me, RMSE = rmse, MAE = mae, MAPE = mape)
-rownames(accuracy_table) <- "SARIMA"
-accuracy_table
-
-# Forecasting using the model
-forecast_sarima_germany <- predict(sarima_germany, n.ahead = 13, interval = "confidence")
-
-# Graphing the forecast with confidence intervals
-ggplot() + 
-  geom_line(aes(x = time(ts_germany), y = ts_germany), color = "blue") +
-  geom_line(aes(x = time(forecast_sarima_germany$pred), y = forecast_sarima_germany$pred), color = "red") +
-  geom_ribbon(aes(x = time(forecast_sarima_germany$pred), ymin = forecast_sarima_germany$pred - 1.96*forecast_sarima_germany$se,
-                  ymax = forecast_sarima_germany$pred + 1.96*forecast_sarima_germany$se), alpha = 0.3, fill = "orange") +
-  labs(title = "SARIMA Forecast for Germany", x = "Year", y = "Germany Electricity Consumption") +
-  scale_x_continuous(breaks = seq(2015, 2023, by = 1)) +
-  theme_bw() +
-  theme(plot.title = element_text(size = 16, face = "bold"),
-        axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
-        legend.title = element_blank(),
-        legend.text = element_text(size = 12)) +
-  annotate("text", x = 2022.5, y = 535, label = "Historical data", color = "blue", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1], label = "Forecast", color = "red", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_germany$pred[1] + 30, label = "95% Confidence Interval", color = "orange", size = 4)
-
-
-# Extracting the forecasted values
-forecast_table_germany_sa <- data.frame(Model = c("SARIMA"),
-                                     Forecast_Values = c(forecast_sarima_germany$pred))
-
-colnames(forecast_table_germany_sa)[2] <- "Germany_sarima"
-
-forecast_table_germany_sa
-
-```
-
-
+The time series residuals plot also shows that the ARIMA model best fits the data. The residuals don't follow any pattern and are random and stationary. Autocorrelation indicates that residuals in the ARIMA model are not correlated with their past and future values. We can't observe the same pattern in SNAIVE and ETS models. These models captured all the information in data not that well, as ARIMA did. 
 
 
 

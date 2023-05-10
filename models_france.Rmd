@@ -11,7 +11,7 @@ data_elec %>% autoplot(France) +
 
 Looks like piecewise should be used again around 2010
 
-#Investigating Total closely since 2015
+#Investigating France closely since 2015
 ```{r}
 France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
 autoplot(France_since_2015)
@@ -30,6 +30,9 @@ report(snaive_france)
 
 # Forecasting using the model
 forecast_snaive_france <- snaive_france %>% forecast(h = 13)
+
+#Checking the residuals before forecasting
+snaive_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
 
 # Graphing the forecast
 snaive_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
@@ -50,10 +53,6 @@ forecast_table_france
 
 
 
-
-
-
-
 ### ETS Model 
 
 
@@ -70,6 +69,9 @@ report(ets_france)
 
 #Forecasting using the models
 forecast_ets_france<- ets_france %>% forecast(h = 13)
+
+#Checking the residuals before forecasting
+ets_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
 
 #Graphing the forecast
 ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015)+
@@ -91,9 +93,8 @@ forecast_table_france_ets
 Looks like it expects a jump upwards on the following month. Might be a bit wrong, let's compare with other models.
 
 
-
-
 ### ARIMA
+
 
 ```{r}
 # Modelling ARIMA automatically
@@ -104,8 +105,12 @@ arima_france <- data_elec %>%
 # Getting the Accuracy scores for models
 report(arima_france)
 
+
 # Forecasting using the models
 forecast_arima_france <- arima_france %>% forecast(h = 13)
+
+#Checking the residuals before forecasting
+arima_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA France residuals analysis")
 
 # Graphing the forecast
 arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
@@ -120,57 +125,14 @@ forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..m
 colnames(forecast_table_france_a)[1] <- "France_arima"
 
 forecast_table_france_a
-```
 
-### S-ARIMA
-
-```{r}
-# Create time series object for France up to end of 2022
-ts_france <- ts(data_elec$France[1:96], start = c(2015, 1), frequency = 12)
-
-# Create SARIMA model for France
-sarima_france <- stats::arima(ts_france, order = c(1,1,1), seasonal = list(order = c(1,0,0), period = 12))
-
-# Getting the accuracy scores for the model
-# Obtain residuals
-residuals <- sarima_france$residuals
-me <- mean(residuals)
-rmse <- sqrt(mean(residuals^2))
-mae <- mean(abs(residuals))
-mape <- mean(abs(residuals/ts_france))
-accuracy_table <- data.frame(ME = me, RMSE = rmse, MAE = mae, MAPE = mape)
-rownames(accuracy_table) <- "SARIMA"
-accuracy_table
-
-# Forecasting using the model
-forecast_sarima_france <- predict(sarima_france, n.ahead = 13, interval = "confidence")
-
-# Graphing the forecast with confidence intervals
-ggplot() + 
-  geom_line(aes(x = time(ts_france), y = ts_france), color = "blue") +
-  geom_line(aes(x = time(forecast_sarima_france$pred), y = forecast_sarima_france$pred), color = "red") +
-  geom_ribbon(aes(x = time(forecast_sarima_france$pred), ymin = forecast_sarima_france$pred - 1.96*forecast_sarima_france$se,
-                  ymax = forecast_sarima_france$pred + 1.96*forecast_sarima_france$se), alpha = 0.3, fill = "orange") +
-  labs(title = "SARIMA Forecast for France", x = "Year", y = "France Electricity Consumption") +
-  scale_x_continuous(breaks = seq(2015, 2023, by = 1)) +
-  theme_bw() +
-  theme(plot.title = element_text(size = 16, face = "bold"),
-        axis.title = element_text(size = 14),
-        axis.text = element_text(size = 12),
-        legend.title = element_blank(),
-        legend.text = element_text(size = 12)) +
-  annotate("text", x = 2022.5, y = 535, label = "Historical data", color = "blue", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_france$pred[1], label = "Forecast", color = "red", size = 4) +
-  annotate("text", x = 2024, y = forecast_sarima_france$pred[1] + 30, label = "95% Confidence Interval", color = "orange", size = 4)
-
-
-# Extracting the forecasted values
-forecast_table_france_sa <- data.frame(Model = c("SARIMA"),
-                                     Forecast_Values = c(forecast_sarima_france$pred))
-
-colnames(forecast_table_france_sa)[2] <- "France_sarima"
-
-forecast_table_france_sa
 
 
 ```
+## Model Comparison
+The ETS(M,N,M) model has an AIC of 4244.319, AICc of 4246.172, and BIC of 4298.570.
+The ARIMA(2,1,1)(0,0,2)[12] model has an AIC of 3531.14, AICc of 3531.46, and BIC of 3552.82.The lower parameters are preferred, as they are a good trade-off between the complexity and goodness of fit. 
+
+Based on the AIC, AICc, and BIC values, the ARIMA(2,1,1)(0,0,2)[12] model appears to be the better model, as it has lower values for all three criteria.
+
+The time series residuals plot also shows that the ARIMA model best fits the data. The residuals don't follow any pattern and are random and stationary. Autocorrelation indicates that residuals in the ARIMA model are not correlated with their past and future values. We can't observe the same pattern in SNAIVE and ETS models. These models captured all the information in data not that well, as ARIMA did.
