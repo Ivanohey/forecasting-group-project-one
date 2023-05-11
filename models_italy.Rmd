@@ -1,7 +1,7 @@
 
-## Italy 
+# Italy 
 
-### S-Naive Model
+## S-Naive Model
 
 ```{r}
 #Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
@@ -36,9 +36,9 @@ forecast_table_italy
 ```
 
 
-### ETS Model 
+## ETS Model 
 
-#### What is it
+### What is it
 
 The most basic variant of exponential smoothing is called Simple Exponential Smoothing (SES). The method is appropriate when the time series does not show any trend nor seasonality. It will provide a flat forecast, similar to the average and naïve methods presented earlier.
 
@@ -86,7 +86,7 @@ Performing ETS automatically (ANA) vs doing one manually (AAA), we notice that o
 
 
 
-### ARIMA
+## ARIMA
 
 ARIMA and ETS are different, but they also share quite a lot of aspects. While ETS is focusing on trend and seasonal components, ARIMA focuses strongly on the autocorrelation structure of time series.
 
