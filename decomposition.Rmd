@@ -1,4 +1,5 @@
-## Decomposition
+# Decomposition
+
 As time series data often consists of different patterns, it is helpful to split time series into components, each representing a pattern category. As a result, we can understand how each element behaves over time and model each separately for greater forecasting accuracy results. It will also help to decide on the type of forecasting model.
 
 For this purpose, we considered different types of decomposition techniques:
@@ -7,7 +8,8 @@ For this purpose, we considered different types of decomposition techniques:
 * X-11 method originated in the US Census Bureau and was further developed by Statistics Canada, based on classical decomposition, a slightly improved version of classical decomposition; the seasonal component varies slowly over time, highly robust to outliers and level shifts in the time series.
 We decided to continue with STL Decomposition.
 
-### Decomposition_Germany
+## Decomposition for all countries
+
 ```{r}
 
 #STL Decomposition_Germany

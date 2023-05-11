@@ -1,9 +1,9 @@
-## Autocorrelation
+# Autocorrelation
 
 Before moving on with the models and in order to be able to use them, we must check for autocorrelation in the time series. 
 
 
-### Let's first look at a specific country: Germany 
+## Let's first look at a specific country: Germany 
 
 ```{r}
 
@@ -40,7 +40,7 @@ On this chart the autocorrelation coefficients are plotted by bars, along with a
 - Every 6 months, we see that the data is strongly inversely auto correlated. This means that every 6 months, the data is consistently moving in opposite directions (If exports are high in July, we expect them to be consistently lower 6 months later). This is something that we only explored now, and was not so easy to see from the previous graph/table.
 - Every 12 months, the data is strongly positively auto correlated. 
 
-### Total exports autocorrelation 
+## Total exports autocorrelation 
 
 ```{r}
 

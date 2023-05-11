@@ -1,5 +1,5 @@
 
-## Austria
+# Austria
 
 Visualizing Austria again -> looks like we shouldn't use the whole data for this forecast, as there is a significant change at around 2016-2018
 
@@ -19,7 +19,7 @@ autoplot(Austria_since_2015)
 autoplot(Austria_since_2018)
 ```
 
-### S-Naive Model
+## S-Naive Model
 
 ```{r}
 # Modelling SNaive automatically
@@ -48,7 +48,7 @@ colnames(forecast_table_austria)[1] <- "Austria_snaive"
 forecast_table_italy
 ```
 
-### ETS Model 
+## ETS Model 
 
 ```{r}
 
@@ -80,7 +80,7 @@ colnames(forecast_table_austria)[1] <- "Austria_ets_ANA"
 #components(ets_austria) %>% autoplot()
 ```
 
-### S-ARIMA
+## S-ARIMA
 
 ```{r}
 
