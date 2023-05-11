@@ -17,97 +17,100 @@ Germany_since_2015 <- data_elec %>%
 autoplot(Germany_since_2015)
 ```
 
+To evaluate the forecast accuracy, we will test how a model performs on new data not used during the fitting phase.
+So, we split our data into training and test set. The first one we will use to estimate any parameters of the forecasting method, and the second - is to define the model's accuracy. 
+We fit the training data to models selected (ARIMA, ETS, SNAIVE) to forecast 60 following periods (in our case, months). 
+We refit our models with test data and calculate the accuracy of the forecast. 
+We select the model with the lowest accuracy metrics for further forecast. Low metric values indicate the better predictive performance of the model, with a value of 0 indicating a perfect fit between the predicted and actual values. 
+Residuals analysis is also plotted to see how well the model captured the dynamics in data. Good models' residuals should be stationary (white noise) and have no patterns. 
 
-### S-Naive Model
-
-```{r}
-# Modelling snaive automatically
-snaive_germany <- data_elec %>% 
-  select(Germany) %>%
-  model(snaive = SNAIVE(Germany))
-
-# Getting the accuracy scores for models
-report(snaive_germany)
-
-# Forecasting using the models
-forecast_snaive_germany <- snaive_germany %>% forecast(h = 13)
-
-#Checking the residuals before forecasting
-snaive_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
-
-
-# Graphing the forecast
-snaive_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
-  labs(title = "Seasonal Naive Forecast for Germany")
-
-# Extracting the forecasted values
-forecast_table_germany <- data.frame(Model = c("Seasonal Naive"),
-                                     Forecast_Values = c(forecast_snaive_germany))
-
-forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_germany)[1] <- "Germany_snaive"
-
-forecast_table_germany
-
-
-```
-
-
-### ETS Model 
-
+We can see strong seasonality and trend in German data from decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2018. 
 ```{r}
 
-#Modelling ets automatically
-ets_germany <- data_elec %>%
-  select(Germany) %>%
+#Split the data
+training_ge <- data_elec %>% select(Date,Germany) %>%  filter(Date < as.Date("2017-01-01"))
+test_ge <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2017-01-01"))
+
+# Fit ARIMA model and generate forecasts
+data_fit_ge_a <- training_ge %>%
+  model(ARIMA(Germany))
+forecasts_ge_a <- data_fit_ge_a %>%
+  forecast(h = 60)
+
+# Fit ETS model and generate forecasts
+data_fit_ge_e <- training_ge %>%
   model(ETS(Germany))
+forecasts_ge_e <- data_fit_ge_e %>%
+  forecast(h = 60)
 
-#Getting the Accuracy scores for models
-report(ets_germany)
+# Fit seasonal naive model and generate forecasts
+data_fit_ge_n <- training_ge %>%
+  model(SNAIVE(Germany))
+forecasts_ge_n <- data_fit_ge_n %>%
+  forecast(h = 60)
 
-#Forecasting using the models
-forecast_ets_germany<- ets_germany %>% forecast(h = 13)
+# Combine forecasts into a single data frame
+all_forecasts_ge <- bind_rows(
+  data.frame(Date = forecasts_ge_a$Date, Method = "ARIMA", Forecast = forecasts_a$.mean),
+  data.frame(Date = forecasts_ge_e$Date, Method = "ETS", Forecast = forecasts_e$.mean),
+  data.frame(Date = forecasts_ge_n$Date, Method = "SNAIVE", Forecast = forecasts_n$.mean))
 
-#Checking the residuals before forecasting
-ets_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
 
-#Graphing the forecast
-ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
-  labs(title = "ETS MAdM Forecast for Germany")
+# Plot all three sets of forecasts together
+autoplot(data_elec, series = "Germany") +
+  geom_line(data = all_forecasts_ge, aes(x = Date, y = Forecast, color = Method)) +
+  labs(title = "Electricity Consumption in Germany")
 
-#Extracting the forecasted values
-
-forecast_table_germany_ets <- data.frame(Model = c("ETS (MAdM)"),
-                              Forecast_Values = c(forecast_ets_germany))
-
-forecast_table_germany_ets <- forecast_table_germany_ets %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_germany_ets)[1] <- "Germany_ets_MAdM"
-
-forecast_table_germany_ets
-
-#components(ets_germany) %>% autoplot()
 ```
 
+According to the accuracy table below RMSE, MAE and other indicators, ARIMA has the lowest values on the test data. 
+The ARIMA model has an AIC of 2422.94, AICc of 2423.39, and BIC of 2442.49. On the other hand, the ETS model has an AIC of 2975.557, AICc of 2978.110, and BIC of 3025.329. These information criteria are used to assess the goodness of fit of a model, with lower values indicating a better fit. Therefore, based on these criteria, we can conclude that the ARIMA model fits the data better than the ETS model.
+
+```{r}
+#Accuracy
+germany_accuracy_a <-data_fit_ge_a %>%
+  refit(test_ge) %>%
+  accuracy()
+
+germany_accuracy_e <-data_fit_ge_e %>%
+  refit(test_ge) %>%
+  accuracy()
+
+germany_accuracy_n <-data_fit_ge_n %>%
+  refit(test_ge) %>%
+  accuracy()
+
+germany_accuracy_table <- rbind(
+  data.frame(germany_accuracy_a),
+  data.frame(germany_accuracy_e),
+  data.frame(germany_accuracy_n))
 
 
 
+#AIC
+report(data_fit_ge_a)
+germany_accuracy_table
+report(data_fit_ge_e)
 
 
 
+```
+### Residuals
+The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+```{r}
+gg_tsresiduals(data_fit_ge_a) + labs(title = "ARIMA Germany residuals analysis")
 
+gg_tsresiduals(data_fit_ge_e) + labs(title = "ETS Germany residuals analysis")
 
+gg_tsresiduals(data_fit_ge_n) + labs(title = "SNAIVE Germany residuals analysis")
+```
 ### ARIMA
-
+Based on the analysis above, we decide to forecast the electricity demand for Germany using the ARIMA model.The results are shown below. 
 ```{r}
 # Modelling ARIMA automatically
 arima_germany <- data_elec %>%
   select(Germany) %>%
   model(arima = ARIMA(Germany))
-
-# Getting the Accuracy scores for models
-report(arima_germany)
 
 # Forecasting using the models
 forecast_arima_germany <- arima_germany %>% forecast(h = 13)
@@ -132,9 +135,90 @@ forecast_table_germany_a
 ```
 
 
-## Model Comparison
+### S-Naive Model
 
-The ARIMA model has an AIC of 3382.65, AICc of 3382.88, and BIC of 3400.51, while the ETS model has an AIC of 4123.569, AICc of 4126.241, and BIC of 4188.671. Lower values of these information criteria indicate a better model fit, so we can conclude that the ARIMA model is better than the ETS model.
+```{r}
+## Modelling snaive automatically
+#snaive_germany <- data_elec %>% 
+#  select(Germany) %>%
+#  model(snaive = SNAIVE(Germany))
+#
+## Getting the accuracy scores for models
+#report(snaive_germany)
+#
+## Forecasting using the models
+#forecast_snaive_germany <- snaive_germany %>% forecast(h = 13)
+#
+##Checking the residuals before forecasting
+#snaive_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
+#
+#
+## Graphing the forecast
+#snaive_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
+#  labs(title = "Seasonal Naive Forecast for Germany")
+#
+## Extracting the forecasted values
+#forecast_table_germany <- data.frame(Model = c("Seasonal Naive"),
+#                                     Forecast_Values = c(forecast_snaive_germany))
+#
+#forecast_table_germany <- forecast_table_germany %>% select(Forecast_Values..mean)
+#
+#colnames(forecast_table_germany)[1] <- "Germany_snaive"
+#
+#forecast_table_germany
+#
+
+```
+
+
+### ETS Model 
+
+```{r}
+
+##Modelling ets automatically
+#ets_germany <- data_elec %>%
+#  select(Germany) %>%
+#  model(ETS(Germany))
+#
+##Getting the Accuracy scores for models
+#report(ets_germany)
+#
+##Forecasting using the models
+#forecast_ets_germany<- ets_germany %>% forecast(h = 13)
+#
+##Checking the residuals before forecasting
+#ets_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
+#
+##Graphing the forecast
+#ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015)+
+#  labs(title = "ETS MAdM Forecast for Germany")
+#
+##Extracting the forecasted values
+#
+#forecast_table_germany_ets <- data.frame(Model = c("ETS (MAdM)"),
+#                              Forecast_Values = c(forecast_ets_germany))
+#
+#forecast_table_germany_ets <- forecast_table_germany_ets %>% select(Forecast_Values..mean)
+#
+#colnames(forecast_table_germany_ets)[1] <- "Germany_ets_MAdM"
+#
+#forecast_table_germany_ets
+#
+#components(ets_germany) %>% autoplot()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
