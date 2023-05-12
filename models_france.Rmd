@@ -16,86 +16,87 @@ Looks like piecewise should be used again around 2010
 France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
 autoplot(France_since_2015)
 ```
-
-### S-Naive Model
-
-```{r}
-# Modelling SNaive automatically
-snaive_france <- data_elec %>%
-  select(France) %>%
-  model(snaive = SNAIVE(France, h = 13))
-
-# Getting the accuracy scores for models
-report(snaive_france)
-
-# Forecasting using the model
-forecast_snaive_france <- snaive_france %>% forecast(h = 13)
-
-#Checking the residuals before forecasting
-snaive_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
-
-# Graphing the forecast
-snaive_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
-  labs(title = "Seasonal Naive Forecast for France")
-
-# Extracting the forecasted values
-forecast_table_france <- data.frame(Model = c("SNaive"),
-                                    Forecast_Values = c(forecast_snaive_france))
-
-forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_france)[1] <- "France_snaive"
-
-forecast_table_france
-
-
-```
-
-
-
-### ETS Model 
-
-
-
+According to decomposition analysis, there is strong seasonality and trend in France data. Below is the plot of how well each model (SNAIVE, ARIMA, ETS) fits the data based on a 60-period prediction starting from 2016. 
 ```{r}
 
-#Modelling ets automatically
-ets_france <- data_elec %>%
-  select(France) %>%
+#Split the data
+training_fr <- data_elec %>% select(Date, France) %>%  filter(Date < as.Date("2016-01-01"))
+test_fr <- data_elec %>% select(Date, France) %>% filter(Date >= as.Date("2016-01-01"))
+
+# Fit ARIMA model and generate forecasts
+data_fit_fr_a <- training_fr %>%
+  model(ARIMA(France))
+forecasts_fr_a <- data_fit_fr_a %>%
+  forecast(h = 60)
+
+# Fit ETS model and generate forecasts
+data_fit_fr_e <- training_fr %>%
   model(ETS(France))
+forecasts_fr_e <- data_fit_fr_e %>%
+  forecast(h = 60)
 
-#Getting the Accuracy scores for models
-report(ets_france)
+# Fit seasonal naive model and generate forecasts
+data_fit_fr_n <- training_fr %>%
+  model(SNAIVE(France))
+forecasts_fr_n <- data_fit_fr_n %>%
+  forecast(h = 60)
 
-#Forecasting using the models
-forecast_ets_france<- ets_france %>% forecast(h = 13)
+# Combine forecasts into a single data frame
+all_forecasts_fr <- bind_rows(
+  data.frame(Date = forecasts_fr_a$Date, Method = "ARIMA", Forecast = forecasts_fr_a$.mean),
+  data.frame(Date = forecasts_fr_e$Date, Method = "ETS", Forecast = forecasts_fr_e$.mean),
+  data.frame(Date = forecasts_fr_n$Date, Method = "SNAIVE", Forecast = forecasts_fr_n$.mean))
 
-#Checking the residuals before forecasting
-ets_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
 
-#Graphing the forecast
-ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015)+
-  labs(title = "ETS MNM Forecast for France")
+# Plot all three sets of forecasts together
+data_elec %>% autoplot(France) +
+  geom_line(data = all_forecasts_fr, aes(x = Date, y = Forecast, color = Method)) +
+  labs(title = "Electricity Demand in France")
 
-#Extracting the forecasted values
-forecast_table_france_ets <- data.frame(Model = c("ETS (MNM)"),
-                              Forecast_Values = c(forecast_ets_france))
-
-forecast_table_france_ets <- forecast_table_france_ets %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_france_ets)[1] <- "France_ets_MNM"
-
-forecast_table_france_ets
-
-#components(ets_france) %>% autoplot()
 ```
 
-Looks like it expects a jump upwards on the following month. Might be a bit wrong, let's compare with other models.
+According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC = 2558.88, AICc = 2559.46, and BIC=2582.07 than the ETS model. 
+```{r}
+#Accuracy
+france_accuracy_a <-data_fit_fr_a %>%
+  refit(test_fr) %>%
+  accuracy()
 
+france_accuracy_e <-data_fit_fr_e %>%
+  refit(test_fr) %>%
+  accuracy()
+
+france_accuracy_n <-data_fit_fr_n %>%
+  refit(test_fr) %>%
+  accuracy()
+
+france_accuracy_table <- rbind(
+  data.frame(france_accuracy_a),
+  data.frame(france_accuracy_e),
+  data.frame(france_accuracy_n))
+
+
+
+#AIC
+report(data_fit_fr_a)
+france_accuracy_table
+report(data_fit_fr_e)
+
+```
+
+### Residuals
+The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+```{r}
+gg_tsresiduals(data_fit_fr_a) + labs(title = "ARIMA France residuals analysis")
+
+gg_tsresiduals(data_fit_fr_e) + labs(title = "ETS France residuals analysis")
+
+gg_tsresiduals(data_fit_fr_n) + labs(title = "SNAIVE France residuals analysis")
+```
+
+All of these metrics are important for evaluating forecast accuracy. Still, we decided to give more weight to AIC, as this indicator considers both the complexity and the model's fit. As a result, the ARIMA model is selected to forecast the electricity demand in France.
 
 ### ARIMA
-
-
 ```{r}
 # Modelling ARIMA automatically
 arima_france <- data_elec %>%
@@ -125,14 +126,115 @@ forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..m
 colnames(forecast_table_france_a)[1] <- "France_arima"
 
 forecast_table_france_a
+```
+
+
+### ETS Model 
+```{r}
+
+##Modelling ets automatically
+#ets_france <- data_elec %>%
+#  select(France) %>%
+#  model(ETS(France))
+#
+##Forecasting using the models
+#forecast_ets_france<- ets_france %>% forecast(h = 13)
+#
+##Checking the residuals before forecasting
+#ets_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
+#
+##Graphing the forecast
+#ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015)+
+#  labs(title = "ETS MNM Forecast for France")
+#
+##Extracting the forecasted values
+#forecast_table_france_ets <- data.frame(Model = c("ETS (MNM)"),
+#                              Forecast_Values = c(forecast_ets_france))
+#
+#forecast_table_france_ets <- forecast_table_france_ets %>% select(Forecast_Values..mean)
+#
+#colnames(forecast_table_france_ets)[1] <- "France_ets_MNM"
+#
+#forecast_table_france_ets
+
+#components(ets_france) %>% autoplot()
+```
+
+### S-Naive Model
+
+```{r}
+# Modelling SNaive automatically
+#snaive_france <- data_elec %>%
+#  select(France) %>%
+#  model(snaive = SNAIVE(France, h = 13))
+#
+## Getting the accuracy scores for models
+#report(snaive_france)
+#
+## Forecasting using the model
+#forecast_snaive_france <- snaive_france %>% forecast(h = 13)
+#
+##Checking the residuals before forecasting
+#snaive_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
+#
+## Graphing the forecast
+#snaive_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
+#  labs(title = "Seasonal Naive Forecast for France")
+#
+## Extracting the forecasted values
+#forecast_table_france <- data.frame(Model = c("SNaive"),
+#                                    Forecast_Values = c(forecast_snaive_france))
+#
+#forecast_table_france <- forecast_table_france %>% select(Forecast_Values..mean)
+#
+#colnames(forecast_table_france)[1] <- "France_snaive"
+
+#forecast_table_france
+
+
+```
+
+
+
+
+
+Looks like it expects a jump upwards on the following month. Might be a bit wrong, let's compare with other models.
+
+
+### ARIMA
+```{r}
+# Modelling ARIMA automatically
+#arima_france <- data_elec %>%
+#  select(France) %>%
+#  model(arima = ARIMA(France))
+#
+## Getting the Accuracy scores for models
+#report(arima_france)
+#
+#
+## Forecasting using the models
+#forecast_arima_france <- arima_france %>% forecast(h = 13)
+#
+##Checking the residuals before forecasting
+#arima_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA France residuals analysis")
+#
+## Graphing the forecast
+#arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
+#  labs(title = "ARIMA Forecast for France")
+#
+##Extracting the forecasted values
+#forecast_table_france_a <- data.frame(Model = c("ARIMA"),
+#                              Forecast_Values = c(forecast_arima_france))
+#
+#forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..mean)
+#
+#colnames(forecast_table_france_a)[1] <- "France_arima"
+#
+#forecast_table_france_a
 
 
 
 ```
-## Model Comparison
-The ETS(M,N,M) model has an AIC of 4244.319, AICc of 4246.172, and BIC of 4298.570.
-The ARIMA(2,1,1)(0,0,2)[12] model has an AIC of 3531.14, AICc of 3531.46, and BIC of 3552.82.The lower parameters are preferred, as they are a good trade-off between the complexity and goodness of fit. 
 
-Based on the AIC, AICc, and BIC values, the ARIMA(2,1,1)(0,0,2)[12] model appears to be the better model, as it has lower values for all three criteria.
 
 

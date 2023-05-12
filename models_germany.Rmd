@@ -24,12 +24,12 @@ We refit our models with test data and calculate the accuracy of the forecast.
 We select the model with the lowest accuracy metrics for further forecast. Low metric values indicate the better predictive performance of the model, with a value of 0 indicating a perfect fit between the predicted and actual values. 
 Residuals analysis is also plotted to see how well the model captured the dynamics in data. Good models' residuals should be stationary (white noise) and have no patterns. 
 
-We can see strong seasonality and trend in German data from decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2018. 
+We can see strong seasonality and trend in Germany data from decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
 ```{r}
 
 #Split the data
-training_ge <- data_elec %>% select(Date,Germany) %>%  filter(Date < as.Date("2017-01-01"))
-test_ge <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2017-01-01"))
+training_ge <- data_elec %>% select(Date,Germany) %>%  filter(Date < as.Date("2016-01-01"))
+test_ge <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2016-01-01"))
 
 # Fit ARIMA model and generate forecasts
 data_fit_ge_a <- training_ge %>%
@@ -51,13 +51,13 @@ forecasts_ge_n <- data_fit_ge_n %>%
 
 # Combine forecasts into a single data frame
 all_forecasts_ge <- bind_rows(
-  data.frame(Date = forecasts_ge_a$Date, Method = "ARIMA", Forecast = forecasts_a$.mean),
-  data.frame(Date = forecasts_ge_e$Date, Method = "ETS", Forecast = forecasts_e$.mean),
-  data.frame(Date = forecasts_ge_n$Date, Method = "SNAIVE", Forecast = forecasts_n$.mean))
+  data.frame(Date = forecasts_ge_a$Date, Method = "ARIMA", Forecast = forecasts_ge_a$.mean),
+  data.frame(Date = forecasts_ge_e$Date, Method = "ETS", Forecast = forecasts_ge_e$.mean),
+  data.frame(Date = forecasts_ge_n$Date, Method = "SNAIVE", Forecast = forecasts_ge_n$.mean))
 
 
 # Plot all three sets of forecasts together
-autoplot(data_elec, series = "Germany") +
+data_elec %>% autoplot(Germany)  +
   geom_line(data = all_forecasts_ge, aes(x = Date, y = Forecast, color = Method)) +
   labs(title = "Electricity Consumption in Germany")
 

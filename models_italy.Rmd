@@ -7,6 +7,85 @@
 #Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
 Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
 ```
+```{r}
+
+#Split the data
+training_it <- data_elec %>% select(Date, Italy) %>%  filter(Date < as.Date("2016-01-01"))
+test_it <- data_elec %>% select(Date, Italy) %>% filter(Date >= as.Date("2016-01-01"))
+
+# Fit ARIMA model and generate forecasts
+data_fit_it_a <- training_it %>%
+  model(ARIMA(Italy)) 
+forecasts_it_a <- data_fit_it_a %>%
+  forecast(h = 60)
+
+
+
+forecasts_it_a <- data_fit_it_a %>%
+  forecast(h = 60)
+
+# Fit ETS model and generate forecasts
+data_fit_it_e <- training_it %>%
+  model(ETS(Italy))
+forecasts_it_e <- data_fit_it_e %>%
+  forecast(h = 60)
+
+# Fit seasonal naive model and generate forecasts
+data_fit_it_n <- training_it %>%
+  model(SNAIVE(Italy))
+forecasts_it_n <- data_fit_it_n %>%
+  forecast(h = 60)
+
+# Combine forecasts into a single data frame
+all_forecasts_it <- bind_rows(
+  data.frame(Date = forecasts_it_a$Date, Method = "ARIMA", Forecast = forecasts_it_a$.mean),
+  data.frame(Date = forecasts_it_e$Date, Method = "ETS", Forecast = forecasts_it_e$.mean),
+  data.frame(Date = forecasts_it_n$Date, Method = "SNAIVE", Forecast = forecasts_it_n$.mean))
+
+
+# Plot all three sets of forecasts together
+data_elec %>% autoplot(Italy) +
+  geom_line(data = all_forecasts_it, aes(x = Date, y = Forecast, color = Method)) +
+  labs(title = "Electricity Demand in Italy")
+
+```
+According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=2708.77, AICc=2709.1, and BIC=2725.06 than the ETS model.
+```{r}
+#Accuracy
+italy_accuracy_a <-data_fit_it_a %>%
+  refit(test_it) %>%
+  accuracy()
+
+italy_accuracy_e <-data_fit_it_e %>%
+  refit(test_it) %>%
+  accuracy()
+
+italy_accuracy_n <-data_fit_it_n %>%
+  refit(test_it) %>%
+  accuracy()
+
+italy_accuracy_table <- rbind(
+  data.frame(italy_accuracy_a),
+  data.frame(italy_accuracy_e),
+  data.frame(italy_accuracy_n))
+
+
+
+#AIC
+report(data_fit_it_a)
+italy_accuracy_table
+report(data_fit_it_e)
+
+```
+### Residuals
+The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+```{r}
+gg_tsresiduals(data_fit_it_a) + labs(title = "ARIMA Italy residuals analysis")
+
+gg_tsresiduals(data_fit_it_e) + labs(title = "ETS Italy residuals analysis")
+
+gg_tsresiduals(data_fit_it_n) + labs(title = "SNAIVE Italy residuals analysis")
+```
 
 ```{r}
 # Modelling SNaive automatically
