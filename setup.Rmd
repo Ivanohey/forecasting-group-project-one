@@ -1,5 +1,6 @@
 ```{r setup, include=FALSE}
 #install.packages("rlang") 
+#install.packages("seasonal")
 
 #read excel file
 library(readxl)
@@ -17,6 +18,9 @@ library(seasonal)
 #Cleaning and visualizations
 library(DataExplorer)
 library(patchwork)
+
+
+
 
 #Tables
 library(knitr)
