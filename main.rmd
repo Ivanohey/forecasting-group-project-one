@@ -12,7 +12,7 @@ output:
 ---
 
 
-```{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf.rmd', 'decomposition.rmd','models_general.rmd','models_italy.rmd','models_austria.rmd','models_france.rmd','models_germany.rmd')}
+```{r child=c('setup.Rmd', 'data_cleaning.rmd', 'eda.rmd', 'acf.rmd', 'decomposition.rmd','models_general.rmd','models_germany.rmd', 'models_italy.rmd','models_austria.rmd','models_france.rmd', 'models_total.rmd', 'forecast.rmd')}
 
 
 

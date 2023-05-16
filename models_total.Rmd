@@ -1,130 +1,110 @@
 
-## Total 
+## Total{.tabset}
 
-```{r}
-data_elec %>% autoplot(Total) + 
-  ggtitle("Exports from Switzerland to all countries") +
-  ylab("GWt") + xlab("Month")
-```
-
-
-#Investigating Total closely since 2015
 ```{r}
 Total_since_2015 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2015-01-01"))
-autoplot(Total_since_2015)
 ```
-
-### S-Naive Model
-
-```{r}
-# Modelling SNaive automatically
-snaive_total <- data_elec %>%
-  select(Total) %>%
-  model(snaive = SNAIVE(Total, h = 13))
-
-# Getting the accuracy scores for models
-report(snaive_total)
-
-# Forecasting using the model
-forecast_snaive_total <- snaive_total %>% forecast(h = 13)
-
-#Checking the residuals before forecasting
-snaive_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS residuals analysis for all countries")
-
-# Graphing the forecast
-snaive_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
-  labs(title = "Seasonal Naive Forecast to all countries")
-
-# Extracting the forecasted values
-forecast_table_total <- data.frame(Model = c("SNaive"),
-                                    Forecast_Values = c(forecast_snaive_total))
-
-forecast_table_total <- forecast_table_total %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_total)[1] <- "Total_snaive"
-
-forecast_table_total
-
-
-```
-
-
-
-
-
-
-
-
-### ETS Model 
-
+### **Testing Models**
+Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
 ```{r}
 
-#Modelling ets automatically
-ets_total <- data_elec %>%
-  select(Total) %>%
+#Split the data
+training_tot <- data_elec %>% select(Date, Total) %>%  filter(Date < as.Date("2016-01-01"))
+test_tot <- data_elec %>% select(Date, Total) %>% filter(Date >= as.Date("2016-01-01"))
+
+# Fit ARIMA model and generate forecasts
+data_fit_tot_a <- training_tot %>%
+  model(ARIMA(Total))
+forecasts_tot_a <- data_fit_tot_a %>%
+  forecast(h = 60)
+
+# Fit ETS model and generate forecasts
+data_fit_tot_e <- training_tot %>%
   model(ETS(Total))
+forecasts_tot_e <- data_fit_tot_e %>%
+  forecast(h = 60)
 
-#Getting the Accuracy scores for models
-report(ets_total)
+# Fit seasonal naive model and generate forecasts
+data_fit_tot_n <- training_tot %>%
+  model(SNAIVE(Total))
+forecasts_tot_n <- data_fit_tot_n %>%
+  forecast(h = 60)
 
-#Forecasting using the models
-forecast_ets_total<- ets_total %>% forecast(h = 13)
-
-#Checking the residuals before forecasting
-ets_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS residuals analysis for all countries")
-
-#Graphing the forecast
-ets_total %>% forecast(h = 13) %>% autoplot(Total_since_2015)+
-  labs(title = "ETS ANA Forecast for all countries")
-
-#Extracting the forecasted values
-
-forecast_table_total <- data.frame(Model = c("ETS (ANA)"),
-                              Forecast_Values = c(forecast_ets_total))
-
-forecast_table_total <- forecast_table_total %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_total)[1] <- "All_countries_ets_ANA"
+# Combine forecasts into a single data frame
+all_forecasts_tot <- bind_rows(
+  data.frame(Date = forecasts_tot_a$Date, Method = "ARIMA", Forecast = forecasts_tot_a$.mean),
+  data.frame(Date = forecasts_tot_e$Date, Method = "ETS", Forecast = forecasts_tot_e$.mean),
+  data.frame(Date = forecasts_tot_n$Date, Method = "SNAIVE", Forecast = forecasts_tot_n$.mean))
 
 
-#components(ets_total) %>% autoplot()
+# Plot all three sets of forecasts together
+data_elec %>% autoplot(Total) +
+  geom_line(data = all_forecasts_tot, aes(x = Date, y = Forecast, color = Method)) +
+  labs(title = "Electricity Demand to all countries")
+
 ```
 
-
-
-
-
-### S-ARIMA
+### **Measuring Model Accuracy**
+According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=2683.45, AICc=2683.9, and BIC=2702.99 than the ETS model. 
 ```{r}
-# Modelling ARIMA automatically
-arima_total <- data_elec %>%
-  select(Total) %>%
-  model(arima = ARIMA(Total))
+#Accuracy
+total_accuracy_a <-data_fit_tot_a %>%
+  refit(test_tot) %>%
+  accuracy()
 
-# Getting the Accuracy scores for models
-report(arima_total)
+total_accuracy_e <-data_fit_tot_e %>%
+  refit(test_tot) %>%
+  accuracy()
 
-# Forecasting using the models
-forecast_arima_total <- arima_total %>% forecast(h = 13)
+total_accuracy_n <-data_fit_tot_n %>%
+  refit(test_tot) %>%
+  accuracy()
 
-#Checking the residuals before forecasting
-arima_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA residuals analysis for all countries")
+total_accuracy_table <- rbind(
+  data.frame(total_accuracy_a),
+  data.frame(total_accuracy_e),
+  data.frame(total_accuracy_n))
 
 
-# Graphing the forecast
-arima_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
-  labs(title = "ARIMA Forecast for all countries")
 
-#Extracting the forecasted values
-forecast_table_total_a <- data.frame(Model = c("ARIMA"),
-                              Forecast_Values = c(forecast_arima_total))
+#AIC
+report(data_fit_tot_a)
+total_accuracy_table
+report(data_fit_tot_e)
 
-forecast_table_total_a <- forecast_table_total_a %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_total_a)[1] <- "Total_arima"
-
-forecast_table_total_a
 ```
+
+
+### **Residuals**
+The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+```{r}
+gg_tsresiduals(data_fit_tot_a) + labs(title = "ARIMA Total residuals analysis")
+
+gg_tsresiduals(data_fit_tot_e) + labs(title = "ETS Total residuals analysis")
+
+gg_tsresiduals(data_fit_tot_n) + labs(title = "SNAIVE Total residuals analysis")
+```
+
+
+
+## Result
+All of these metrics are important for evaluating forecast accuracy. Still, we decided to give more weight to AIC, as this indicator considers both the complexity and the model's fit. As a result, the ARIMA model is selected to forecast the electricity demand in Germany, Italy, Austria, France, and for all countries together.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

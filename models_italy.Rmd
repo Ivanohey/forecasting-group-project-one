@@ -1,12 +1,13 @@
 
-# Italy 
-
-## S-Naive Model
+## Italy{.tabset}
 
 ```{r}
 #Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
 Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
 ```
+
+### **Testing Models**
+Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
 ```{r}
 
 #Split the data
@@ -49,6 +50,8 @@ data_elec %>% autoplot(Italy) +
   labs(title = "Electricity Demand in Italy")
 
 ```
+
+### **Measuring Model Accuracy**
 According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=2708.77, AICc=2709.1, and BIC=2725.06 than the ETS model.
 ```{r}
 #Accuracy
@@ -73,11 +76,12 @@ italy_accuracy_table <- rbind(
 
 #AIC
 report(data_fit_it_a)
-italy_accuracy_table
 report(data_fit_it_e)
+italy_accuracy_table
 
 ```
-### Residuals
+
+### **Residuals**
 The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
 ```{r}
 gg_tsresiduals(data_fit_it_a) + labs(title = "ARIMA Italy residuals analysis")
@@ -87,184 +91,11 @@ gg_tsresiduals(data_fit_it_e) + labs(title = "ETS Italy residuals analysis")
 gg_tsresiduals(data_fit_it_n) + labs(title = "SNAIVE Italy residuals analysis")
 ```
 
-```{r}
-# Modelling SNaive automatically
-snaive_italy <- data_elec %>%
-  select(Italy) %>%
-  model(snaive = SNAIVE(Italy, h = 13))
 
-# Getting the accuracy scores for models
-report(snaive_italy)
 
-# Forecasting using the model
-forecast_snaive_italy <- snaive_italy %>% forecast(h = 13)
 
-# Graphing the forecast
-snaive_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
-  labs(title = "Seasonal Naive Forecast for Italy")
 
-# Extracting the forecasted values
-forecast_table_italy <- data.frame(Model = c("SNaive"),
-                                    Forecast_Values = c(forecast_snaive_italy))
 
-forecast_table_italy <- forecast_table_italy %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_italy)[1] <- "Italy_snaive"
-
-forecast_table_italy
-```
-
-
-## ETS Model 
-
-### What is it
-
-The most basic variant of exponential smoothing is called Simple Exponential Smoothing (SES). The method is appropriate when the time series does not show any trend nor seasonality. It will provide a flat forecast, similar to the average and naïve methods presented earlier.
-
-It does not make sense to use SES here, as from the decomposition we clearly showed that the data is strongly seasonal and has a trend.
-
-```{r}
-
-#Modelling ets automatically
-ets_italy <- data_elec %>%
-  select(Italy) %>%
-  model(ETS(Italy))
-
-#Modelling ets with trend because I know there is one! 
-ets_italy_AAA <- data_elec %>%
-  select(Italy) %>%
-  model(ETS(Italy ~ error("A") + trend("A") + season("A")))
-
-#Getting the Accuracy scores for models
-report(ets_italy)
-report(ets_italy_AAA)
-
-#Forecasting using the models
-forecast_ets_italy_ANA <- ets_italy %>% forecast(h = 13)
-forecast_ets_italy_AAA <- ets_italy_AAA %>% forecast(h = 13)
-
-#Graphing the forecast
-ets_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018)+
-  labs(title = "ETS ANA Forecast for Italy")
-ets_italy_AAA %>% forecast(h = 13) %>% autoplot(Italy_since_2018)+
-  labs(title = "ETS AAA Forecast for Italy")
-
-#Extracting the forecasted values
-forecast_table_italy <- data.frame(Model = c("ETS (ANA)"),
-                              Forecast_Values = c(forecast_ets_italy_ANA))
-
-forecast_table_italy <- forecast_table_italy %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_italy)[1] <- "Italy_ets_AAA"
-
-
-#components(ets_italy) %>% autoplot()
-```
-
-Performing ETS automatically (ANA) vs doing one manually (AAA), we notice that obviously the automatic one has a smaller AIC,AICc and BIC (because using the ETS function without arguments picks the best model with the lowest error directly). Furthermore, plotting the forecast for a manual AAA ETS model, we see that the two are almost completely identical. This is why w   e decided to stick with the one selected automatically, being the ANA model. 
-
-
-
-## ARIMA
-
-ARIMA and ETS are different, but they also share quite a lot of aspects. While ETS is focusing on trend and seasonal components, ARIMA focuses strongly on the autocorrelation structure of time series.
-
-Here's the automatic ARIMA model, which will obvsiously do some differencing, leading to a SARIMA model, since our data is seasonal. 
-
-SARIMA models incorporate both non-seasonal and seasonal components, including autoregressive (AR), differencing (I), and moving average (MA) terms for both the non-seasonal and seasonal components of the data. Since our data is highly seasonal, we expect S-ARIMA to do a better job than ARIMA. 
-
-
-```{r}
-#Modelling ARIMA automatically
-arima_italy <- data_elec %>%
-  select(Italy) %>%
-  model(ARIMA(Italy, stepwise = FALSE)) #By default, stepwise is set to TRUE, which means the function performs a stepwise search to identify the best model by iteratively considering different model orders and selecting the model with the lowest AIC value.
-#However, this approach also has some potential drawbacks. The stepwise algorithm might not search through all possible models, and therefore might not find the best-fitting model. Additionally, using stepwise selection might lead to overfitting, especially if the algorithm is used iteratively to search for the "best" model among many different time series.
-
-#Getting the Accuracy scores for models
-report(arima_italy) #ARIMA(0,1,3)(2,0,0)
-
-#Forecasting using the models
-forecast_arima_italy <- arima_italy %>% forecast(h = 13)
-
-#Graphing the forecast
-arima_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018)+
-  labs(title = "SARIMA Forecast for Italy")
-
-#Extracting the forecasted values
-forecast_table_italy_arima <- data.frame(Model = c("SARIMA"),
-                              Forecast_Values = c(forecast_arima_italy))
-
-forecast_table_italy_arima <- forecast_table_italy_arima %>% select(Forecast_Values..mean)
-
-colnames(forecast_table_italy_arima)[1] <- "Italy_Arima"
-
-```
-
-Normally, when creating the model, the option approximation = FALSE should be used to get the exact likelihood function, however after running 2 versions with and without approximation we found that they both resulted in the same arima model. This is why we kept the default option of approximation = TRUE, as it's much faster. 
-
-The model selected by the function is ARIMA(0,1,3)(2,0,0)[12], which means it has a non-seasonal differencing of order 1 (d = 1), a moving average (MA) component of order 3 (q = 3), and a seasonal AR component of order 2 (P = 2), a seasonal differencing of order 0 (D = 0), and no seasonal MA component (Q = 0).
-
-The coefficients of the model are shown in the table. The values in the first row indicate the parameter estimates for the MA terms (ma1, ma2, ma3), and those in the second row show the parameter estimates for the seasonal AR terms (sar1, sar2). The standard errors of the parameter estimates are shown in the second row of numbers (se.ma1, se.ma2, se.ma3, se.sar1, se.sar2).
-
-The estimated variance of the error term (sigma^2) is 98336, and the log-likelihood is -1964.61. 
-
-The presence or absence of AR components in an ARIMA model depends on the autocorrelation structure of the time series being modeled. If there is no evidence of autocorrelation in the series, an AR component is not needed in the model. In this case, the data may be well-modeled by a simpler model such as an MA (moving average) model or a seasonal model like the SARIMA.
-
-In terms of the ARIMA model we have, it's not a surprise to see that a differencing of order 1 has been selected. This is because our initial data has both a trend and seasonal component as we have seen in our decomposition. By taking the 1st-order difference of the data, the trend and seasonal components are eliminated making the series stationary, and  allowing the ARIMA model to function.
-
-Let's verify this by looking at the differenced time-series: 
-
-```{r}
-
-#Plotting the differenced time series should show stationarity:
-italy <- data_elec %>% select(Italy) %>% mutate(italy_diff = difference(Italy))
-italy %>% autoplot(italy_diff) + 
-    labs(title = "1st-order Differenced Exports to Italy")
-
-
-
-```
-From the graph above, it is obvious that taking the 1st-order difference, we get rid of the trend and seasonality in the data. This creates a stationary times series which can be used in the ARIMA model. 
-
-Let's also look at the ACF plots to confirm it in a different way: 
-
-```{r}
-italyACF <- italy %>% ACF(Italy) %>% autoplot() + labs(title = "ACF Italy")
-
-italydiffACF <- italy %>% mutate(italy_diff = difference(Italy)) %>% ACF(italy_diff) %>% autoplot() + labs(title = "ACF Italy Differenced")
-
-italyACF + italydiffACF
-```
-
-Actually from these two graphs, we see that taking the first difference removes autocorrelation in the first 3-4 lagged periods, but actually seems to increase the autocorrelation of data on a 12-month lagged period. 
-
-Below, you can see the double differenced Italy data. 
-
-I DONT THINK I WANT TO KEEP THIS GRAPH:
-```{r}
-
-#Double differencing 
-italy %>% gg_tsdisplay(difference(Italy, 12) %>% difference(),
-                         plot_type = 'partial', lag = 36) +
-  labs(y = "Double differenced")
-
-```
-
-Finally, let's take a look at the residuals of the SARIMA model: 
-
-```{r}
-
-arima_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Italy residuals analysis")
-
-
-```
-
-From the graph above, we can actually see a lot of things. 
-- Heteroskedasticity: At the top, we can see the residuals over time. It seems like there is no significant heteroskedasticity, as the variance of the residuals is more or less constant over time. There seems to be a bit less variance in the early years (2000-2005), but after that the variance seems to be quite constant. This is an indication that our model is doing a good job. 
-- Distribution: The distribution of the residuals (bottom-right graph) seems to be similar to a bell-curve, and very symmetric, which is also a sign that our model has done a good job. 
-- ACF: There is no significant autocorrelation in the early periods, which is again good. 
-- Trend in the residuals: there is no trend in the residuals, which is also a good sign.
 
 
 
