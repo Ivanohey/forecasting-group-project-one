@@ -1,0 +1,186 @@
+# Forecast
+
+## Germany{.tabset}
+
+```{r}
+# Modelling ARIMA automatically
+arima_germany <- data_elec %>%
+  select(Germany) %>%
+  model(arima = ARIMA(Germany))
+
+# Forecasting using the models
+forecast_arima_germany <- arima_germany %>% forecast(h = 13)
+```
+
+### **Checking Residuals**
+```{r}
+arima_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Germany residuals analysis")
+```
+
+### **Graphing the forecast**
+```{r}
+arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
+  labs(title = "ARIMA Forecast for Germany")
+
+#Extracting the forecasted values
+forecast_table_germany_a <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_germany))
+
+forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_germany_a)[1] <- "Germany_arima"
+```
+
+### **Forecast Table**
+```{r}
+forecast_table_germany_a
+
+```
+
+## Italy{.tabset}
+
+```{r}
+# Modelling ARIMA automatically
+arima_italy <- data_elec %>%
+  select(Italy) %>%
+  model(arima = ARIMA(Italy))
+
+# Forecasting using the models
+forecast_arima_italy <- arima_italy %>% forecast(h = 13)
+```
+
+### **Checking Residuals**
+```{r}
+arima_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Italy residuals analysis")
+```
+
+### **Graphing the forecast**
+```{r}
+arima_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
+  labs(title = "ARIMA Forecast for Italy")
+
+#Extracting the forecasted values
+forecast_table_italy_a <- data.frame(Model = c("ARIMA"),
+                          Forecast_Values = c(forecast_arima_italy))
+
+forecast_table_italy_a <- forecast_table_italy_a %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_italy_a)[1] <- "Italy_arima"
+```
+
+### **Forecast Table**
+```{r}
+forecast_table_italy_a
+```
+
+## Austria{.tabset}
+```{r}
+# Modelling ARIMA automatically
+arima_austria <- data_elec %>%
+  select(Austria) %>%
+  model(arima = ARIMA(Austria))
+
+# Forecasting using the models
+forecast_arima_austria <- arima_austria %>% forecast(h = 13)
+```
+
+### **Checking Residuals**
+```{r}
+arima_austria %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Austria residuals analysis")
+```
+
+### **Graphing the forecast**
+```{r}
+arima_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2015) +
+  labs(title = "ARIMA Forecast for Austria")
+
+#Extracting the forecasted values
+forecast_table_austria_a <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_austria))
+
+forecast_table_austria_a <- forecast_table_austria_a %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_austria_a)[1] <- "Austria_arima"
+```
+
+### **Forecast Table**
+```{r}
+forecast_table_austria_a
+
+```
+
+## France{.tabset}
+```{r}
+# Modelling ARIMA automatically
+arima_france <- data_elec %>%
+  select(France) %>%
+  model(arima = ARIMA(France))
+
+# Forecasting using the models
+forecast_arima_france <- arima_france %>% forecast(h = 13)
+```
+
+### **Checking Residuals**
+```{r}
+arima_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA France residuals analysis")
+```
+
+### **Graphing the forecast**
+```{r}
+# Graphing the forecast
+arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
+  labs(title = "ARIMA Forecast for France")
+
+#Extracting the forecasted values
+forecast_table_france_a <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_france))
+
+forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_france_a)[1] <- "France_arima"
+
+```
+
+### **Forecast Table**
+```{r}
+forecast_table_france_a
+
+```
+
+
+## Total{.tabset}
+```{r}
+# Modelling ARIMA automatically
+arima_total <- data_elec %>%
+  select(Total) %>%
+  model(arima = ARIMA(Total))
+
+# Forecasting using the models
+forecast_arima_total <- arima_total %>% forecast(h = 13)
+```
+
+### **Checking Residuals**
+```{r}
+arima_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA residuals analysis for all countries")
+
+```
+
+### **Graphing the forecast**
+```{r}
+# Graphing the forecast
+arima_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
+  labs(title = "ARIMA Forecast for all countries")
+
+#Extracting the forecasted values
+forecast_table_total_a <- data.frame(Model = c("ARIMA"),
+                              Forecast_Values = c(forecast_arima_total))
+
+forecast_table_total_a <- forecast_table_total_a %>% select(Forecast_Values..mean)
+
+colnames(forecast_table_total_a)[1] <- "Total_arima"
+```
+
+### **Forecast Table**
+```{r}
+forecast_table_total_a
+```
