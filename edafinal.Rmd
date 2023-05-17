@@ -5,7 +5,8 @@ In general:
 
 - Select what will go in the final report 
 - Complete the Report 
-- Create table with final forecasts + Confidence intervals 
+- Create table with final forecasts (DONE) + Confidence intervals (NEED TO DO)
+- Add lichtenstein forecast table + inside the final_fc
 
 Country specific:
 

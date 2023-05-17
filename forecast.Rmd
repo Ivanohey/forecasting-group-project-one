@@ -9,7 +9,7 @@ arima_germany <- data_elec %>%
   model(arima = ARIMA(Germany))
 
 # Forecasting using the models
-forecast_arima_germany <- arima_germany %>% forecast(h = 13)
+forecast_arima_germany <- arima_germany %>% forecast(h = 13, level = 90)
 ```
 
 ### **Checking Residuals**
@@ -26,9 +26,11 @@ arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
 forecast_table_germany_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_germany))
 
-forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_germany_a)[1] <- "Germany_arima"
+forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values.Date,Forecast_Values..mean)
+
+colnames(forecast_table_germany_a)[1] <- "Month"
+colnames(forecast_table_germany_a)[2] <- "Germany ARIMA"
 ```
 
 ### **Forecast Table**
@@ -63,9 +65,10 @@ arima_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
 forecast_table_italy_a <- data.frame(Model = c("ARIMA"),
                           Forecast_Values = c(forecast_arima_italy))
 
-forecast_table_italy_a <- forecast_table_italy_a %>% select(Forecast_Values..mean)
+forecast_table_italy_a <- forecast_table_italy_a %>% select(Forecast_Values.Date,Forecast_Values..mean)
 
-colnames(forecast_table_italy_a)[1] <- "Italy_arima"
+colnames(forecast_table_italy_a)[1] <- "Month"
+colnames(forecast_table_italy_a)[2] <- "Italy ARIMA"
 ```
 
 ### **Forecast Table**
@@ -98,9 +101,10 @@ arima_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2015) +
 forecast_table_austria_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_austria))
 
-forecast_table_austria_a <- forecast_table_austria_a %>% select(Forecast_Values..mean)
+forecast_table_austria_a <- forecast_table_austria_a %>% select(Forecast_Values.Date,Forecast_Values..mean)
 
-colnames(forecast_table_austria_a)[1] <- "Austria_arima"
+colnames(forecast_table_austria_a)[1] <- "Month"
+colnames(forecast_table_austria_a)[2] <- "Austria ARIMA"
 ```
 
 ### **Forecast Table**
@@ -135,9 +139,10 @@ arima_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
 forecast_table_france_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_france))
 
-forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values..mean)
+forecast_table_france_a <- forecast_table_france_a %>% select(Forecast_Values.Date,Forecast_Values..mean)
 
-colnames(forecast_table_france_a)[1] <- "France_arima"
+colnames(forecast_table_france_a)[1] <- "Month"
+colnames(forecast_table_france_a)[2] <- "France ARIMA"
 
 ```
 
@@ -175,12 +180,29 @@ arima_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
 forecast_table_total_a <- data.frame(Model = c("ARIMA"),
                               Forecast_Values = c(forecast_arima_total))
 
-forecast_table_total_a <- forecast_table_total_a %>% select(Forecast_Values..mean)
+forecast_table_total_a <- forecast_table_total_a %>% select(Forecast_Values.Date,Forecast_Values..mean)
 
-colnames(forecast_table_total_a)[1] <- "Total_arima"
+colnames(forecast_table_total_a)[1] <- "Month"
+colnames(forecast_table_total_a)[2] <- "Total ARIMA"
+
 ```
 
 ### **Forecast Table**
 ```{r}
 forecast_table_total_a
 ```
+
+
+## Combining all forecasts into one table: 
+
+```{r}
+
+final_fc <- left_join(forecast_table_total_a,forecast_table_germany_a, by = "Month")
+final_fc <- final_fc %>% left_join(forecast_table_france_a, by = "Month")
+final_fc <- final_fc %>% left_join(forecast_table_italy_a, by = "Month")
+final_fc <- final_fc %>% left_join(forecast_table_austria_a, by = "Month")
+#final_fc <- final_fc %>% left_join(forecast_table_Lichtenstein_a, by = "Month")
+
+
+```
+
