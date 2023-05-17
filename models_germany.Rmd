@@ -6,11 +6,11 @@ So, we split our data into training and test set. The first one we will use to e
 We fit the training data to models selected (ARIMA, ETS, SNAIVE) to forecast 60 following periods (in our case, months). 
 We refit our models with test data and calculate the accuracy of the forecast. 
 We select the model with the lowest accuracy metrics for further forecast. Low metric values indicate the better predictive performance of the model, with a value of 0 indicating a perfect fit between the predicted and actual values. 
-Residuals analysis is also will be plotted to see how well the model captures the dynamics in data. Good models' residuals should be stationary (white noise) and have no patterns. 
+Residuals analysis is also going to be plotted to see how well the model captures the dynamics of the data. Good models' residuals should be stationary (white noise) and have no patterns. 
 
-We can see strong seasonality and trend in data from decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. 
+We can see strong seasonality and trend in data from our decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. 
 
-Lichtenstei Analysis will be described separately.
+Lichtenstein Analysis will be described separately.
 
 ## Germany{.tabset}
 

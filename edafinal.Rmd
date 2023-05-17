@@ -1,0 +1,89 @@
+
+# THINGS THAT NEED TO BE DONE 
+
+In general: 
+
+- Select what will go in the final report 
+- Complete the Report 
+- Create table with final forecasts + Confidence intervals 
+
+Country specific:
+
+- Explore huge peak in Austria 2002 -> is it an outlier 
+- Explain big drop in Lichtenstein + thought process behind piece-wise model 
+
+# 1. Introduction 
+
+This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files. 
+
+The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of TSLM (piece-wise) for a specific country. 
+
+
+# 2. Data Processing 
+
+The data we were given was already cleaned, without any missing values. The only noteworthy cleaning we did, was to format the names of all columns and all rows, and to then convert the final table to a tsibble in order to be able to use functions from the tsibble and fpp3 package. All details on how this was done can be found in the code files. 
+
+
+# 3. Exploratory Data Analysis
+
+## 3.1 Historical data plots 
+
+In this section you can find an example of the exploratory analysis we did to identify outliers and behaviors in our data. We created historical plots of all the data for each country, but this is not presented here and can instead be found in our code files (eda.rmd). The anomalies and outliers in the behaviors of exports for each country, helped guide the rest of our analysis. 
+
+For example, we noticed irregularities in the amplitudes of seasonality over time. For countries like Germany and France, the amplitude of the seasonality seems to increase towards the most recent years. Based on this, we decided to do a seasonal/trend decomposition for each country to further analyze this.
+
+Furthermore, for Lichtenstein, we noticed a huge drop in exports after 2008-2009, which indicated that we should try different models like the piece-wise model to seperate the differences in trend over time. 
+
+## 3.2 Seasonal Sub-series plots 
+
+We also created seasonal sub-series plots to explore specific months in more detail, for each country. Below you can see the one for the total exports: 
+
+```{r}
+data_elec %>% gg_subseries(Total) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to All countries")
+```
+
+Here are some observations based on these plots for each country (which you can find in eda.rmd):  
+
+- Germany: It looks like Germany consistently receives more electricity during the summer months (May, June, July, August). Seasonality seems to vary over time, increasing towards the most recent years.
+- France: It looks like there are two peaks in energy exported to France during the year, one in July, and one in December.  
+- Italy: Similar energy peak in July.
+- Austria: Same trend, with a single peak in the summer months, and then relatively constant energy for the other months.
+- Lichtenstein: This country shows the opposite trend, with a very smooth peak in the coldest winter months (Jan,Feb), and the lowest energy exports during the summer months.  
+- Total: Clearly seeing the peak in energy exports to countries in the summer, and specifically in July. The other months are at similar levels for the total electricity exports.
+
+In summary, the main observation we got from these historical plots, was that all countries (except Lichtenstein) experience peaks in the electricity they receive from Switzerland in the summer months. 
+
+Before this monthly analysis, we expected that energy exports to these countries, would be higher in the winter months, as that's when people tend to consumer more energy to heat up their homes (we assumed this to be one of the biggest drivers in energy consumption). However, in reality it seems like electricity exports are peaking in the summer and not in the winter months. Our explanation for this is that the ways to heat up a home in the winter are mainly based on oil/gas rather than electricity which is why there is no peak for electricity exports in the winter. On the contrary, during the summer months, people tend to cool down their homes using Air-conditioning which primarily uses electricity, hence the peak in the summer months. This does not explain why Lichtenstein does not follow the same pattern, despite being geographically right next to all of these countries (hence having similar climate). 
+
+## 3.3 ACF - Autocorrelation analysis
+
+Before moving on with the models and in order to be able to use them, we wanted to check for autocorrelation in the time series. Here is data on Germany which is lagged by 12 periods:
+
+```{r}
+#Graph of 12 lagged months for Germany
+data_elec %>% 
+  gg_lag(Germany, lags = 1:12, geom="point") + 
+  ggtitle("Germany 12-period lag graph")
+```
+
+From this graph, we can visualize autocorrelation. It's clear that the autocorrelation is the highest for the 1-month lag, and the 12-month lag. We can see this because the points in the scatterplots (Current month vs Lagged period x) approach the 45-degree line, indicating the similarity in magnitude of two the observations. 
+
+Based on the strong and clear presence of autocorrelation, we expect that a model like ARIMA/SARIMA will do a good job to capture this auto-correlation component, and will most likely have the best performance compared to other models. On the contrary, auto-correlation tends to impact the performance of SNAIVE models, as they rely on the assumption that the future values are solely determined by past values without considering any auto-correlation patterns. This suggests that our SNAIVE model will not be fitting the data as well.
+
+## 3.4 Decomposition
+
+In the final part of our EDA, we decided to perform an STL decomposition, as it can provide valuable insights and help explore and understand any strange patterns in our data. Overall, we observed strong seasonality and trend patterns in each country and all countries together which suggested our models should have a way to capture their presence.
+
+Here's the STL decomposition for Germany: 
+
+```{r}
+data_elec %>%
+  model(STL(Germany ~ trend(window = 7) + season(window = "periodic"),
+    robust = TRUE)) %>%
+  components() %>%
+  autoplot()
+```
+
+

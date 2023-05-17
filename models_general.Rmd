@@ -1,10 +1,14 @@
-# Models
+# 4. Models
 
 ## A few words on the models we are going to use
 
 In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
 
-Here are the models we are going to use: 
+Here are the models we are going to use:
+
+- S-Naive: 
+- ETS: 
+- S-ARIMA:
 
 
 ### Naive model 

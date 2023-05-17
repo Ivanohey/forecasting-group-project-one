@@ -1,8 +1,7 @@
-# Exploratory Data Analysis
 
-### Questions
+# 3. Exploratory Data Analysis
 
-- Explain why the peak electricity exports happen in the summer months instead of the winter months.
+In this section you can find 
 
 ```{r EDA, echo=FALSE}
 
@@ -39,7 +38,7 @@ Some observations:
 - Germany: Energy exports seem to be varying in variance over time, being a lot more volatile since 2012. This suggests multiplicative errors? 
 - France: Similarly to Germany, exports become more volatile over time. Big peak in 2011? 
 - Italy: Less variability in the variance over time compared to the precious two. 
-- Austria: Big peak in 2002ish, could be an outliar. Exports oscillating close to 0 until 2014, since then much more volatile and higher in volume.
+- Austria: Big peak in 2002ish, could be an outlier. Exports oscillating close to 0 until 2014, since then much more volatile and higher in volume.
 - Lichtenstein: Big drop in level of exports during 2008-2009. Why did that happen? Should probably only use more recent data for predictions, because older data is very different. 
 - Total: Data oscillating around the same level, no signs of seasonality which indicates white noise data. This is good for making the models. 
 
@@ -86,7 +85,6 @@ Some observations:
 - Austria: Same trend, with a single peak in the summer months, and then relatively constant energy for the other months.
 - Lichtenstein: This country shows the opposite trend, with a very smooth peak in the coldest winter months (Jan,Feb), and the lowest energy exports during the summer months.  
 - Total: Clearly seeing the peak in energy exports to countries in the summer, and specifically in July. The other months are at similar level for the total electricity exports.
-
 
 Conclusion on monthly subplots: 
 
