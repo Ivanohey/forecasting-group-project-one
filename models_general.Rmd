@@ -1,28 +1,15 @@
-## Models
+# Models
 
-### Questions
-
-- Naive model forecast is not showing me historical data, only the forecast
-- Should we even bother doing a SES model (Simple exponential smoothing)? It's basically the same as the naive and don't think adds any value
-- I don't get it: we don't want our data to have a trend/seasonality, but then when we select the parameters for ETS, we set them to Additive, Multiplicative etc. In the end do we want there to be a trend/seasonality or not? 
-
-
-IMPORTANT 
-- What I am basically doing, is first trying to find the best forecasting method, and THEN I will apply it to the total + all countries individually.
-
-### Todo next: 
-- More models (Better ETS, models introduced later in the course)
-- Decomposition (haven't done anything on this yet)
-
-
-
-### Building models - Only looking at Total exports for now
+## A few words on the models we are going to use
 
 In the world of forecasting, we can't get a perfect forecast no matter how hard we try. Also, making a model more complicated won't necessarily make it more accurate. Finally, when trying to forecast it's important to take into consideration how much time is spent on a forecast, versus how much valuable information we get out of it. It is therefore important to consider simpler, more "naive" models to try and make predictions about the future, before moving on to more complicated ones. 
 
+Here are the models we are going to use: 
+
+
 ### Naive model 
 
-The naive model we are going to use is simply a forecast that is equal to the latest observation. 
+The naive model we are going to use is simply a forecast that is equal to the latest observation. We are using this as a simple, base model. 
 
 ```{r}
 #Creating and Plotting the naive model
@@ -36,7 +23,7 @@ augment(naive_fit) %>% ggplot(aes(x = Date)) +
 
 ```
 
-This plot is basically shows the original data, and then a copy of it which is moved one period in the future. 
+This plot is basically showing the original data, and then a copy of it which is moved one period in the future. 
 
 Now let's look at the residuals of the naive forecasting model, and search for autocorrelation. It is important to do so, because if there is autocorrelation in a the residuals of a forecasting model, this means that the model is not capturing some of the important features of the data, and might be leading to an inaccurate forecast. We will use the Portmanteau (Ljung-box) test:
 
@@ -92,14 +79,7 @@ ETS is based on the idea that more recent observations should be given more impo
 In our case, the most recent data (2020-2022) were probably heavily impacted by Covid-19 and the war between Russia and Ukraine. This means that an ETS model, will put more weight on more recent data, hence will give us a biased forecast based on those two big events. We have to be careful when selecting the weights of the ETS model, so that not too much weight is put on the most recent data. 
 
 
-### Simple Exponential Smoothing 
 
-This version of Exponential smoothing, assumes that the data has no Trend and no Seasonality:
-
-```{r}
-
-
-```
 
 ### Exponential smoothing with different alpha parameters
 
