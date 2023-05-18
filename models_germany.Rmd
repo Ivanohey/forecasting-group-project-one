@@ -2,13 +2,15 @@
 
 ## Methodology
 To evaluate the forecast accuracy, we will test how a model performs on new data not used during the fitting phase.
-So, we split our data into training and test set. The first one we will use to estimate any parameters of the forecasting method, and the second - is to define the model's accuracy. 
+We split our data into training and test set. The first one we will use to estimate any parameters of the forecasting method, and the second - is to define the model's accuracy. 
 We fit the training data to models selected (ARIMA, ETS, SNAIVE) to forecast 60 following periods (in our case, months). 
 We refit our models with test data and calculate the accuracy of the forecast. 
 We select the model with the lowest accuracy metrics for further forecast. Low metric values indicate the better predictive performance of the model, with a value of 0 indicating a perfect fit between the predicted and actual values. 
 Residuals analysis is also going to be plotted to see how well the model captures the dynamics of the data. Good models' residuals should be stationary (white noise) and have no patterns. 
 
 We can see strong seasonality and trend in data from our decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. 
+
+As the most accurate forecast is of interest, we will give more weight to the model with low values of RMSE and MAE, even though another model has a higher AIC (see Appendix 2.).
 
 Lichtenstein Analysis will be described separately.
 
@@ -66,7 +68,7 @@ data_elec %>% autoplot(Germany)  +
 
 ### **Measuring Model Accuracy**
 According to the accuracy table RMSE, MAE and other indicators, ARIMA has the lowest values on the test data. 
-The ARIMA model has an AIC of 2422.94, AICc of 2423.39, and BIC of 2442.49. On the other hand, the ETS model has an AIC of 2975.557, AICc of 2978.110, and BIC of 3025.329. These information criteria are used to assess the goodness of fit of a model, with lower values indicating a better fit. Therefore, based on these criteria, we can conclude that the ARIMA model fits the data better than the ETS model.
+The ARIMA model has an AIC of 2422.94, AICc of 2423.39, and BIC of 2442.49. On the other hand, the ETS model has an AIC of 2975.557, AICc of 2978.110, and BIC of 3025.329.  Therefore, based on these criteria, we can conclude that the ARIMA model fits the data better than the ETS model.
 
 ```{r}
 #Accuracy
