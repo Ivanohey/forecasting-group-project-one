@@ -88,7 +88,8 @@ gg_tsresiduals(data_fit_tot_n) + labs(title = "SNAIVE Total residuals analysis")
 
 
 ## Result
-All of these metrics are important for evaluating forecast accuracy. Still, we decided to give more weight to AIC, as this indicator considers both the complexity and the model's fit. As a result, the ARIMA model is selected to forecast the electricity demand in Germany, Italy, Austria, France, and for all countries together.
+All of these metrics are important for evaluating forecast accuracy. Still, our goal is to obtain the most accurate forecast. Therefore, we give more weight to RMSE and MAE metrics than AIC.
+As a result, the ARIMA model is selected to forecast the electricity demand in Germany and ETS model - in Italy, Austria, France, and all countries together.
 
 
 

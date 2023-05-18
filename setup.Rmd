@@ -20,7 +20,7 @@ library(DataExplorer)
 library(patchwork)
 
 
-
+library(fable)
 
 #Tables
 library(knitr)
