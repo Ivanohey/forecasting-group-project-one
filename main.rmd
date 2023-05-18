@@ -13,7 +13,7 @@ warnings: false
 ---
 
 
-```{r child=c('setup.Rmd', 'data_cleaning.Rmd', 'edafinal.rmd', 'decomposition.rmd','models_germany.rmd', 'models_italy.rmd','models_austria.rmd','models_france.rmd', 'models_total.rmd', 'forecast.rmd')}
+```{r child=c('setup.Rmd', 'data_cleaning.Rmd', 'edafinal.rmd', 'decomposition.rmd','models_germany.rmd', 'models_italy.rmd','models_austria.rmd','models_france.rmd', 'models_lichtenstein.rmd','models_total.rmd', 'forecast.rmd')}
 
 opts_chunk$set(echo=TRUE,
                cache=TRUE,
