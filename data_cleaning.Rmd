@@ -1,14 +1,14 @@
 
 # Data cleaning
 
-```{r import_data, include=FALSE}
+```{r import_data, echo = FALSE, include=FALSE}
 raw_data = read.csv("data/electricity_exports.csv", header = TRUE, fill=TRUE, encoding = "UTF-8")
 raw_data = data.frame(raw_data)
 
 ```
 
 We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns. Here is a sample of our data:
-```{r data_cleaning, echo=FALSE}
+```{r data_cleaning, echo=FALSE, include=FALSE}
 colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichtenstein', 'total')
 
 #Removing first rows
@@ -27,7 +27,7 @@ head(clean_data)
 
 We directly import the data from the excel file, selecting only the range that contains the data, and then setting the column names accordingly. 
 
-```{r}
+```{r, echo = FALSE,include=FALSE}
 #importing data directly from excel
 data_elec <- read_excel("data/Electricity export Switzerland.xlsx", 
     range = "A6:G280", col_names = FALSE)
@@ -40,7 +40,7 @@ colnames(data_elec) = c('Date','Germany','France','Italy','Austria','Lichtenstei
 
 Looking at the data we see that October is written with a "k", so we change that in the Date column. Then we check for missing values, before proceeding. 
 
-```{r}
+```{r, echo = FALSE,include=FALSE}
 # replace "Oktober" with "October" in the Date column
 data_elec$Date <- str_replace_all(data_elec$Date, "Oktober", "October")
 
@@ -51,7 +51,7 @@ plot_intro(data_elec)
 
 ### Converting to tsibble so that we can use the fpp3 and tsibble package functions
 
-```{r}
+```{r, echo = FALSE,include=FALSE}
 #Convert to tsibble 
 data_elec <- data_elec %>%
   mutate(Date = yearmonth(Date)) %>% #need to do this before converting to get proper format

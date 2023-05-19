@@ -1,7 +1,7 @@
 
 ## France{.tabset}
 
-```{r}
+```{r, warning=FALSE}
 France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
 ```
 

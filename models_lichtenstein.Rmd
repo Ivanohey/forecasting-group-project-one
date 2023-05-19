@@ -1,10 +1,5 @@
 ## Lichtenstein
 
-- ETS creates a negative value forecast, I will just set the negative forecast values to 0.
-- Maybe should find a better way to use ETS (by not allowing it to drop below 0) or just use other models
-
-We have selected S-naive,S-ARIMA In general, S-ARIMA is more suitable for complex time series with trends, seasonality, and other patterns, while S-naive is simpler and more appropriate for time series with stable and predictable seasonal patterns.
-
 ```{r}
 data_elec %>% autoplot(Lichtenstein) + 
   ggtitle("Exports from Switzerland to Lichtenstein") +
@@ -46,6 +41,7 @@ Lichtenstein_since_2010 %>% features(Lichtenstein_since_2010, unitroot_kpss)
 In order to observe the stationarity assumption of Lichtenstein time serie. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
 
 Unit Root Test has the following hypothesis: 
+
 $$H_0:$$ Data is stationary
 
 $$H_a:$$ Data is non-stationary

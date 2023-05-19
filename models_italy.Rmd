@@ -1,7 +1,7 @@
 
 ## Italy{.tabset}
 
-```{r}
+```{r, warning=FALSE}
 #Selecting Italy only since 2018 to better display the forecast. 2018 will both show the trend BEFORE covid + improve display 
 Italy_since_2018 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2018-01-01"))
 ```
@@ -83,7 +83,7 @@ italy_accuracy_table
 
 ### **Residuals**
 The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
-```{r}
+```{r, warning=FALSE}
 gg_tsresiduals(data_fit_it_a) + labs(title = "ARIMA Italy residuals analysis")
 
 gg_tsresiduals(data_fit_it_e) + labs(title = "ETS Italy residuals analysis")

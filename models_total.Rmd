@@ -1,7 +1,7 @@
 
 ## Total{.tabset}
 
-```{r}
+```{r, warning=FALSE}
 Total_since_2015 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2015-01-01"))
 ```
 ### **Testing Models**

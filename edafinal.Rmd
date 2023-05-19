@@ -3,12 +3,9 @@
 
 In general: 
 
-- Select what will go in the final report 
-- Complete the Report 
-- Create table with final forecasts (DONE) + Confidence intervals (DONE)
-- Edit methodology (DONE)
-- Change ARIMA to ETS where RMSE is > (DONE)
-- Add lichtenstein forecast table + inside the final_fc
+- URGENT: FIX LICHTENSTEIN + add it to final table
+- Remove all warnings 
+- Complete the Report -> Write specific analysis for different countries
 
 Country specific:
 

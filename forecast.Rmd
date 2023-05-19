@@ -1,5 +1,7 @@
 # Forecast
 
+For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and 
+
 ## Germany{.tabset}
 We fit Germany electricity demand data to ARIMA model.
 ```{r}

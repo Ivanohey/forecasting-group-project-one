@@ -5,7 +5,7 @@ author:
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
-    code_folding: hide #We can se this to show to automatically show all the code
+    code_folding: hide #We can set this to show to automatically show all the code
     highlight: espresso #we can change this to kate, tango, pygments, haddock. 
     self_contained: false
     mathjax: false
@@ -13,13 +13,13 @@ warnings: false
 ---
 
 
-```{r child=c('setup.Rmd', 'data_cleaning.Rmd', 'edafinal.rmd', 'decomposition.rmd','models_germany.rmd', 'models_italy.rmd','models_austria.rmd','models_france.rmd', 'models_lichtenstein.rmd','models_total.rmd', 'forecast.rmd')}
+```{r child=c('setup.Rmd', 'data_cleaning.Rmd', 'edafinal.rmd', 'decomposition.rmd','models_germany.rmd', 'models_italy.rmd','models_austria.rmd','models_france.rmd','models_total.rmd', 'forecast.rmd')}
 
 opts_chunk$set(echo=TRUE,
                cache=TRUE,
                prompt=FALSE,
                tidy=TRUE,
                message=FALSE,
-               warning=FALSE)
+               warnings=FALSE)
 
 ```
