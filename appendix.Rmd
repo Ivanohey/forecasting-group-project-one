@@ -10,7 +10,3 @@
 ## *Appendix 2. Accuracy metrics comparison*
 *AIC* criteria are used to assess the goodness of fit of a model, with lower values indicating a better fit.
 *RMSE* and MAE are used to measure the difference between predicted values and actual values. Comparatively lower numbers of these metrics assume a better model's forecast quality potential. 
-
-## *Appendix 3. 80% / 95 CI Comparison*
-The 95% confidence interval provides a higher level of confidence but has a wider range of values.
-The 80% confidence interval has a lower level of confidence but a narrower range of values. 

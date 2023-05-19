@@ -25,7 +25,7 @@ arima_germany <- data_elec %>%
   model(arima = ARIMA(Germany))
 
 # Forecasting using the models
-forecast_arima_germany <- arima_germany %>% forecast(h = 13, level = 90) %>% hilo()
+forecast_arima_germany <- arima_germany %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
@@ -46,7 +46,7 @@ forecast_table_germany_a <- data.frame(Model = c("ARIMA"),
 
 
 
-forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.80.) 
+forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.) 
 forecast_table_germany_a$Country <- "Germany"
 
 colnames(forecast_table_germany_a)[1] <- "Month"
@@ -70,7 +70,7 @@ ets_italy <- data_elec %>%
   model(ETS(Italy))
 
 # Forecasting using the models
-forecast_ets_italy <- ets_italy %>% forecast(h = 13) %>% hilo()
+forecast_ets_italy <- ets_italy %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
@@ -89,7 +89,7 @@ ets_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
 forecast_table_italy_e <- data.frame(Model = c("ETS"),
                           Forecast_Values = c(forecast_ets_italy))
 
-forecast_table_italy_e <- forecast_table_italy_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.80.)
+forecast_table_italy_e <- forecast_table_italy_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
 forecast_table_italy_e$Country <- "Italy"
 
 colnames(forecast_table_italy_e)[1] <- "Month"
@@ -112,7 +112,7 @@ ets_austria <- data_elec %>%
   model(ETS(Austria))
 
 # Forecasting using the models
-forecast_ets_austria <- ets_austria %>% forecast(h = 13) %>% hilo()
+forecast_ets_austria <- ets_austria %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
@@ -131,7 +131,7 @@ ets_austria %>% forecast(h = 13) %>% autoplot(Austria_since_2018) +
 forecast_table_austria_e <- data.frame(Model = c("ETS"),
                           Forecast_Values = c(forecast_ets_austria))
 
-forecast_table_austria_e <- forecast_table_austria_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.80.)
+forecast_table_austria_e <- forecast_table_austria_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
 forecast_table_austria_e$Country <- "Austria"
 
 colnames(forecast_table_austria_e)[1] <- "Month"
@@ -155,7 +155,7 @@ ets_france <- data_elec %>%
   model(ETS(France))
 
 # Forecasting using the models
-forecast_ets_france <- ets_france %>% forecast(h = 13) %>% hilo()
+forecast_ets_france <- ets_france %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
@@ -177,7 +177,7 @@ ets_france %>% forecast(h = 13) %>% autoplot(France_since_2015) +
 forecast_table_france_e <- data.frame(Model = c("ETS"),
                           Forecast_Values = c(forecast_ets_france))
 
-forecast_table_france_e <- forecast_table_france_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.80.)
+forecast_table_france_e <- forecast_table_france_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
 forecast_table_france_e$Country <- "France"
 
 colnames(forecast_table_france_e)[1] <- "Month"
@@ -203,7 +203,7 @@ ets_total <- data_elec %>%
   model(ETS(Total))
 
 # Forecasting using the models
-forecast_ets_total <- ets_total %>% forecast(h = 13) %>% hilo()
+forecast_ets_total <- ets_total %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
@@ -223,7 +223,7 @@ ets_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
 forecast_table_total_e <- data.frame(Model = c("ETS"),
                           Forecast_Values = c(forecast_ets_total))
 
-forecast_table_total_e <- forecast_table_total_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.80.)
+forecast_table_total_e <- forecast_table_total_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
 forecast_table_total_e$Country <- "Total"
 
 colnames(forecast_table_total_e)[1] <- "Month"
@@ -251,4 +251,4 @@ final_fc
 
 # 6. Challenges and Further Analysis
 
-95% CI with its wider range of values, resulted in lower than 0 electricity demand in some countries, so we chose to include 80% CI in the final tables. However, some of Germany's lower and upper values remain negative with different confidence intervals. It may indicate that the forecasting model or method used may not adequately capture the underlying dynamics of electricity demand. Even though the model was chosen based on the accuracy analysis we conducted before. Further investigation and model testing is required.
+Some of Germany's and Austria's lower values remain negative with 90% confidence intervals. It may indicate that the forecasting model or method used may not adequately capture the underlying dynamics of electricity demand. Even though the models were chosen based on the accuracy analysis we conducted before. Further investigation and model testing is required.
