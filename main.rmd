@@ -1,7 +1,7 @@
 ---
 title: "Forecasting Project 1 - Group 7"
 author:
-  - name: K K A I
+  - name: Konst Khryst Amina Ivan
 date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
@@ -14,12 +14,5 @@ warnings: false
 
 
 ```{r child=c('setup.Rmd', 'data_cleaning.Rmd', 'edafinal.rmd','models_germany.rmd','models_italy.rmd','models_austria.rmd','models_france.rmd','models_total.rmd', 'forecast.rmd')}
-
-opts_chunk$set(echo=TRUE,
-               cache=TRUE,
-               prompt=FALSE,
-               tidy=TRUE,
-               message=FALSE,
-               warning=FALSE)
 
 ```

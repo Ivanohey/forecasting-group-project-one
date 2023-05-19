@@ -1,10 +1,24 @@
 # Forecast
 
-For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and 
+For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and the actual values. In summary, we used SARIMA for Germany, and ETS for all other countries.
+
+#### Side note: 
+
+Below, for each country, you can see a residual analysis for the every selected model, a graph of the forecast, and finally the forecast table. 
+
+The outcome of the residual analysis is to confirm that the model has done a good job fitting the data, and more specifically, here's what we obtained from it: 
+
+A good model fit has the following characteristics in terms of its residuals: 
+- The residuals are distributed symmetrically, in a shape that resembles a Normal distribution. 
+- Low ACF (autocorrelation) in the first few lags. 
+- No Heteroskedasticity: the variance of the residuals is constant. 
+- There is no trend in the residuals. 
+
+In essence, what this all means, is that the residuals are white noise. Let's now look at the results for each country, and make some more specific comments: 
 
 ## Germany{.tabset}
-We fit Germany electricity demand data to ARIMA model.
-```{r}
+We fit Germany electricity demand data using the ARIMA model.
+```{r, warning=FALSE}
 # Modelling ARIMA automatically
 arima_germany <- data_elec %>%
   select(Germany) %>%
@@ -48,7 +62,7 @@ forecast_table_germany_a
 ```
 
 ## Italy{.tabset}
-We fit Italy electricity demand data to ETS model.
+We fit Italy electricity demand data using the ETS model.
 ```{r}
 # Modelling ETS automatically
 ets_italy <- data_elec %>%
@@ -90,7 +104,7 @@ forecast_table_italy_e
 ```
 
 ## Austria{.tabset}
-We fit Austria electricity demand data to ETS model.
+We fit Austria electricity demand data using the ETS model.
 ```{r}
 # Modelling ETS automatically
 ets_austria <- data_elec %>%
@@ -133,7 +147,7 @@ forecast_table_austria_e
 ```
 
 ## France{.tabset}
-We fit France electricity demand data to ETS model.
+We fit France electricity demand data using the ETS model.
 ```{r}
 # Modelling ETS automatically
 ets_france <- data_elec %>%
@@ -145,7 +159,7 @@ forecast_ets_france <- ets_france %>% forecast(h = 13) %>% hilo()
 ```
 
 ### **Checking Residuals**
-The output below suggests that the ETS model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+The output below suggests that the ETS model did well in capturing all the dynamics in data, as the residuals seem to be white noise. More specifically, we see that there is more variation in the distribution of the residuals of France's model compared to other countries. Nevertheless, the distribution of the errors is symmetric, which is good. 
 ```{r}
 ets_france %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS France residuals analysis")
 ```
@@ -178,7 +192,7 @@ forecast_table_france_e
 
 
 ## Total{.tabset}
-We fit Total electricity demand data to ETS model.
+We fit Total electricity demand data using the ETS model.
 ```{r}
 # Modelling ETS automatically
 ets_total <- data_elec %>%

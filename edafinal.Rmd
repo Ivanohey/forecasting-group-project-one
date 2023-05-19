@@ -4,7 +4,7 @@
 In general: 
 
 - URGENT: FIX LICHTENSTEIN + add it to final table
-- Remove all warnings 
+- Remove all warnings (Done)
 - Complete the Report -> Write specific analysis for different countries
 
 Country specific:
