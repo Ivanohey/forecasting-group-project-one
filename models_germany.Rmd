@@ -1,4 +1,4 @@
-# Model Selection
+# 4. Model Selection
 
 ## Methodology
 To evaluate the forecast accuracy, we will test how a model performs on new data not used during the fitting phase.
@@ -14,7 +14,7 @@ As the most accurate forecast is of interest, we will give more weight to the mo
 
 Lichtenstein Analysis will be described separately.
 
-## Germany{.tabset}
+## 4.1 Germany{.tabset}
 
 ```{r}
 

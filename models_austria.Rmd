@@ -1,5 +1,5 @@
 
-## Austria{.tabset}
+## 4.3 Austria{.tabset}
 
 ```{r, warning=FALSE}
 #Investigating Austria closely since 2018, because it seems like something changed -> perhaps should use Piecewise!!!
@@ -8,7 +8,7 @@ Austria_since_2018 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.D
 ```
 ### **Testing Models**
 Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
-```{r}
+```{r, warning=FALSE}
 
 #Split the data
 training_au <- data_elec %>% select(Date, Austria) %>%  filter(Date < as.Date("2016-01-01"))

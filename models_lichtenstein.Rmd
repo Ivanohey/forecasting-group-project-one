@@ -1,4 +1,4 @@
-## Lichtenstein
+## 4.5 Lichtenstein
 
 ```{r}
 data_elec %>% autoplot(Lichtenstein) + 

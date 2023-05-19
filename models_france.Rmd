@@ -1,5 +1,5 @@
 
-## France{.tabset}
+## 4.4 France{.tabset}
 
 ```{r, warning=FALSE}
 France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2015-01-01"))
@@ -7,7 +7,7 @@ France_since_2015 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Dat
 
 ### **Testing Models**
 Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
-```{r}
+```{r, warning=FALSE}
 
 #Split the data
 training_fr <- data_elec %>% select(Date, France) %>%  filter(Date < as.Date("2016-01-01"))
