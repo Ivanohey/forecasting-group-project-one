@@ -1,28 +1,6 @@
 
 # Data cleaning
 
-```{r import_data, echo = FALSE, include=FALSE}
-raw_data = read.csv("data/electricity_exports.csv", header = TRUE, fill=TRUE, encoding = "UTF-8")
-raw_data = data.frame(raw_data)
-
-```
-
-We import data and we clean it from <i>NA</i> and from blank rows. We also name the columns. Here is a sample of our data:
-```{r data_cleaning, echo=FALSE, include=FALSE}
-colnames(raw_data) = c('date', 'germany', 'france', 'italy', 'austria', 'lichtenstein', 'total')
-
-#Removing first rows
-raw_data = raw_data[-c(1:4),] 
-
-#Selecting columns and removing NAs
-clean_data =  select(raw_data, date, germany, france, italy, austria, lichtenstein, total) %>% drop_na() 
-
-#Removing empty rows
-clean_data = clean_data[!clean_data$date=="",]
-
-head(clean_data)
-```
-
 ## Data import 
 
 We directly import the data from the excel file, selecting only the range that contains the data, and then setting the column names accordingly. 

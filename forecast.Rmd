@@ -249,6 +249,6 @@ final_fc
 
 ```
 
-# Challenges and Further Analysis
+# 6. Challenges and Further Analysis
 
 95% CI with its wider range of values, resulted in lower than 0 electricity demand in some countries, so we chose to include 80% CI in the final tables. However, some of Germany's lower and upper values remain negative with different confidence intervals. It may indicate that the forecasting model or method used may not adequately capture the underlying dynamics of electricity demand. Even though the model was chosen based on the accuracy analysis we conducted before. Further investigation and model testing is required.

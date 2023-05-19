@@ -21,7 +21,25 @@ The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a vari
 
 # 2. Data Processing 
 
-The data we were given was already cleaned, without any missing values. The only noteworthy cleaning we did, was to format the names of all columns and all rows, and to then convert the final table to a tsibble in order to be able to use functions from the tsibble and fpp3 package. All details on how this was done can be found in the code files. 
+The data we were given was already cleaned, without any missing values. The only noteworthy cleaning we did, was to format the names of all columns and all rows, and to then convert the final table to a tsibble in order to be able to use functions from the tsibble and fpp3 package. All details on how this was done can be found in the code files.
+
+```{r, echo = FALSE, warning=FALSE}
+#importing data directly from excel
+data_elec <- read_excel("data/Electricity export Switzerland.xlsx", 
+    range = "A6:G280", col_names = FALSE)
+
+#Setting column names
+colnames(data_elec) = c('Date','Germany','France','Italy','Austria','Lichtenstein','Total')
+
+# replace "Oktober" with "October" in the Date column
+data_elec$Date <- str_replace_all(data_elec$Date, "Oktober", "October")
+
+#Convert to tsibble 
+data_elec <- data_elec %>%
+  mutate(Date = yearmonth(Date)) %>% #need to do this before converting to get proper format
+  as_tsibble(index = Date)
+```
+
 
 
 # 3. Exploratory Data Analysis
