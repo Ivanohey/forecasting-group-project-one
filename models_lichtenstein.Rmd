@@ -11,7 +11,6 @@ data_elec %>% autoplot(Lichtenstein) +
 Lichtenstein_before_2008 <- data_elec %>% 
   select(Date,Lichtenstein) %>% 
   filter(Date <= as.Date("2008-01-01"))
-
 autoplot(Lichtenstein_before_2008)
 
 # Investigating Lichtenstein closely after 2008
@@ -51,20 +50,6 @@ In this case the Unit Root Test was performed on a the data Lichtenstein, and th
 Based on it, we can use methods that assume non-stationarity, such as Random Walk Model, Autoregressive Integrated Moving Average (ARIMA), Exponential smoothing methods, Moving average models, Vector autoregression(VAR), ARIMA,SARIMA.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Model selection
 Based on the previous analysis Lichtenstein data is stationary time series with high presence of trend and seasonality, thus we can consider using a simple ARIMA, Piece-Wise and . S-naive.
 
@@ -80,23 +65,29 @@ data_fit_Licht_a <- training_Licht %>%
 forecasts_Licht_a <- data_fit_Licht_a %>%
   forecast(h = 60)
 
+
 # Fit ETS model and generate forecasts
 data_fit_Licht_e <- training_Licht %>%
   model(ETS(Lichtenstein))
 forecasts_Licht_e <- data_fit_Licht_e %>%
   forecast(h = 60)
+forecasts_Licht_e$.mean <- ifelse(forecasts_Licht_e$.mean < 0, 0, forecasts_Licht_e$.mean)
 
 # Fit seasonal naive model and generate forecasts
 data_fit_Licht_n <- training_Licht %>%
   model(SNAIVE(Lichtenstein))
 forecasts_Licht_n <- data_fit_Licht_n %>%
   forecast(h = 60)
+forecasts_Licht_n$.mean <- ifelse(forecasts_Licht_n$.mean < 0, 0, forecasts_Licht_n$.mean)
+
 
 # Fit piece wise model and generate forecasts
 data_fit_Licht_pw <- training_Licht %>%
   model(piecewise = ARIMA(Lichtenstein ~ trend(knots = c(2008, 2009,2015,2016))))
 forecasts_Licht_pw <- data_fit_Licht_pw%>%
   forecast(h = 60)
+forecasts_Licht_pw$.mean <- ifelse(forecasts_Licht_pw$.mean < 0, 0, forecasts_Licht_pw$.mean)
+
 
 # Combine forecasts into a single data frame
 all_forecasts_Licht <- bind_rows(
@@ -163,49 +154,71 @@ gg_tsresiduals(data_fit_Licht_pw) + labs(title = "PIECE WISE Lichtenstein residu
 
 Although all of these metrics are valuable for evaluating forecast accuracy, we have chosen to place greater emphasis on the AIC. This decision is based on the fact that the AIC takes into account both the model's fit to the data and its complexity. Consequently, we have selected the Piecewise model as the preferred choice for forecasting electricity demand in Lichtenstein
 
-### Piecewise
+### ETS
 ```{r}
 # Modelling ARIMA automatically
-pw_Licht <- data_elec %>%
+ets_Licht <- data_elec %>%
   select(Lichtenstein) %>%
-  model(piecewise = ARIMA(Lichtenstein ~ trend(knots = c(2008, 2009,2015,2016))))
-
+  model(ETS(Lichtenstein))
 # Getting the Accuracy scores for models
-report(pw_Licht)
-
+report(ets_Licht)
 
 # Forecasting using the models
-forecast_pw_Licht <- pw_Licht %>% forecast(h = 13)
+forecast_ets_Licht <- ets_Licht %>% forecast(h = 13)
+forecast_ets_Licht$.mean <- ifelse(forecast_ets_Licht$.mean < 0, 0, forecast_ets_Licht$.mean)
 
 #Checking the residuals before forecasting
-pw_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "piecewise Lichtenstein residuals analysis")
+ets_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Lichtenstein residuals analysis")
 
 # Graphing the forecast
-pw_Licht %>% forecast(h = 13) %>% autoplot(Lichtenstein_after_2008) +
+forecast_ets_Licht %>% autoplot(Lichtenstein_after_2008) +
   labs(title = "piecewise Forecast for Lichtenstein")
 
 #Extracting the forecasted values
-forecast_table_Lichtenstein_a <- data.frame(Model = c("piecewise"),
-                              Forecast_Values = c(forecast_pw_Licht))
+forecast_table_Lichtenstein_ets <- data.frame(Model = c("ets"),
+                              Forecast_Values = c(forecast_ets_Licht))
 
-forecast_table_Lichtenstein_a <- forecast_table_Lichtenstein_a %>% select(Forecast_Values..mean)
+forecast_table_Lichtenstein_ets <- forecast_table_Lichtenstein_ets %>% select(Forecast_Values..mean)
 
-colnames(forecast_table_Lichtenstein_a)[1] <- "Lichtenstein_piecewise"
+colnames(forecast_table_Lichtenstein_ets)[1] <- "Lichtenstein_ets"
 
-forecast_table_Lichtenstein_a
+forecast_table_Lichtenstein_ets
 
 ```
+### Piecewise
+```{r}
+# # Modelling ARIMA automatically
+# pw_Licht <- data_elec %>%
+#   select(Lichtenstein) %>%
+#   model(piecewise = ARIMA(Lichtenstein ~ trend(knots = c(2008, 2009,2015,2016))))
+# 
+# # Getting the Accuracy scores for models
+# report(pw_Licht)
+# 
+# 
+# # Forecasting using the models
+# forecast_pw_Licht <- pw_Licht %>% forecast(h = 13)
+# forecast_pw_Licht$.mean <- ifelse(forecast_pw_Licht$.mean < 0, 0, forecast_pw_Licht$.mean)
+# 
+# 
+# #Checking the residuals before forecasting
+# pw_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "piecewise Lichtenstein residuals analysis")
+# 
+# # Graphing the forecast
+# forecast_pw_Licht %>% autoplot(Lichtenstein_after_2008) +
+#   labs(title = "piecewise Forecast for Lichtenstein")
+# 
+# #Extracting the forecasted values
+# forecast_table_Lichtenstein_a <- data.frame(Model = c("piecewise"),
+#                               Forecast_Values = c(forecast_pw_Licht))
+# 
+# forecast_table_Lichtenstein_a <- forecast_table_Lichtenstein_a %>% select(Forecast_Values..mean)
+# 
+# colnames(forecast_table_Lichtenstein_a)[1] <- "Lichtenstein_piecewise"
+# 
+# forecast_table_Lichtenstein_a
 
-
-
-
-
-
-
-
-
-
-
+```
 
 
 
