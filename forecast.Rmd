@@ -195,6 +195,51 @@ forecast_table_france_e
 
 ```
 
+## 5.5 Lichtenstein{.tabset}
+We fit Total electricity demand data using the ETS model.
+### ETS
+```{r}
+# Modelling ETS automatically
+ets_Licht <- data_elec %>%
+  select(Lichtenstein) %>%
+  model(ETS(Lichtenstein))
+# Getting the Accuracy scores for models
+report(ets_Licht)
+
+# Forecasting using the models
+forecast_ets_Licht <- ets_Licht %>% forecast(h = 13) %>% hilo(90)
+forecast_ets_Licht$.mean <- ifelse(forecast_ets_Licht$.mean < 0, 0, forecast_ets_Licht$.mean)
+```
+
+### **Checking Residuals**
+```{r}
+#Checking the residuals before forecasting
+ets_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Lichtenstein residuals analysis")
+```
+
+### **Graphing the forecast**
+
+```{r}
+# Graphing the forecast
+ets_Licht %>% forecast(h = 13) %>% autoplot(Lichtenstein_after_2008) +
+  labs(title = "ETS Forecast for Lichtenstein")
+
+#Extracting the forecasted values
+forecast_table_Lichtenstein_ets <- data.frame(Model = c("ETS"),
+                              Forecast_Values = c(forecast_ets_Licht))
+
+forecast_table_Lichtenstein_ets <- forecast_table_Lichtenstein_ets %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
+forecast_table_Lichtenstein_ets$Country <- "Lichtenstein"
+
+colnames(forecast_table_Lichtenstein_ets)[1] <- "Month"
+colnames(forecast_table_Lichtenstein_ets)[2] <- "PF"
+colnames(forecast_table_Lichtenstein_ets)[3] <- "CI"
+```
+### **Forecast Table**
+The resulting forecast table for Lichtenstein is shown below. 
+```{r}
+forecast_table_Lichtenstein_ets
+```
 
 ## 5.6 Total{.tabset}
 We fit Total electricity demand data using the ARIMA model.
