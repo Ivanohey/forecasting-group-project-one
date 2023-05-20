@@ -21,10 +21,6 @@ forecasts_it_a <- data_fit_it_a %>%
   forecast(h = 60)
 
 
-
-forecasts_it_a <- data_fit_it_a %>%
-  forecast(h = 60)
-
 # Fit ETS model and generate forecasts
 data_fit_it_e <- training_it %>%
   model(ETS(Italy))
@@ -52,20 +48,14 @@ data_elec %>% autoplot(Italy) +
 ```
 
 ### **Measuring Model Accuracy**
-According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=2708.77, AICc=2709.1, and BIC=2725.06 than the ETS model.
+According to the accuracy table below, RMSE, MAE, as well as AIC, AICc, and BIC, ARIMA has the lowest values on the test data than the ETS model.
 ```{r}
 #Accuracy
-italy_accuracy_a <-data_fit_it_a %>%
-  refit(test_it) %>%
-  accuracy()
+italy_accuracy_a <-accuracy(forecasts_it_a, test_it)
 
-italy_accuracy_e <-data_fit_it_e %>%
-  refit(test_it) %>%
-  accuracy()
+italy_accuracy_e <-accuracy(forecasts_it_e, test_it)
 
-italy_accuracy_n <-data_fit_it_n %>%
-  refit(test_it) %>%
-  accuracy()
+italy_accuracy_n <-accuracy(forecasts_it_n, test_it)
 
 italy_accuracy_table <- rbind(
   data.frame(italy_accuracy_a),
