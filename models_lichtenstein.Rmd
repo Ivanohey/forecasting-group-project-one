@@ -1,19 +1,13 @@
 ## 4.5 Lichtenstein{.tabset}
 
-```{r, warning=FALSE, echo=FALSE}
+```{r, warning=FALSE, echo=FALSE, results='hide'}
 # Investigating Lichtenstein closely before 2008
-Lichtenstein_before_2008 <- data_elec %>% 
-  select(Date,Lichtenstein) %>% 
-  filter(Date <= as.Date("2008-01-01"))
-autoplot(Lichtenstein_before_2008)
+Lichtenstein_before_2008 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date <= as.Date("2008-01-01"))
 
 # Investigating Lichtenstein closely after 2008
-Lichtenstein_after_2008 <- data_elec %>% 
-  select(Date,Lichtenstein) %>% 
-  filter(Date >= as.Date("2008-01-01"))
-autoplot(Lichtenstein_after_2008)
+Lichtenstein_after_2008 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2008-01-01"))
+
 ```
-**Comment**
 
 ### Check the Stationarity by using Unit Root Test
 
@@ -99,7 +93,7 @@ data_elec %>% autoplot(Lichtenstein) +
 
 ###**Measuring Model Accuracy**
 
-```{r}
+```{r, warning=FALSE, echo=FALSE}
 #Accuracy
 Licht_accuracy_a <-data_fit_Licht_a %>%
   refit(test_Licht) %>%
@@ -137,7 +131,7 @@ A low AIC value is desirable as it indicates a better trade-off between model fi
 
 ### **Residuals**
 Interesting to examine any outliers or extreme values in the residuals.
-```{r}
+```{r, warning=FALSE, echo=FALSE}
 gg_tsresiduals(data_fit_Licht_a) + labs(title = "ARIMA Lichtenstein residuals analysis")
 
 gg_tsresiduals(data_fit_Licht_e) + labs(title = "ETS Lichtenstein residuals analysis")
@@ -146,11 +140,3 @@ gg_tsresiduals(data_fit_Licht_n) + labs(title = "SNAIVE Lichtenstein residuals a
 
 gg_tsresiduals(data_fit_Licht_pw) + labs(title = "PIECE WISE Lichtenstein residuals analysis")
 ```
-
-## Result
-Although all of these metrics are valuable for evaluating forecast accuracy, we have chosen to place greater emphasis on the AIC. This decision is based on the fact that the AIC takes into account both the model's fit to the data and its complexity. Consequently, we have selected the ETS model as the preferred choice for forecasting electricity demand in Lichtenstein
-
-
-Since we can't have negative values, I decided to just set the negative ones to 0. 
-
-This forecast actually doesn't look great. I would expect the next upward bounce to be of similar amplitude as the previous ones, but it seems like the forecast of the next bounce is only half the amplitude of the previous ones. 
