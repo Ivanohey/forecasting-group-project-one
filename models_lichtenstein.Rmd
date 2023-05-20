@@ -71,12 +71,12 @@ forecasts_Licht_n <- data_fit_Licht_n %>%
 forecasts_Licht_n$.mean <- ifelse(forecasts_Licht_n$.mean < 0, 0, forecasts_Licht_n$.mean)
 
 
-# Fit piece wise model and generate forecasts
-data_fit_Licht_pw <- training_Licht %>%
+# Fit piece wise ARIMA model and generate forecasts
+data_fit_Licht_pw_a <- training_Licht %>%
   model(piecewise = ARIMA(Lichtenstein ~ trend(knots = c(2008, 2009,2015,2016))))
-forecasts_Licht_pw <- data_fit_Licht_pw%>%
+forecasts_Licht_pw_a <- data_fit_Licht_pw_a%>%
   forecast(h = 60)
-forecasts_Licht_pw$.mean <- ifelse(forecasts_Licht_pw$.mean < 0, 0, forecasts_Licht_pw$.mean)
+forecasts_Licht_pw_a$.mean <- ifelse(forecasts_Licht_pw_a$.mean < 0, 0, forecasts_Licht_pw_a$.mean)
 
 
 # Combine forecasts into a single data frame
@@ -84,7 +84,7 @@ all_forecasts_Licht <- bind_rows(
   data.frame(Date = forecasts_Licht_a$Date, Method = "ARIMA", Forecast = forecasts_Licht_a$.mean),
   data.frame(Date = forecasts_Licht_e$Date, Method = "ETS", Forecast = forecasts_Licht_e$.mean),
   data.frame(Date = forecasts_Licht_n$Date, Method = "SNAIVE", Forecast = forecasts_Licht_n$.mean),
-  data.frame(Date = forecasts_Licht_pw$Date, Method = "PIECE WISE", Forecast = forecasts_Licht_pw$.mean))
+  data.frame(Date = forecasts_Licht_pw_a$Date, Method = "Piece Wise ARIMA", Forecast = forecasts_Licht_pw_a$.mean))
 
 # Plot all three sets of forecasts together
 data_elec %>% autoplot(Lichtenstein) +
@@ -93,7 +93,7 @@ data_elec %>% autoplot(Lichtenstein) +
 
 ```
 
-###**Measuring Model Accuracy**
+### **Measuring Model Accuracy**
 A low AIC value is desirable as it indicates a better trade-off between model fit and complexity. Thus
 ```{r, warning=FALSE, echo=FALSE}
 #Accuracy
@@ -109,7 +109,7 @@ Licht_accuracy_n <-data_fit_Licht_n %>%
   refit(test_Licht) %>%
   accuracy()
 
-Licht_accuracy_pw <- data_fit_Licht_pw %>%
+Licht_accuracy_pw_a <- data_fit_Licht_pw_a %>%
   refit(test_Licht) %>%
   accuracy()
 
@@ -117,13 +117,12 @@ Licht_accuracy_table <- rbind(
   data.frame(Licht_accuracy_a),
   data.frame(Licht_accuracy_e),
   data.frame(Licht_accuracy_n),
-  data.frame(Licht_accuracy_pw))
-
+  data.frame(Licht_accuracy_pw_a))
 #AIC
-report(data_fit_Licht_a)
+#report(data_fit_Licht_a)
 report(data_fit_Licht_e)
-report(data_fit_Licht_n)
-report(data_fit_Licht_pw)
+#report(data_fit_Licht_n)
+#report(data_fit_Licht_pw_a)
 
 ```
 
