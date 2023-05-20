@@ -3,7 +3,8 @@
 
 In general: 
 
-- URGENT: FIX LICHTENSTEIN + add it to final table
+- URGENT: FIX LICHTENSTEIN + add it to final table (Ok)
+--> adjust in forecast the CI
 - Remove all warnings (Done)
 - Complete the Report -> Write specific analysis for different countries
 
@@ -11,6 +12,7 @@ Country specific:
 
 - Explore huge peak in Austria 2002 -> is it an outlier 
 - Explain big drop in Lichtenstein + thought process behind piece-wise model 
+- Should add piece-wise ets if perform better
 
 # 1. Introduction 
 

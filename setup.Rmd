@@ -1,6 +1,7 @@
 ```{r setup, include=FALSE}
 #install.packages("rlang") 
 #install.packages("seasonal")
+#install.packages("kableExtra")
 
 #read excel file
 library(readxl)
@@ -25,6 +26,7 @@ library(fable)
 #Tables
 library(knitr)
 library(fable)
+library(kableExtra)
 
 
 
