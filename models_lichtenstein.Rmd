@@ -1,6 +1,6 @@
-## 4.5 Lichtenstein
+## 4.5 Lichtenstein{.tabset}
 
-```{r}
+```{r, warning=FALSE}
 data_elec %>% autoplot(Lichtenstein) + 
   ggtitle("Exports from Switzerland to Lichtenstein") +
   ylab("GWt") + xlab("Month")
