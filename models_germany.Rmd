@@ -67,22 +67,16 @@ data_elec %>% autoplot(Germany)  +
 
 
 ### **Measuring Model Accuracy**
-According to the accuracy table RMSE, MAE and other indicators, ARIMA has the lowest values on the test data. 
-The ARIMA model has an AIC of 2422.94, AICc of 2423.39, and BIC of 2442.49. On the other hand, the ETS model has an AIC of 2975.557, AICc of 2978.110, and BIC of 3025.329.  Therefore, based on these criteria, we can conclude that the ARIMA model fits the data better than the ETS model.
+According to the accuracy table RMSE, MAE and other indicators, ETS has the lowest values on the test data. 
+The ARIMA model has an AIC of AIC=2260.11, AICc of AICc=2260.6, and BIC of 2279.27. On the other hand, the ETS model has an AIC of 2797.057, AICc of 2799.784, and BIC of 2845.919. Therefore, based on these criteria, we can conclude that the ARIMA model fits the data better than the ETS model.
 
 ```{r}
 #Accuracy
-germany_accuracy_a <-data_fit_ge_a %>%
-  refit(test_ge) %>%
-  accuracy()
+germany_accuracy_a <- accuracy(forecasts_ge_a, test_ge)
 
-germany_accuracy_e <-data_fit_ge_e %>%
-  refit(test_ge) %>%
-  accuracy()
+germany_accuracy_e <- accuracy(forecasts_ge_e, test_ge)
 
-germany_accuracy_n <-data_fit_ge_n %>%
-  refit(test_ge) %>%
-  accuracy()
+germany_accuracy_n <- accuracy(forecasts_ge_n, test_ge)
 
 germany_accuracy_table <- rbind(
   data.frame(germany_accuracy_a),

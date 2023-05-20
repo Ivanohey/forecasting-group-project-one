@@ -1,6 +1,6 @@
 # 5. Forecast
 
-For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and the actual values. In summary, we used SARIMA for Germany, and ETS for all other countries.
+For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and the actual values. In summary, we used SARIMA for Italy and all countries together, and ETS for all other countries.
 
 #### Side note: 
 
@@ -17,90 +17,92 @@ A good model fit has the following characteristics in terms of its residuals:
 In essence, what this all means, is that the residuals are white noise. Let's now look at the results for each country, and make some more specific comments: 
 
 ## 5.1 Germany{.tabset}
-We fit Germany electricity demand data using the ARIMA model.
+We fit Germany electricity demand data using the ETS model.
 ```{r, warning=FALSE}
 # Modelling ARIMA automatically
-arima_germany <- data_elec %>%
+ets_germany <- data_elec %>%
   select(Germany) %>%
-  model(arima = ARIMA(Germany))
+  model(ets = ETS(Germany))
 
 # Forecasting using the models
-forecast_arima_germany <- arima_germany %>% forecast(h = 13) %>% hilo(90)
+forecast_ets_germany <- ets_germany %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
-The output below suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+The output below suggests that the ETS model did a decent job in capturing all the dynamics in data, as the residuals seem to be white noise.
+
+However, it seems like this model for Germany is not fitting well. More specifically, we see that there is more variation in the distribution of the residuals of Germany's model. Nevertheless, the distribution of the errors is symmetric, which is good. Furthermore, we notice the peaks in some of the lagged periods of the ACF graph, indicating the presence of autocorrelation between the time periods and the previous time periods, which is not great in terms of how well the model fits the data. 
 ```{r}
-arima_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Germany residuals analysis")
+ets_germany %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Germany residuals analysis")
 ```
 
 ### **Graphing the forecast**
 For better visualization, we plot our forecast results starting from 2015.
 ```{r}
-arima_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
-  labs(title = "ARIMA Forecast for Germany")
+ets_germany %>% forecast(h = 13) %>% autoplot(Germany_since_2015) +
+  labs(title = "ETS Forecast for Germany")
 
 #Extracting the forecasted values
-forecast_table_germany_a <- data.frame(Model = c("ARIMA"),
-                              Forecast_Values = c(forecast_arima_germany))
+forecast_table_germany_e <- data.frame(Model = c("ETS"),
+                              Forecast_Values = c(forecast_ets_germany))
 
 
 
-forecast_table_germany_a <- forecast_table_germany_a %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.) 
-forecast_table_germany_a$Country <- "Germany"
+forecast_table_germany_e <- forecast_table_germany_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.) 
+forecast_table_germany_e$Country <- "Germany"
 
-colnames(forecast_table_germany_a)[1] <- "Month"
-colnames(forecast_table_germany_a)[2] <- "PF"
-colnames(forecast_table_germany_a)[3] <- "CI"
+colnames(forecast_table_germany_e)[1] <- "Month"
+colnames(forecast_table_germany_e)[2] <- "PF"
+colnames(forecast_table_germany_e)[3] <- "CI"
 
 
 ```
 ### **Forecast Table**
 The resulting forecast table for Germany is shown below. 
 ```{r}
-forecast_table_germany_a
+forecast_table_germany_e
 ```
 
 ## 5.2 Italy{.tabset}
-We fit Italy electricity demand data using the ETS model.
+We fit Italy electricity demand data using the ARIMA model.
 ```{r}
 # Modelling ETS automatically
-ets_italy <- data_elec %>%
+arima_italy <- data_elec %>%
   select(Italy) %>%
-  model(ETS(Italy))
+  model(ARIMA(Italy))
 
 # Forecasting using the models
-forecast_ets_italy <- ets_italy %>% forecast(h = 13) %>% hilo(90)
+forecast_arima_italy <- arima_italy %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
-The output below suggests that the ETS model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+The output below suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
 ```{r}
-ets_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Italy residuals analysis")
+arima_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "ARIMA Italy residuals analysis")
 ```
 
 ### **Graphing the forecast**
 For better visualization, we plot our forecast results starting from 2018.
 ```{r}
-ets_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
-  labs(title = "ETS Forecast for Italy")
+arima_italy %>% forecast(h = 13) %>% autoplot(Italy_since_2018) +
+  labs(title = "ARIMA Forecast for Italy")
 
 #Extracting the forecasted values
-forecast_table_italy_e <- data.frame(Model = c("ETS"),
-                          Forecast_Values = c(forecast_ets_italy))
+forecast_table_italy_a <- data.frame(Model = c("ARIMA"),
+                          Forecast_Values = c(forecast_arima_italy))
 
-forecast_table_italy_e <- forecast_table_italy_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
-forecast_table_italy_e$Country <- "Italy"
+forecast_table_italy_a <- forecast_table_italy_a %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
+forecast_table_italy_a$Country <- "Italy"
 
-colnames(forecast_table_italy_e)[1] <- "Month"
-colnames(forecast_table_italy_e)[2] <- "PF"
-colnames(forecast_table_italy_e)[3] <- "CI"
+colnames(forecast_table_italy_a)[1] <- "Month"
+colnames(forecast_table_italy_a)[2] <- "PF"
+colnames(forecast_table_italy_a)[3] <- "CI"
 ```
 
 ### **Forecast Table**
 The resulting forecast table for Italy is shown below. 
 ```{r}
-forecast_table_italy_e
+forecast_table_italy_a
 ```
 
 ## 5.3 Austria{.tabset}
@@ -195,47 +197,47 @@ forecast_table_france_e
 
 
 ## 5.6 Total{.tabset}
-We fit Total electricity demand data using the ETS model.
+We fit Total electricity demand data using the ARIMA model.
 ```{r}
 # Modelling ETS automatically
-ets_total <- data_elec %>%
+arima_total <- data_elec %>%
   select(Total) %>%
-  model(ETS(Total))
+  model(ARIMA(Total))
 
 # Forecasting using the models
-forecast_ets_total <- ets_total %>% forecast(h = 13) %>% hilo(90)
+forecast_arima_total <- arima_total %>% forecast(h = 13) %>% hilo(90)
 ```
 
 ### **Checking Residuals**
-The output below suggests that the ETS model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
+The output below suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
 ```{r}
-ets_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS residuals analysis for all countries")
+arima_total %>% gg_tsresiduals(lag_max = 36) + labs(title = "ARIMA residuals analysis for all countries")
 
 ```
 
 ### **Graphing the forecast**
 For better visualization, we plot our forecast results starting from 2015.
 ```{r}
-ets_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
-  labs(title = "ETS Forecast for All Countries")
+arima_total %>% forecast(h = 13) %>% autoplot(Total_since_2015) +
+  labs(title = "ARIMA Forecast for All Countries")
 
 #Extracting the forecasted values
-forecast_table_total_e <- data.frame(Model = c("ETS"),
-                          Forecast_Values = c(forecast_ets_total))
+forecast_table_total_a<- data.frame(Model = c("ARIMA"),
+                          Forecast_Values = c(forecast_arima_total))
 
-forecast_table_total_e <- forecast_table_total_e %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
-forecast_table_total_e$Country <- "Total"
+forecast_table_total_a <- forecast_table_total_a %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
+forecast_table_total_a$Country <- "Total"
 
-colnames(forecast_table_total_e)[1] <- "Month"
-colnames(forecast_table_total_e)[2] <- "PF"
-colnames(forecast_table_total_e)[3] <- "CI"
+colnames(forecast_table_total_a)[1] <- "Month"
+colnames(forecast_table_total_a)[2] <- "PF"
+colnames(forecast_table_total_a)[3] <- "CI"
 
 ```
 
 ### **Forecast Table**
 The resulting forecast table for Total is shown below. 
 ```{r}
-forecast_table_total_e
+forecast_table_total_a
 ```
 
 
@@ -243,7 +245,7 @@ forecast_table_total_e
 Below is the final table containing `Month,` point forecast `PF,` 80% lower and upper confidence levels (see Appendix 3.) interval forecast `CI,` and `Country.`  
 ```{r}
 
-final_fc <- bind_rows(forecast_table_germany_a, forecast_table_italy_e, forecast_table_france_e, forecast_table_austria_e, forecast_table_total_e)
+final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e, forecast_table_total_a)
 
 final_fc
 

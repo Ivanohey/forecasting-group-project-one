@@ -46,20 +46,14 @@ data_elec %>% autoplot(France) +
 ```
 
 ### **Measuring Model Accuracy**
-According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC = 2558.88, AICc = 2559.46, and BIC=2582.07 than the ETS model. 
+According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC, AICc, and BIC than the ETS model. 
 ```{r}
 #Accuracy
-france_accuracy_a <-data_fit_fr_a %>%
-  refit(test_fr) %>%
-  accuracy()
+france_accuracy_a <-accuracy(forecasts_fr_a, test_fr)
 
-france_accuracy_e <-data_fit_fr_e %>%
-  refit(test_fr) %>%
-  accuracy()
+france_accuracy_e <-accuracy(forecasts_fr_e, test_fr)
 
-france_accuracy_n <-data_fit_fr_n %>%
-  refit(test_fr) %>%
-  accuracy()
+france_accuracy_n <-accuracy(forecasts_fr_n, test_fr)
 
 france_accuracy_table <- rbind(
   data.frame(france_accuracy_a),

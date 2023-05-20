@@ -6,6 +6,7 @@
 Austria_since_2015 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2015-01-01"))
 Austria_since_2018 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2018-02-01"))
 ```
+
 ### **Testing Models**
 Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. 
 ```{r, warning=FALSE}
@@ -47,20 +48,14 @@ data_elec %>% autoplot(Austria) +
 ```
 
 ### **Measuring Model Accuracy**
-According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=1839.24, AICc=1840.03, and BIC=1865.3 than the ETS model. 
+According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC, AICc, and BIC than the ETS model. 
 ```{r}
 #Accuracy
-austria_accuracy_a <-data_fit_au_a %>%
-  refit(test_au) %>%
-  accuracy()
+austria_accuracy_a <-accuracy(forecasts_au_a, test_au)
 
-austria_accuracy_e <-data_fit_au_e %>%
-  refit(test_au) %>%
-  accuracy()
+austria_accuracy_e <-accuracy(forecasts_au_e, test_au)
 
-austria_accuracy_n <-data_fit_au_n %>%
-  refit(test_au) %>%
-  accuracy()
+austria_accuracy_n <-accuracy(forecasts_au_n, test_au)
 
 austria_accuracy_table <- rbind(
   data.frame(austria_accuracy_a),

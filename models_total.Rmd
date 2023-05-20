@@ -45,20 +45,14 @@ data_elec %>% autoplot(Total) +
 ```
 
 ### **Measuring Model Accuracy**
-According to the accuracy table below, RMSE, MAE, and other indicators, ETS has the lowest values on the test data. However, ARIMA has lower values of AIC=2683.45, AICc=2683.9, and BIC=2702.99 than the ETS model. 
+According to the accuracy table below, RMSE, MAE, as well as AIC, AICc, and BIC, ARIMA has the lowest values on the test data than the ETS model.
 ```{r}
 #Accuracy
-total_accuracy_a <-data_fit_tot_a %>%
-  refit(test_tot) %>%
-  accuracy()
+total_accuracy_a <-accuracy(forecasts_tot_a, test_tot)
 
-total_accuracy_e <-data_fit_tot_e %>%
-  refit(test_tot) %>%
-  accuracy()
+total_accuracy_e <-accuracy(forecasts_tot_e, test_tot)
 
-total_accuracy_n <-data_fit_tot_n %>%
-  refit(test_tot) %>%
-  accuracy()
+total_accuracy_n <-accuracy(forecasts_tot_n, test_tot)
 
 total_accuracy_table <- rbind(
   data.frame(total_accuracy_a),
@@ -89,7 +83,7 @@ gg_tsresiduals(data_fit_tot_n) + labs(title = "SNAIVE Total residuals analysis")
 
 ## Result
 All of these metrics are important for evaluating forecast accuracy. Still, our goal is to obtain the most accurate forecast. Therefore, we give more weight to RMSE and MAE metrics than AIC.
-As a result, the ARIMA model is selected to forecast the electricity demand in Germany and ETS model - in Italy, Austria, France, and all countries together.
+As a result, the ARIMA model is selected to forecast the electricity demand in Italy and all countries and ETS model - in Germany, Austria, France.
 
 
 
