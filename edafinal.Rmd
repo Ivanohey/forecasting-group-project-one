@@ -22,7 +22,7 @@ Country specific:
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 
 
-The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of TSLM (piece-wise) for a specific country. 
+The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of ARIMA piece-wise for a specific country. 
 
 
 # 2. Data Processing 
