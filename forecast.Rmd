@@ -344,7 +344,9 @@ colnames(forecast_table_total_a)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Total is shown below. 
 ```{r}
-forecast_table_total_a
+#forecast_table_total_a
+kbl(forecast_table_total_a) %>%
+  kable_styling(fixed_thead = T)
 ```
 
 
@@ -352,10 +354,13 @@ forecast_table_total_a
 Below is the final table containing `Month,` point forecast `PF,` 80% lower and upper confidence levels (see Appendix 3.) interval forecast `CI,` and `Country.`  
 ```{r}
 
-final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_ets, forecast_table_total_a)
+final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)
 
-final_fc
+#final_fc
 
+kbl(cbind(final_fc)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "500px")
 ```
 
 # 6. Challenges and Further Analysis

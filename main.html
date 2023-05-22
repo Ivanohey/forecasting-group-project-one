@@ -3583,21 +3583,211 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb1
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Total is shown below.</p>
 <div class="sourceCode" id="cb107"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a</span></code></pre></div>
-<pre><code>##       Month       PF                     CI Country
-## 1  2022 Dec 2336.515 [1867.508, 2805.521]90   Total
-## 2  2023 Jan 2507.818 [1979.592, 3036.043]90   Total
-## 3  2023 Feb 2489.217 [1932.451, 3045.983]90   Total
-## 4  2023 Mar 2580.353 [2009.191, 3151.514]90   Total
-## 5  2023 Apr 2302.442 [1723.875, 2881.008]90   Total
-## 6  2023 May 2411.328 [1828.916, 2993.740]90   Total
-## 7  2023 Jun 2591.927 [2007.509, 3176.345]90   Total
-## 8  2023 Jul 3070.838 [2485.371, 3656.306]90   Total
-## 9  2023 Aug 2798.490 [2212.473, 3384.507]90   Total
-## 10 2023 Sep 2469.884 [1883.579, 3056.189]90   Total
-## 11 2023 Oct 2412.024 [1825.569, 2998.480]90   Total
-## 12 2023 Nov 2300.391 [1713.856, 2886.926]90   Total
-## 13 2023 Dec 2299.457 [1694.028, 2904.886]90   Total</code></pre>
+class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co">#forecast_table_total_a</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(forecast_table_total_a) <span class="sc">%&gt;%</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">fixed_thead =</span> T)</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Month
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PF
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+CI
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Country
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+2336.515
+</td>
+<td style="text-align:left;">
+[1867.508, 2805.521]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+2507.818
+</td>
+<td style="text-align:left;">
+[1979.592, 3036.043]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+2489.217
+</td>
+<td style="text-align:left;">
+[1932.451, 3045.983]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+2580.353
+</td>
+<td style="text-align:left;">
+[2009.191, 3151.514]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+2302.442
+</td>
+<td style="text-align:left;">
+[1723.875, 2881.008]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+2411.328
+</td>
+<td style="text-align:left;">
+[1828.916, 2993.740]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+2591.927
+</td>
+<td style="text-align:left;">
+[2007.509, 3176.345]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+3070.838
+</td>
+<td style="text-align:left;">
+[2485.371, 3656.306]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+2798.490
+</td>
+<td style="text-align:left;">
+[2212.473, 3384.507]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+2469.884
+</td>
+<td style="text-align:left;">
+[1883.579, 3056.189]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+2412.024
+</td>
+<td style="text-align:left;">
+[1825.569, 2998.480]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+2300.391
+</td>
+<td style="text-align:left;">
+[1713.856, 2886.926]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+2299.457
+</td>
+<td style="text-align:left;">
+[1694.028, 2904.886]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="combining-all-forecasts-into-one-table" class="section level2">
@@ -3606,89 +3796,1129 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb1
 forecast <code>PF,</code> 80% lower and upper confidence levels (see
 Appendix 3.) interval forecast <code>CI,</code> and
 <code>Country.</code></p>
-<div class="sourceCode" id="cb109"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_ets, forecast_table_total_a)</span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>final_fc</span></code></pre></div>
-<pre><code>##       Month          PF                            CI      Country
-## 1  2022 Dec  157.130385 [  69.3527092,  244.908060]90      Germany
-## 2  2023 Jan  134.065938 [  38.4623689,  229.669508]90      Germany
-## 3  2023 Feb  104.738864 [  15.9694414,  193.508287]90      Germany
-## 4  2023 Mar  133.317557 [   3.9026239,  262.732491]90      Germany
-## 5  2023 Apr  272.833414 [ -23.7251699,  569.391997]90      Germany
-## 6  2023 May  489.815085 [ -97.3146502, 1076.944819]90      Germany
-## 7  2023 Jun  429.450485 [-132.0351381,  990.936108]90      Germany
-## 8  2023 Jul  429.263363 [-177.8739643, 1036.400690]90      Germany
-## 9  2023 Aug  398.274870 [-207.1941231, 1003.743862]90      Germany
-## 10 2023 Sep  282.117528 [-176.5034364,  740.738492]90      Germany
-## 11 2023 Oct  218.337950 [-159.6232539,  596.299154]90      Germany
-## 12 2023 Nov  176.744322 [-147.9288382,  501.417481]90      Germany
-## 13 2023 Dec  156.408047 [-147.6022060,  460.418301]90      Germany
-## 14 2022 Dec 1826.558788 [1289.9394327, 2363.178144]90        Italy
-## 15 2023 Jan 1830.640758 [1164.2665917, 2497.014925]90        Italy
-## 16 2023 Feb 2084.347711 [1309.6550450, 2859.040377]90        Italy
-## 17 2023 Mar 2064.941360 [1195.3190717, 2934.563648]90        Italy
-## 18 2023 Apr 1763.042363 [ 807.8789630, 2718.205763]90        Italy
-## 19 2023 May 1826.054690 [ 792.4051762, 2859.704204]90        Italy
-## 20 2023 Jun 1930.823661 [ 824.2408513, 3037.406471]90        Italy
-## 21 2023 Jul 2272.029778 [1097.0320280, 3447.027527]90        Italy
-## 22 2023 Aug 1978.937335 [ 739.2946818, 3218.579989]90        Italy
-## 23 2023 Sep 1936.262112 [ 635.1825192, 3237.341704]90        Italy
-## 24 2023 Oct 1939.172242 [ 579.4287727, 3298.915712]90        Italy
-## 25 2023 Nov 1906.992038 [ 491.0130480, 3322.971028]90        Italy
-## 26 2023 Dec 1816.284715 [ 288.3433134, 3344.226116]90        Italy
-## 27 2022 Dec  452.641916 [  86.2774590,  819.006373]90       France
-## 28 2023 Jan  426.109767 [  77.6676904,  774.551843]90       France
-## 29 2023 Feb  356.170252 [  61.9684506,  650.372053]90       France
-## 30 2023 Mar  268.482172 [  44.5005823,  492.463761]90       France
-## 31 2023 Apr  232.862299 [  36.6897322,  429.034866]90       France
-## 32 2023 May  216.673724 [  32.3747535,  400.972694]90       France
-## 33 2023 Jun  336.654050 [  47.5756738,  625.732426]90       France
-## 34 2023 Jul  454.143916 [  60.5213577,  847.766475]90       France
-## 35 2023 Aug  411.525844 [  51.5445754,  771.507112]90       France
-## 36 2023 Sep  389.800170 [  45.7160738,  733.884266]90       France
-## 37 2023 Oct  351.465568 [  38.4323550,  664.498781]90       France
-## 38 2023 Nov  371.737030 [  37.7147013,  705.759359]90       France
-## 39 2023 Dec  452.643331 [  42.3615418,  862.925120]90       France
-## 40 2022 Dec  109.288551 [  45.7111685,  172.865934]90      Austria
-## 41 2023 Jan  106.376034 [  36.6047883,  176.147279]90      Austria
-## 42 2023 Feb  102.600616 [  27.1422181,  178.059013]90      Austria
-## 43 2023 Mar  102.472470 [  21.7264929,  183.218448]90      Austria
-## 44 2023 Apr  111.903240 [  26.1952715,  197.611209]90      Austria
-## 45 2023 May  122.581014 [  32.1830104,  212.979017]90      Austria
-## 46 2023 Jun  125.523384 [  30.6669550,  220.379813]90      Austria
-## 47 2023 Jul  148.099857 [  48.9853517,  247.214363]90      Austria
-## 48 2023 Aug  147.680067 [  44.4830307,  250.877103]90      Austria
-## 49 2023 Sep  112.266482 [   5.1423886,  219.390575]90      Austria
-## 50 2023 Oct  111.340208 [   0.4280154,  222.252400]90      Austria
-## 51 2023 Nov  107.720233 [  -6.8564988,  222.296964]90      Austria
-## 52 2023 Dec  109.288551 [  -8.8375275,  227.414630]90      Austria
-## 53 2022 Dec    3.468600 [  -1.9978425,    8.935043]90 Lichtenstein
-## 54 2023 Jan    4.516874 [  -1.5611307,   10.594879]90 Lichtenstein
-## 55 2023 Feb    4.156808 [  -2.4766137,   10.790230]90 Lichtenstein
-## 56 2023 Mar    2.903066 [  -4.2427322,   10.048863]90 Lichtenstein
-## 57 2023 Apr    0.000000 [  -8.6512375,    6.596394]90 Lichtenstein
-## 58 2023 May    0.000000 [  -9.3567635,    6.790399]90 Lichtenstein
-## 59 2023 Jun    0.000000 [ -10.7547296,    6.244430]90 Lichtenstein
-## 60 2023 Jul    0.000000 [ -11.2294046,    6.581041]90 Lichtenstein
-## 61 2023 Aug    0.000000 [ -11.2645151,    7.321839]90 Lichtenstein
-## 62 2023 Sep    0.000000 [ -10.5483418,    8.782802]90 Lichtenstein
-## 63 2023 Oct    1.137037 [  -8.8871054,   11.161179]90 Lichtenstein
-## 64 2023 Nov    4.212885 [  -6.1575770,   14.583346]90 Lichtenstein
-## 65 2023 Dec    3.468600 [  -7.2368477,   14.174048]90 Lichtenstein
-## 66 2022 Dec 2336.514538 [1867.5081594, 2805.520917]90        Total
-## 67 2023 Jan 2507.817626 [1979.5918486, 3036.043402]90        Total
-## 68 2023 Feb 2489.217266 [1932.4512384, 3045.983293]90        Total
-## 69 2023 Mar 2580.352950 [2009.1914148, 3151.514486]90        Total
-## 70 2023 Apr 2302.441586 [1723.8748477, 2881.008324]90        Total
-## 71 2023 May 2411.327733 [1828.9156802, 2993.739786]90        Total
-## 72 2023 Jun 2591.926916 [2007.5086713, 3176.345160]90        Total
-## 73 2023 Jul 3070.838312 [2485.3708615, 3656.305762]90        Total
-## 74 2023 Aug 2798.489711 [2212.4728573, 3384.506565]90        Total
-## 75 2023 Sep 2469.883921 [1883.5791909, 3056.188651]90        Total
-## 76 2023 Oct 2412.024248 [1825.5686263, 2998.479871]90        Total
-## 77 2023 Nov 2300.390795 [1713.8560678, 2886.925523]90        Total
-## 78 2023 Dec 2299.457086 [1694.0277708, 2904.886401]90        Total</code></pre>
+<div class="sourceCode" id="cb108"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="co">#final_fc</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(final_fc)) <span class="sc">%&gt;%</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;800px&quot;</span>)</span></code></pre></div>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:800px; overflow-x: scroll; width:100%; ">
+<table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Month
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PF
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+CI
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Country
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+157.1304
+</td>
+<td style="text-align:left;">
+[69.3527092, 244.90806]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+134.0659
+</td>
+<td style="text-align:left;">
+[38.4623689, 229.66951]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+104.7389
+</td>
+<td style="text-align:left;">
+[15.9694414, 193.50829]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+133.3176
+</td>
+<td style="text-align:left;">
+[3.9026239, 262.73249]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+272.8334
+</td>
+<td style="text-align:left;">
+[-23.7251699, 569.39200]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+489.8151
+</td>
+<td style="text-align:left;">
+[-97.3146502, 1076.94482]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+429.4505
+</td>
+<td style="text-align:left;">
+[-132.0351381, 990.93611]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+429.2634
+</td>
+<td style="text-align:left;">
+[-177.8739643, 1036.40069]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+398.2749
+</td>
+<td style="text-align:left;">
+[-207.1941231, 1003.74386]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+282.1175
+</td>
+<td style="text-align:left;">
+[-176.5034364, 740.73849]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+218.3380
+</td>
+<td style="text-align:left;">
+[-159.6232539, 596.29915]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+176.7443
+</td>
+<td style="text-align:left;">
+[-147.9288382, 501.41748]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+156.4080
+</td>
+<td style="text-align:left;">
+[-147.6022060, 460.41830]90
+</td>
+<td style="text-align:left;">
+Germany
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+1826.5588
+</td>
+<td style="text-align:left;">
+[1289.9394327, 2363.17814]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+1830.6408
+</td>
+<td style="text-align:left;">
+[1164.2665917, 2497.01492]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+2084.3477
+</td>
+<td style="text-align:left;">
+[1309.6550450, 2859.04038]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+2064.9414
+</td>
+<td style="text-align:left;">
+[1195.3190717, 2934.56365]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+1763.0424
+</td>
+<td style="text-align:left;">
+[807.8789630, 2718.20576]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+1826.0547
+</td>
+<td style="text-align:left;">
+[792.4051762, 2859.70420]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+1930.8237
+</td>
+<td style="text-align:left;">
+[824.2408513, 3037.40647]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+2272.0298
+</td>
+<td style="text-align:left;">
+[1097.0320280, 3447.02753]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+1978.9373
+</td>
+<td style="text-align:left;">
+[739.2946818, 3218.57999]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+1936.2621
+</td>
+<td style="text-align:left;">
+[635.1825192, 3237.34170]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+1939.1722
+</td>
+<td style="text-align:left;">
+[579.4287727, 3298.91571]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+1906.9920
+</td>
+<td style="text-align:left;">
+[491.0130480, 3322.97103]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+1816.2847
+</td>
+<td style="text-align:left;">
+[288.3433134, 3344.22612]90
+</td>
+<td style="text-align:left;">
+Italy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+452.6419
+</td>
+<td style="text-align:left;">
+[86.2774590, 819.00637]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+426.1098
+</td>
+<td style="text-align:left;">
+[77.6676904, 774.55184]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+356.1703
+</td>
+<td style="text-align:left;">
+[61.9684506, 650.37205]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+268.4822
+</td>
+<td style="text-align:left;">
+[44.5005823, 492.46376]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+232.8623
+</td>
+<td style="text-align:left;">
+[36.6897322, 429.03487]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+216.6737
+</td>
+<td style="text-align:left;">
+[32.3747535, 400.97269]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+336.6541
+</td>
+<td style="text-align:left;">
+[47.5756738, 625.73243]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+454.1439
+</td>
+<td style="text-align:left;">
+[60.5213577, 847.76647]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+411.5258
+</td>
+<td style="text-align:left;">
+[51.5445754, 771.50711]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+389.8002
+</td>
+<td style="text-align:left;">
+[45.7160738, 733.88427]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+351.4656
+</td>
+<td style="text-align:left;">
+[38.4323550, 664.49878]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+371.7370
+</td>
+<td style="text-align:left;">
+[37.7147013, 705.75936]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+452.6433
+</td>
+<td style="text-align:left;">
+[42.3615418, 862.92512]90
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+109.2886
+</td>
+<td style="text-align:left;">
+[45.7111685, 172.86593]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+106.3760
+</td>
+<td style="text-align:left;">
+[36.6047883, 176.14728]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+102.6006
+</td>
+<td style="text-align:left;">
+[27.1422181, 178.05901]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+102.4725
+</td>
+<td style="text-align:left;">
+[21.7264929, 183.21845]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+111.9032
+</td>
+<td style="text-align:left;">
+[26.1952715, 197.61121]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+122.5810
+</td>
+<td style="text-align:left;">
+[32.1830104, 212.97902]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+125.5234
+</td>
+<td style="text-align:left;">
+[30.6669550, 220.37981]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+148.0999
+</td>
+<td style="text-align:left;">
+[48.9853517, 247.21436]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+147.6801
+</td>
+<td style="text-align:left;">
+[44.4830307, 250.87710]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+112.2665
+</td>
+<td style="text-align:left;">
+[5.1423886, 219.39058]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+111.3402
+</td>
+<td style="text-align:left;">
+[0.4280154, 222.25240]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+107.7202
+</td>
+<td style="text-align:left;">
+[-6.8564988, 222.29696]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+109.2886
+</td>
+<td style="text-align:left;">
+[-8.8375275, 227.41463]90
+</td>
+<td style="text-align:left;">
+Austria
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+8.0000
+</td>
+<td style="text-align:left;">
+[-1.4157003, 17.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+7.0000
+</td>
+<td style="text-align:left;">
+[-2.4157003, 16.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+7.0000
+</td>
+<td style="text-align:left;">
+[-2.4157003, 16.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+4.0000
+</td>
+<td style="text-align:left;">
+[-5.4157003, 13.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+[-9.4157003, 9.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+4.0000
+</td>
+<td style="text-align:left;">
+[-5.4157003, 13.41570]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+8.0000
+</td>
+<td style="text-align:left;">
+[-5.3158111, 21.31581]90
+</td>
+<td style="text-align:left;">
+Lichtenstein
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2022 Dec
+</td>
+<td style="text-align:right;">
+2336.5145
+</td>
+<td style="text-align:left;">
+[1867.5081594, 2805.52092]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jan
+</td>
+<td style="text-align:right;">
+2507.8176
+</td>
+<td style="text-align:left;">
+[1979.5918486, 3036.04340]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Feb
+</td>
+<td style="text-align:right;">
+2489.2173
+</td>
+<td style="text-align:left;">
+[1932.4512384, 3045.98329]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Mar
+</td>
+<td style="text-align:right;">
+2580.3530
+</td>
+<td style="text-align:left;">
+[2009.1914148, 3151.51449]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Apr
+</td>
+<td style="text-align:right;">
+2302.4416
+</td>
+<td style="text-align:left;">
+[1723.8748477, 2881.00832]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 May
+</td>
+<td style="text-align:right;">
+2411.3277
+</td>
+<td style="text-align:left;">
+[1828.9156802, 2993.73979]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jun
+</td>
+<td style="text-align:right;">
+2591.9269
+</td>
+<td style="text-align:left;">
+[2007.5086713, 3176.34516]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Jul
+</td>
+<td style="text-align:right;">
+3070.8383
+</td>
+<td style="text-align:left;">
+[2485.3708615, 3656.30576]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Aug
+</td>
+<td style="text-align:right;">
+2798.4897
+</td>
+<td style="text-align:left;">
+[2212.4728573, 3384.50657]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Sep
+</td>
+<td style="text-align:right;">
+2469.8839
+</td>
+<td style="text-align:left;">
+[1883.5791909, 3056.18865]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Oct
+</td>
+<td style="text-align:right;">
+2412.0242
+</td>
+<td style="text-align:left;">
+[1825.5686263, 2998.47987]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Nov
+</td>
+<td style="text-align:right;">
+2300.3908
+</td>
+<td style="text-align:left;">
+[1713.8560678, 2886.92552]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2023 Dec
+</td>
+<td style="text-align:right;">
+2299.4571
+</td>
+<td style="text-align:left;">
+[1694.0277708, 2904.88640]90
+</td>
+<td style="text-align:left;">
+Total
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div id="challenges-and-further-analysis" class="section level1">
