@@ -66,7 +66,7 @@ data_elec %>% autoplot(Lichtenstein) +
 
 ### **Measuring Model Accuracy**
 In our case S-Naive outperform during the model selection and analysis of accuracy. However S-Naive method may perform well for the time period that we have train our data, but it is important to note that it has some limitations. Indeed, it assumes that historical patterns will repeat exactly in the future, which may not always hold. The S-Naive method may not account for underlying factors or trends that could impact future outcomes. Therefore, there is an increased risk of inaccurate forecasts if the method is blindly applied without considering other relevant factors.
-Thus we've selected ETS based on a trade off between forecasting error and complexity of the model. ETS model has the third lowest RMSE and second lowest MAE which makes him a good candidate. 
+ETS could be great models based on a trade off between forecasting error and complexity of the model. ETS model has the third lowest RMSE and second lowest MAE which makes him a good candidate. In order to select a model, we can analyse residuals of those models
 
 ```{r, warning=FALSE, echo=FALSE}
 #Accuracy
@@ -93,7 +93,9 @@ Licht_accuracy_table[ 1:4,1:10] %>%
   kbl() %>%
   kable_paper(full_width = F) %>%
   column_spec(4, color = "white",
-              background = spec_color(Licht_accuracy_table$RMSE[1:4],end = 0.7))
+              background = spec_color(Licht_accuracy_table$RMSE[1:4],end = 0.6)) %>%
+    column_spec(5, color = "white",
+              background = spec_color(Licht_accuracy_table$MAE[1:4],end = 0.6))
 ```
 ```{r}
 report(data_fit_Licht_e)
@@ -101,14 +103,11 @@ report(data_fit_Licht_e)
 ```
 
 ### **Residuals**
-It is interesting to examine any outliers or extreme values in the residuals. The ACF analysis for ETS model shows that there's no correlation between the ts and its lagged values. Thus, each observation in the ts can be considered unrelated to the previous values. It suggests that there is no structure in the data that can be exploited for forecasting. Consequently, Lichtenstein ts might need covariate to forecast and analyse it adequately. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero, thus those might shows autocorrelation.
+It is interesting to examine any outliers or extreme values in the residuals. The ACF analysis for SNaive shows Positive correlations between the ts and its lags. In opposite ETS model shows that there's no correlation between thoses values. Thus, each observation in the ts can be considered unrelated to the previous values. Consequently, Lichtenstein ts might need covariate to forecast and analyse it adequately. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero for both models (SNaive & ETS), thus those might shows autocorrelation.
 
 ```{r, warning=FALSE, echo=FALSE}
 #gg_tsresiduals(data_fit_Licht_a) + labs(title = "ARIMA Lichtenstein residuals analysis")
-
+gg_tsresiduals(data_fit_Licht_n) + labs(title = "SNAIVE Lichtenstein residuals analysis")
 gg_tsresiduals(data_fit_Licht_e) + labs(title = "ETS Lichtenstein residuals analysis")
-
-#gg_tsresiduals(data_fit_Licht_n) + labs(title = "SNAIVE Lichtenstein residuals analysis")
-
 #gg_tsresiduals(data_fit_Licht_pw_a) + labs(title = "PIECE WISE Lichtenstein residuals analysis")
 ```

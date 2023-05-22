@@ -220,11 +220,9 @@
       <li><a href="#acf---autocorrelation-analysis"
       id="toc-acf---autocorrelation-analysis">3.3 ACF - Autocorrelation
       analysis</a></li>
-      <li><a href="#decomposition" id="toc-decomposition">3.4
-      Decomposition</a></li>
       <li><a href="#stl-decomposition-for-all-countries"
-      id="toc-stl-decomposition-for-all-countries">STL Decomposition for
-      all countries</a></li>
+      id="toc-stl-decomposition-for-all-countries">3.4 STL Decomposition
+      for all countries</a></li>
       <li><a href="#unit-root-test-for-stationarity"
       id="toc-unit-root-test-for-stationarity">3.5 Unit Root Test for
       Stationarity</a></li>
@@ -277,20 +275,21 @@ Khryst Amina Ivan
 <div id="main">
 <div id="things-that-need-to-be-done" class="section level1">
 <h1>THINGS THAT NEED TO BE DONE</h1>
-<p>In general:</p>
-<ul>
-<li>URGENT: FIX LICHTENSTEIN + add it to final table (Ok) –&gt; adjust
-in forecast the CI</li>
-<li>Remove all warnings (Done)</li>
-<li>Complete the Report -&gt; Write specific analysis for different
-countries</li>
-</ul>
+<p>In general: - Remove all warnings (Done)</p>
 <p>Country specific:</p>
 <ul>
 <li>Explore huge peak in Austria 2002 -&gt; is it an outlier</li>
 <li>Explain big drop in Lichtenstein + thought process behind piece-wise
-model</li>
-<li>Should add piece-wise ets if perform better</li>
+model (Done)</li>
+<li>Should add piece-wise ets if perform better 3.4: STL decomposition
+analysis :</li>
+<li>Germany</li>
+<li>France</li>
+<li>Italy</li>
+<li>Austria (Done)</li>
+<li>Lich (Done)</li>
+<li>Total 3.5 Unit Root Test for Stationarity every countries
+(Done)</li>
 </ul>
 </div>
 <div id="introduction" class="section level1">
@@ -416,11 +415,12 @@ assumption that the future values are solely determined by past values
 without considering any auto-correlation patterns. This suggests that
 our SNAIVE model will not be fitting the data as well.</p>
 </div>
-<div id="decomposition" class="section level2">
-<h2>3.4 Decomposition</h2>
-<p>In the final part of our EDA, we decided to perform an STL
-decomposition, as it can provide valuable insights and help explore and
-understand any strange patterns in our data.</p>
+<div id="stl-decomposition-for-all-countries"
+class="section level2 tabset">
+<h2 class="tabset">3.4 STL Decomposition for all countries</h2>
+<p>We decided to perform an STL decomposition, as it can provide
+valuable insights and help explore and understand any strange patterns
+in our data.</p>
 <p>Overall as you can see below, we observed strong seasonality and
 trend patterns in each country and all countries together which
 suggested our models should have a way to capture the presence of
@@ -431,10 +431,6 @@ left of each graph). Finally, we can also see that the “remainder”
 component is quite significant in size (relative to the overall
 variation) which makes the time series difficult to predict
 accurately.</p>
-</div>
-<div id="stl-decomposition-for-all-countries"
-class="section level2 tabset">
-<h2 class="tabset">STL Decomposition for all countries</h2>
 <div id="germany" class="section level3">
 <h3><strong>Germany</strong></h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span></span>
@@ -465,6 +461,10 @@ class="section level2 tabset">
 </div>
 <div id="austria" class="section level3">
 <h3><strong>Austria</strong></h3>
+<p>Austria trend undergoes a huge increase during the period 2018-2021,
+follow by a drastic drop which are not explainable by historical data
+and strongly suggest that it is affected by a covariate. Seasonality is
+constant and stable over time during the whole period.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">STL</span>(Austria <span class="sc">~</span> <span class="fu">trend</span>(<span class="at">window =</span> <span class="dv">7</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="at">window =</span> <span class="st">&quot;periodic&quot;</span>),</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -474,6 +474,12 @@ class="section level2 tabset">
 </div>
 <div id="lichtenstein" class="section level3">
 <h3><strong>Lichtenstein</strong></h3>
+<p>Lichtenstein trend undergoes a drastical drop during the year of
+2008, that is not explainable by historical data and strongly suggest
+that it is affected by a covariate. Seasonality is constant and stable
+over time during the whole period. Thus we observe that the amplitude
+and duration of the seasonal patterns remain unchanged over different
+time periods.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">STL</span>(Lichtenstein <span class="sc">~</span> <span class="fu">trend</span>(<span class="at">window =</span> <span class="dv">7</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="at">window =</span> <span class="st">&quot;periodic&quot;</span>),</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -493,10 +499,10 @@ class="section level2 tabset">
 </div>
 <div id="unit-root-test-for-stationarity" class="section level2 tabset">
 <h2 class="tabset">3.5 Unit Root Test for Stationarity</h2>
-<p>Investigating the stationarity for different country is important in
-order to observe the stationarity assumption of those time series. We
-have run the Unit Root Test which is a statistical test that checks for
-the presence of a unit root in a time series, which is an indication of
+<p>In the final part of our EDA, we investigate the stationarity for
+different country is necessary before applying any models. We have run
+the Unit Root Test which is a statistical test that checks for the
+presence of a unit root in a time series, which is an indication of
 non-stationarity.</p>
 <p><span class="math display">\[H_0: The\ time\ series\ has\ a\ unit\
 root\ (non\ stationary)\\ H_1: The\ time\ series\ is\
@@ -604,7 +610,6 @@ best.</p>
 <p>As the most accurate forecast is of interest, we will give more
 weight to the model with low values of RMSE and MAE, even though another
 model has a higher AIC (see Appendix 2.).</p>
-<p>Lichtenstein Analysis will be described separately.</p>
 </div>
 <div id="germany-2" class="section level2 tabset">
 <h2 class="tabset">4.1 Germany</h2>
@@ -1075,37 +1080,20 @@ noise.</p>
 </div>
 <div id="lichtenstein-2" class="section level2 tabset">
 <h2 class="tabset">4.5 Lichtenstein</h2>
-<div id="unit-root-test-for-stationarity-1" class="section level3">
-<h3>Unit Root Test for Stationarity</h3>
-<p>Investigating the stationarity for Lichtenstein is important since
-the bahavior of the time series was not In order to observe the
-stationarity assumption of Lichtenstein time serie. We have run the Unit
-Root Test which is a statistical test that checks for the presence of a
-unit root in a time series, which is an indication of
-non-stationarity.</p>
-<p><span class="math display">\[H_0: The\ time\ series\ has\ a\ unit\
-root\ (non\ stationary)\\ H_1: The\ time\ series\ is\
-stationary\]</span></p>
-<p>In this case the Unit Root Test was performed on a the data
-Lichtenstein, and the test statistic was -6.5052. The p-value of the
-test was 0.01, which indicates strong evidence to reject the null
-hypothesis of non-stationarity at <code>alpha = 0.05</code>. Thus
-Lichtenstein data is a stationary time serie.</p>
-</div>
 <div id="testing-models-4" class="section level3">
 <h3><strong>Testing Models</strong></h3>
 <p>Below is the plot of how well each model fits the data based on a
-60-period prediction starting from 2016. The this code fits an different
-models to the training data, generates forecasts, and then applies a
-constraint to the forecasted mean values to ensure they are not
-negative. Based on the previous analysis Lichtenstein data is stationary
-time series with high presence of trend and seasonality, thus we can
-consider using a simple ARIMA, ETS, S-naive and Piece-Wise. A Piece-Wise
-ARIMA approach could be useful when the ts shows different behaviors
-over different periods. Indeed, we can observe four knots which exhibits
-different pattern in 2008, 2009,2015,2016. We have selected those date
-as knots and will observe the result.</p>
-<p><img src="main_files/figure-html/unnamed-chunk-36-1.png" width="768" /></p>
+60-period prediction starting from 2016. This code fits different models
+to the training data, generates forecasts, and then applies a constraint
+to the forecasted mean values to ensure they are not negative. Based on
+the previous analysis Lichtenstein data is stationary time series with
+high presence of trend and seasonality, thus we can consider using
+following models to perform our analysis: simple ARIMA, ETS, S-naive and
+Piece-Wise. A Piece-Wise ARIMA approach could be useful when the ts
+shows different behaviors over different periods. Indeed, we can observe
+four knots which exhibits different pattern in 2008, 2009,2015 and 2016.
+We have selected those date as knots and will observe the result.</p>
+<p><img src="main_files/figure-html/unnamed-chunk-35-1.png" width="768" /></p>
 </div>
 <div id="measuring-model-accuracy-4" class="section level3">
 <h3><strong>Measuring Model Accuracy</strong></h3>
@@ -1117,33 +1105,11 @@ patterns will repeat exactly in the future, which may not always hold.
 The S-Naive method may not account for underlying factors or trends that
 could impact future outcomes. Therefore, there is an increased risk of
 inaccurate forecasts if the method is blindly applied without
-considering other relevant factors. Thus we’ve selected ETS based on a
-trade of between forecasting error and complexity of the model. ETS
+considering other relevant factors. ETS could be great models based on a
+trade off between forecasting error and complexity of the model. ETS
 model has the third lowest RMSE and second lowest MAE which makes him a
-good candidate.</p>
-<pre><code>## Series: Lichtenstein 
-## Model: ARIMA(1,1,2)(0,0,2)[12] 
-## 
-## Coefficients:
-##          ar1      ma1     ma2    sma1    sma2
-##       0.7733  -1.0998  0.1674  0.2296  0.2115
-## s.e.  0.1341   0.1552  0.1085  0.0746  0.0752
-## 
-## sigma^2 estimated as 13.09:  log likelihood=-514.99
-## AIC=1041.98   AICc=1042.44   BIC=1061.5</code></pre>
-<pre><code>## Series: Lichtenstein 
-## Model: LM w/ ARIMA(1,0,1)(2,0,0)[12] errors 
-## 
-## Coefficients:
-##          ar1      ma1    sar1    sar2
-##       0.8984  -0.2993  0.2682  0.2445
-## s.e.  0.0370   0.0897  0.0711  0.0801
-##       trend(knots = c(2008, 2009, 2015, 2016))trend  intercept
-##                                             -0.1089    24.4159
-## s.e.                                         0.0444     5.3267
-## 
-## sigma^2 estimated as 12.37:  log likelihood=-513.02
-## AIC=1040.04   AICc=1040.65   BIC=1062.84</code></pre>
+good candidate. In order to select a model, we can analyse residuals of
+those models</p>
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1190,10 +1156,10 @@ Test
 <td style="text-align:right;">
 0.201217
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(66, 63, 133, 1) !important;">
+<td style="text-align:right;color: white !important;background-color: rgba(69, 55, 129, 1) !important;">
 4.003959
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;color: white !important;background-color: rgba(38, 130, 142, 1) !important;">
 3.025938
 </td>
 <td style="text-align:right;">
@@ -1222,10 +1188,10 @@ Test
 <td style="text-align:right;">
 1.458273
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(62, 75, 137, 1) !important;">
+<td style="text-align:right;color: white !important;background-color: rgba(66, 65, 134, 1) !important;">
 4.088135
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;color: white !important;background-color: rgba(66, 65, 134, 1) !important;">
 2.171460
 </td>
 <td style="text-align:right;">
@@ -1257,7 +1223,7 @@ Test
 <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;">
 3.623994
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;">
 1.533333
 </td>
 <td style="text-align:right;">
@@ -1286,10 +1252,10 @@ Test
 <td style="text-align:right;">
 3.347704
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(67, 191, 113, 1) !important;">
+<td style="text-align:right;color: white !important;background-color: rgba(34, 168, 132, 1) !important;">
 5.070438
 </td>
-<td style="text-align:right;">
+<td style="text-align:right;color: white !important;background-color: rgba(34, 168, 132, 1) !important;">
 3.546447
 </td>
 <td style="text-align:right;">
@@ -1310,7 +1276,7 @@ NaN
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_Licht_e)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_Licht_e)</span></code></pre></div>
 <pre><code>## Series: Lichtenstein 
 ## Model: ETS(A,N,A) 
 ##   Smoothing parameters:
@@ -1327,89 +1293,85 @@ NaN
 ## 
 ##      AIC     AICc      BIC 
 ## 1486.015 1488.742 1534.878</code></pre>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_Licht_n)</span></code></pre></div>
-<pre><code>## Series: Lichtenstein 
-## Model: SNAIVE 
-## 
-## sigma^2: 38.3321</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co">#report(data_fit_Licht_n)</span></span></code></pre></div>
 </div>
 <div id="residuals-4" class="section level3">
 <h3><strong>Residuals</strong></h3>
-<p>Interesting to examine any outliers or extreme values in the
-residuals. The ACF analysis for ETS model shows that there’s no
-correlation between the ts and its lagged values. Thus, each observation
-in the ts can be considered unrelated to the previous values. It
-suggests that there is no structure in the data that can be exploited
-for forecasting. Consequently, Lichtenstein ts might need covariate to
-forecast and analyse it adequately. Concerning the residual, it should
-ideally appear random, in our case residuals are chinked around zero,
-however those might exhibit autocorrelation or remaining structure.</p>
-<p><img src="main_files/figure-html/unnamed-chunk-40-1.png" width="768" /></p>
+<p>It is interesting to examine any outliers or extreme values in the
+residuals. The ACF analysis for SNaive shows Positive correlations
+between the ts and its lags. In opposite ETS model shows that there’s no
+correlation between thoses values. Thus, each observation in the ts can
+be considered unrelated to the previous values. Consequently,
+Lichtenstein ts might need covariate to forecast and analyse it
+adequately. Concerning the residual, it should ideally appear random, in
+our case residuals are chinked around zero for both models (SNaive &amp;
+ETS), thus those might shows autocorrelation.</p>
+<p><img src="main_files/figure-html/unnamed-chunk-39-1.png" width="768" /><img src="main_files/figure-html/unnamed-chunk-39-2.png" width="768" /></p>
 </div>
 </div>
 <div id="total-2" class="section level2 tabset">
 <h2 class="tabset">4.6 Total</h2>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>Total_since_2015 <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date,Total) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2015-01-01&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>Total_since_2015 <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date,Total) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2015-01-01&quot;</span>))</span></code></pre></div>
 <div id="testing-models-5" class="section level3">
 <h3><strong>Testing Models</strong></h3>
 <p>Below is the plot of how well each model fits the data based on a
 60-period prediction starting from 2016.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Split the data</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>training_tot <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date, Total) <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(Date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>))</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>test_tot <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date, Total) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>))</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ARIMA model and generate forecasts</span></span>
-<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>data_fit_tot_a <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
-<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Total))</span>
-<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>forecasts_tot_a <span class="ot">&lt;-</span> data_fit_tot_a <span class="sc">%&gt;%</span></span>
-<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
-<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ETS model and generate forecasts</span></span>
-<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>data_fit_tot_e <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
-<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Total))</span>
-<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>forecasts_tot_e <span class="ot">&lt;-</span> data_fit_tot_e <span class="sc">%&gt;%</span></span>
-<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
-<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit seasonal naive model and generate forecasts</span></span>
-<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>data_fit_tot_n <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
-<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">SNAIVE</span>(Total))</span>
-<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>forecasts_tot_n <span class="ot">&lt;-</span> data_fit_tot_n <span class="sc">%&gt;%</span></span>
-<span id="cb78-21"><a href="#cb78-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
-<span id="cb78-22"><a href="#cb78-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-23"><a href="#cb78-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine forecasts into a single data frame</span></span>
-<span id="cb78-24"><a href="#cb78-24" aria-hidden="true" tabindex="-1"></a>all_forecasts_tot <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb78-25"><a href="#cb78-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_a<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;ARIMA&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_a<span class="sc">$</span>.mean),</span>
-<span id="cb78-26"><a href="#cb78-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_e<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;ETS&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_e<span class="sc">$</span>.mean),</span>
-<span id="cb78-27"><a href="#cb78-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_n<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;SNAIVE&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_n<span class="sc">$</span>.mean))</span>
-<span id="cb78-28"><a href="#cb78-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-29"><a href="#cb78-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-30"><a href="#cb78-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all three sets of forecasts together</span></span>
-<span id="cb78-31"><a href="#cb78-31" aria-hidden="true" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total) <span class="sc">+</span></span>
-<span id="cb78-32"><a href="#cb78-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> all_forecasts_tot, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Forecast, <span class="at">color =</span> Method)) <span class="sc">+</span></span>
-<span id="cb78-33"><a href="#cb78-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Electricity Demand to all countries&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-42-1.png" width="768" /></p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Split the data</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>training_tot <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date, Total) <span class="sc">%&gt;%</span>  <span class="fu">filter</span>(Date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>))</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>test_tot <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span> <span class="fu">select</span>(Date, Total) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2016-01-01&quot;</span>))</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ARIMA model and generate forecasts</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>data_fit_tot_a <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Total))</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>forecasts_tot_a <span class="ot">&lt;-</span> data_fit_tot_a <span class="sc">%&gt;%</span></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit ETS model and generate forecasts</span></span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>data_fit_tot_e <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Total))</span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>forecasts_tot_e <span class="ot">&lt;-</span> data_fit_tot_e <span class="sc">%&gt;%</span></span>
+<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
+<span id="cb75-16"><a href="#cb75-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-17"><a href="#cb75-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit seasonal naive model and generate forecasts</span></span>
+<span id="cb75-18"><a href="#cb75-18" aria-hidden="true" tabindex="-1"></a>data_fit_tot_n <span class="ot">&lt;-</span> training_tot <span class="sc">%&gt;%</span></span>
+<span id="cb75-19"><a href="#cb75-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">SNAIVE</span>(Total))</span>
+<span id="cb75-20"><a href="#cb75-20" aria-hidden="true" tabindex="-1"></a>forecasts_tot_n <span class="ot">&lt;-</span> data_fit_tot_n <span class="sc">%&gt;%</span></span>
+<span id="cb75-21"><a href="#cb75-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">60</span>)</span>
+<span id="cb75-22"><a href="#cb75-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-23"><a href="#cb75-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine forecasts into a single data frame</span></span>
+<span id="cb75-24"><a href="#cb75-24" aria-hidden="true" tabindex="-1"></a>all_forecasts_tot <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb75-25"><a href="#cb75-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_a<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;ARIMA&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_a<span class="sc">$</span>.mean),</span>
+<span id="cb75-26"><a href="#cb75-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_e<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;ETS&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_e<span class="sc">$</span>.mean),</span>
+<span id="cb75-27"><a href="#cb75-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Date =</span> forecasts_tot_n<span class="sc">$</span>Date, <span class="at">Method =</span> <span class="st">&quot;SNAIVE&quot;</span>, <span class="at">Forecast =</span> forecasts_tot_n<span class="sc">$</span>.mean))</span>
+<span id="cb75-28"><a href="#cb75-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-29"><a href="#cb75-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-30"><a href="#cb75-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all three sets of forecasts together</span></span>
+<span id="cb75-31"><a href="#cb75-31" aria-hidden="true" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total) <span class="sc">+</span></span>
+<span id="cb75-32"><a href="#cb75-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> all_forecasts_tot, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Forecast, <span class="at">color =</span> Method)) <span class="sc">+</span></span>
+<span id="cb75-33"><a href="#cb75-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Electricity Demand to all countries&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-41-1.png" width="768" /></p>
 </div>
 <div id="measuring-model-accuracy-5" class="section level3">
 <h3><strong>Measuring Model Accuracy</strong></h3>
 <p>According to the accuracy table below, RMSE, MAE, as well as AIC,
 AICc, and BIC, ARIMA has the lowest values on the test data than the ETS
 model.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Accuracy</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>total_accuracy_a <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_a, test_tot)</span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>total_accuracy_e <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_e, test_tot)</span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>total_accuracy_n <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_n, test_tot)</span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>total_accuracy_table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
-<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_a),</span>
-<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_e),</span>
-<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_n))</span>
-<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a><span class="co">#AIC</span></span>
-<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_tot_a)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Accuracy</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>total_accuracy_a <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_a, test_tot)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>total_accuracy_e <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_e, test_tot)</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>total_accuracy_n <span class="ot">&lt;-</span><span class="fu">accuracy</span>(forecasts_tot_n, test_tot)</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>total_accuracy_table <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_a),</span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_e),</span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(total_accuracy_n))</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a><span class="co">#AIC</span></span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_tot_a)</span></code></pre></div>
 <pre><code>## Series: Total 
 ## Model: ARIMA(1,0,1)(2,0,0)[12] w/ mean 
 ## 
@@ -1420,7 +1382,7 @@ model.</p>
 ## 
 ## sigma^2 estimated as 63131:  log likelihood=-1335.72
 ## AIC=2683.45   AICc=2683.9   BIC=2702.99</code></pre>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>total_accuracy_table</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>total_accuracy_table</span></code></pre></div>
 <pre><code>##          .model .type        ME     RMSE      MAE        MPE     MAPE MASE
 ## 1  ARIMA(Total)  Test -152.5501 469.2775 322.1278  -8.530677 13.59182  NaN
 ## 2    ETS(Total)  Test -416.7913 578.6994 472.6052 -18.311113 19.85636  NaN
@@ -1429,7 +1391,7 @@ model.</p>
 ## 1   NaN 0.5885794
 ## 2   NaN 0.5109384
 ## 3   NaN 0.5163818</code></pre>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_tot_e)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(data_fit_tot_e)</span></code></pre></div>
 <pre><code>## Series: Total 
 ## Model: ETS(A,N,A) 
 ##   Smoothing parameters:
@@ -1452,15 +1414,15 @@ model.</p>
 <p>The output below also suggests that the ARIMA model did well in
 capturing all the dynamics in data, as the residuals seem to be white
 noise.</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_a) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Total residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-44-1.png" width="768" /></p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_e) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Total residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-44-2.png" width="768" /></p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_n) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;SNAIVE Total residuals analysis&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_a) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Total residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-43-1.png" width="768" /></p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_e) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Total residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-43-2.png" width="768" /></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsresiduals</span>(data_fit_tot_n) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;SNAIVE Total residuals analysis&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning: Removed 12 rows containing missing values (`geom_line()`).</code></pre>
 <pre><code>## Warning: Removed 12 rows containing missing values (`geom_point()`).</code></pre>
 <pre><code>## Warning: Removed 12 rows containing non-finite values (`stat_bin()`).</code></pre>
-<p><img src="main_files/figure-html/unnamed-chunk-44-3.png" width="768" /></p>
+<p><img src="main_files/figure-html/unnamed-chunk-43-3.png" width="768" /></p>
 </div>
 </div>
 <div id="result" class="section level2">
@@ -1500,13 +1462,13 @@ more specific comments:</p>
 <div id="germany-3" class="section level2 tabset">
 <h2 class="tabset">5.1 Germany</h2>
 <p>We fit Germany electricity demand data using the ETS model.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ARIMA automatically</span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Germany) <span class="sc">%&gt;%</span></span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ets =</span> <span class="fu">ETS</span>(Germany))</span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_germany <span class="ot">&lt;-</span> ets_germany <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ARIMA automatically</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Germany) <span class="sc">%&gt;%</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="at">ets =</span> <span class="fu">ETS</span>(Germany))</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_germany <span class="ot">&lt;-</span> ets_germany <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
 <div id="checking-residuals" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
 <p>The output below suggests that the ETS model did a decent job in
@@ -1520,33 +1482,33 @@ notice the peaks in some of the lagged periods of the ACF graph,
 indicating the presence of autocorrelation between the time periods and
 the previous time periods, which is not great in terms of how well the
 model fits the data.</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Germany residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-46-1.png" width="768" /></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Germany residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-45-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
 <p>For better visualization, we plot our forecast results starting from
 2015.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Germany_since_2015) <span class="sc">+</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Germany&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-47-1.png" width="768" /></p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_germany))</span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e <span class="ot">&lt;-</span> forecast_table_germany_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>) </span>
-<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Germany&quot;</span></span>
-<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb94-12"><a href="#cb94-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>ets_germany <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Germany_since_2015) <span class="sc">+</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Germany&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-46-1.png" width="768" /></p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_germany))</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e <span class="ot">&lt;-</span> forecast_table_germany_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>) </span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Germany&quot;</span></span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb91-12"><a href="#cb91-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_germany_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Germany is shown below.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>forecast_table_germany_e</span></code></pre></div>
 <pre><code>##       Month       PF                         CI Country
 ## 1  2022 Dec 157.1304 [  69.352709,  244.9081]90 Germany
 ## 2  2023 Jan 134.0659 [  38.462369,  229.6695]90 Germany
@@ -1566,44 +1528,42 @@ model fits the data.</p>
 <div id="italy-3" class="section level2 tabset">
 <h2 class="tabset">5.2 Italy</h2>
 <p>We fit Italy electricity demand data using the ARIMA model.</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Italy) <span class="sc">%&gt;%</span></span>
-<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Italy))</span>
-<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>forecast_arima_italy <span class="ot">&lt;-</span> arima_italy <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Italy) <span class="sc">%&gt;%</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Italy))</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>forecast_arima_italy <span class="ot">&lt;-</span> arima_italy <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
 <div id="checking-residuals-1" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
 <p>The output below suggests that the ARIMA model did well in capturing
 all the dynamics in data, as the residuals seem to be white noise.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Italy residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-50-1.png" width="768" /></p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Italy residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-49-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast-1" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
 <p>For better visualization, we plot our forecast results starting from
 2018.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Italy_since_2018) <span class="sc">+</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Forecast for Italy&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-51-1.png" width="768" /></p>
-<div class="sourceCode" id="cb100"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA&quot;</span>),</span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_arima_italy))</span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a <span class="ot">&lt;-</span> forecast_table_italy_a <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Italy&quot;</span></span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>arima_italy <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Italy_since_2018) <span class="sc">+</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Forecast for Italy&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-50-1.png" width="768" /></p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA&quot;</span>),</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_arima_italy))</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a <span class="ot">&lt;-</span> forecast_table_italy_a <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Italy&quot;</span></span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-8"><a href="#cb97-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb97-9"><a href="#cb97-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb97-10"><a href="#cb97-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_italy_a)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table-1" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Italy is shown below.</p>
-<div class="sourceCode" id="cb101"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>forecast_table_italy_a</span></code></pre></div>
 <pre><code>##       Month       PF                      CI Country
 ## 1  2022 Dec 1826.559 [1289.9394, 2363.178]90   Italy
 ## 2  2023 Jan 1830.641 [1164.2666, 2497.015]90   Italy
@@ -1623,47 +1583,47 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb1
 <div id="austria-3" class="section level2 tabset">
 <h2 class="tabset">5.3 Austria</h2>
 <p>We fit Austria electricity demand data using the ETS model.</p>
-<div class="sourceCode" id="cb103"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Austria) <span class="sc">%&gt;%</span></span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Austria))</span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_austria <span class="ot">&lt;-</span> ets_austria <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Austria) <span class="sc">%&gt;%</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Austria))</span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_austria <span class="ot">&lt;-</span> ets_austria <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
 <div id="checking-residuals-2" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
 <p>The output below suggests that the ETS model did well in capturing
 all the dynamics in data, as the residuals seem to be white noise.</p>
-<div class="sourceCode" id="cb104"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Austria residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-54-1.png" width="768" /></p>
+<div class="sourceCode" id="cb101"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Austria residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-53-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast-2" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
 <p>For better visualization, we plot our forecast results starting from
 2018.</p>
-<div class="sourceCode" id="cb105"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Austria_since_2018) <span class="sc">+</span></span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Austria&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-55-1.png" width="768" /></p>
-<div class="sourceCode" id="cb106"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
-<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_austria))</span>
-<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e <span class="ot">&lt;-</span> forecast_table_austria_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
-<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Austria&quot;</span></span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb106-10"><a href="#cb106-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>ets_austria <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Austria_since_2018) <span class="sc">+</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Austria&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-54-1.png" width="768" /></p>
+<div class="sourceCode" id="cb103"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_austria))</span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e <span class="ot">&lt;-</span> forecast_table_austria_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Austria&quot;</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_austria_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table-2" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Austria is shown below.</p>
-<div class="sourceCode" id="cb107"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>forecast_table_austria_e</span></code></pre></div>
 <pre><code>##       Month       PF                       CI Country
 ## 1  2022 Dec 109.2886 [45.7111685, 172.8659]90 Austria
 ## 2  2023 Jan 106.3760 [36.6047883, 176.1473]90 Austria
@@ -1683,14 +1643,14 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb1
 <div id="france-3" class="section level2 tabset">
 <h2 class="tabset">5.4 France</h2>
 <p>We fit France electricity demand data using the ETS model.</p>
-<div class="sourceCode" id="cb109"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>ets_france <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(France) <span class="sc">%&gt;%</span></span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(France))</span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_france <span class="ot">&lt;-</span> ets_france <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>ets_france <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(France) <span class="sc">%&gt;%</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(France))</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>forecast_ets_france <span class="ot">&lt;-</span> ets_france <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
 <div id="checking-residuals-3" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
 <p>The output below suggests that the ETS model did a decent job in
@@ -1705,35 +1665,35 @@ notice a peak in the first lagged period of the ACF graph, indicating
 the presence of autocorrelation between a time period and the previous
 time period, which is not great in terms of how well the model fits the
 data.</p>
-<div class="sourceCode" id="cb110"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>ets_france <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS France residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-58-1.png" width="768" /></p>
+<div class="sourceCode" id="cb107"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>ets_france <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS France residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-57-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast-3" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
 <p>For better visualization, we plot our forecast results starting from
 2015.</p>
-<div class="sourceCode" id="cb111"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>ets_france <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(France_since_2015) <span class="sc">+</span></span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for France&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-59-1.png" width="768" /></p>
-<div class="sourceCode" id="cb112"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_france))</span>
-<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e <span class="ot">&lt;-</span> forecast_table_france_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
-<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;France&quot;</span></span>
-<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>ets_france <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(France_since_2015) <span class="sc">+</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for France&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-58-1.png" width="768" /></p>
+<div class="sourceCode" id="cb109"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_france))</span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e <span class="ot">&lt;-</span> forecast_table_france_e <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;France&quot;</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb109-10"><a href="#cb109-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_france_e)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table-3" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for France is shown below.</p>
-<div class="sourceCode" id="cb113"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>forecast_table_france_e</span></code></pre></div>
 <pre><code>##       Month       PF                     CI Country
 ## 1  2022 Dec 452.6419 [86.27746, 819.0064]90  France
 ## 2  2023 Jan 426.1098 [77.66769, 774.5518]90  France
@@ -1752,14 +1712,14 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb1
 </div>
 <div id="lichtenstein-3" class="section level2 tabset">
 <h2 class="tabset">5.5 Lichtenstein</h2>
-<p>We fit Total electricity demand data using the ETS model. ### ETS</p>
-<div class="sourceCode" id="cb115"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
-<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Lichtenstein) <span class="sc">%&gt;%</span></span>
-<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Lichtenstein))</span>
-<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting the Accuracy scores for models</span></span>
-<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(ets_Licht)</span></code></pre></div>
+<p>We fit Lichtenstein electricity demand data using the ETS model.</p>
+<div class="sourceCode" id="cb112"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Lichtenstein) <span class="sc">%&gt;%</span></span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ETS</span>(Lichtenstein))</span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting the Accuracy scores for models</span></span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(ets_Licht)</span></code></pre></div>
 <pre><code>## Series: Lichtenstein 
 ## Model: ETS(A,N,A) 
 ##   Smoothing parameters:
@@ -1776,41 +1736,41 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb1
 ## 
 ##      AIC     AICc      BIC 
 ## 2220.780 2222.634 2275.032</code></pre>
-<div class="sourceCode" id="cb117"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>forecast_ets_Licht <span class="ot">&lt;-</span> ets_Licht <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span>
-<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>forecast_ets_Licht<span class="sc">$</span>.mean <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(forecast_ets_Licht<span class="sc">$</span>.mean <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, forecast_ets_Licht<span class="sc">$</span>.mean)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>forecast_ets_Licht <span class="ot">&lt;-</span> ets_Licht <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>forecast_ets_Licht<span class="sc">$</span>.mean <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(forecast_ets_Licht<span class="sc">$</span>.mean <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, forecast_ets_Licht<span class="sc">$</span>.mean)</span></code></pre></div>
 <div id="checking-residuals-4" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
-<div class="sourceCode" id="cb118"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking the residuals before forecasting</span></span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Lichtenstein residuals analysis&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-62-1.png" width="768" /></p>
+<div class="sourceCode" id="cb115"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking the residuals before forecasting</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Lichtenstein residuals analysis&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-61-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast-4" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
-<div class="sourceCode" id="cb119"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphing the forecast</span></span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Lichtenstein_after_2008) <span class="sc">+</span></span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Lichtenstein&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-63-1.png" width="768" /></p>
-<div class="sourceCode" id="cb120"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
-<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_Licht))</span>
-<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets <span class="ot">&lt;-</span> forecast_table_Lichtenstein_ets <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
-<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Lichtenstein&quot;</span></span>
-<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb120-8"><a href="#cb120-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb120-9"><a href="#cb120-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb120-10"><a href="#cb120-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphing the forecast</span></span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>ets_Licht <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Lichtenstein_after_2008) <span class="sc">+</span></span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ETS Forecast for Lichtenstein&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-62-1.png" width="768" /></p>
+<div class="sourceCode" id="cb117"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ETS&quot;</span>),</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_ets_Licht))</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets <span class="ot">&lt;-</span> forecast_table_Lichtenstein_ets <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Lichtenstein&quot;</span></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb117-9"><a href="#cb117-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb117-10"><a href="#cb117-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_Lichtenstein_ets)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table-4" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Lichtenstein is shown below.</p>
-<div class="sourceCode" id="cb121"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>forecast_table_Lichtenstein_ets</span></code></pre></div>
 <pre><code>##       Month       PF                        CI      Country
 ## 1  2022 Dec 3.468600 [ -1.997842,  8.935043]90 Lichtenstein
 ## 2  2023 Jan 4.516874 [ -1.561131, 10.594879]90 Lichtenstein
@@ -1830,47 +1790,47 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb1
 <div id="total-3" class="section level2 tabset">
 <h2 class="tabset">5.6 Total</h2>
 <p>We fit Total electricity demand data using the ARIMA model.</p>
-<div class="sourceCode" id="cb123"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
-<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>arima_total <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
-<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Total) <span class="sc">%&gt;%</span></span>
-<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Total))</span>
-<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
-<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a>forecast_arima_total <span class="ot">&lt;-</span> arima_total <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelling ETS automatically</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>arima_total <span class="ot">&lt;-</span> data_elec <span class="sc">%&gt;%</span></span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Total) <span class="sc">%&gt;%</span></span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">ARIMA</span>(Total))</span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecasting using the models</span></span>
+<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a>forecast_arima_total <span class="ot">&lt;-</span> arima_total <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">hilo</span>(<span class="dv">90</span>)</span></code></pre></div>
 <div id="checking-residuals-5" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
 <p>The output below suggests that the ARIMA model did well in capturing
 all the dynamics in data, as the residuals seem to be white noise.</p>
-<div class="sourceCode" id="cb124"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>arima_total <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA residuals analysis for all countries&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-66-1.png" width="768" /></p>
+<div class="sourceCode" id="cb121"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>arima_total <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA residuals analysis for all countries&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-65-1.png" width="768" /></p>
 </div>
 <div id="graphing-the-forecast-5" class="section level3">
 <h3><strong>Graphing the forecast</strong></h3>
 <p>For better visualization, we plot our forecast results starting from
 2015.</p>
-<div class="sourceCode" id="cb125"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>arima_total <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total_since_2015) <span class="sc">+</span></span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Forecast for All Countries&quot;</span>)</span></code></pre></div>
-<p><img src="main_files/figure-html/unnamed-chunk-67-1.png" width="768" /></p>
-<div class="sourceCode" id="cb126"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
-<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA&quot;</span>),</span>
-<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_arima_total))</span>
-<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a <span class="ot">&lt;-</span> forecast_table_total_a <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
-<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Total&quot;</span></span>
-<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb126-8"><a href="#cb126-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
-<span id="cb126-9"><a href="#cb126-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
-<span id="cb126-10"><a href="#cb126-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>arima_total <span class="sc">%&gt;%</span> <span class="fu">forecast</span>(<span class="at">h =</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total_since_2015) <span class="sc">+</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;ARIMA Forecast for All Countries&quot;</span>)</span></code></pre></div>
+<p><img src="main_files/figure-html/unnamed-chunk-66-1.png" width="768" /></p>
+<div class="sourceCode" id="cb123"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Extracting the forecasted values</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA&quot;</span>),</span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Forecast_Values =</span> <span class="fu">c</span>(forecast_arima_total))</span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a <span class="ot">&lt;-</span> forecast_table_total_a <span class="sc">%&gt;%</span> <span class="fu">select</span>(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.<span class="fl">90.</span>)</span>
+<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="st">&quot;Total&quot;</span></span>
+<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb123-8"><a href="#cb123-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Month&quot;</span></span>
+<span id="cb123-9"><a href="#cb123-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;PF&quot;</span></span>
+<span id="cb123-10"><a href="#cb123-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(forecast_table_total_a)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;CI&quot;</span></span></code></pre></div>
 </div>
 <div id="forecast-table-5" class="section level3">
 <h3><strong>Forecast Table</strong></h3>
 <p>The resulting forecast table for Total is shown below.</p>
-<div class="sourceCode" id="cb127"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>forecast_table_total_a</span></code></pre></div>
 <pre><code>##       Month       PF                     CI Country
 ## 1  2022 Dec 2336.515 [1867.508, 2805.521]90   Total
 ## 2  2023 Jan 2507.818 [1979.592, 3036.043]90   Total
@@ -1893,10 +1853,10 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb1
 forecast <code>PF,</code> 80% lower and upper confidence levels (see
 Appendix 3.) interval forecast <code>CI,</code> and
 <code>Country.</code></p>
-<div class="sourceCode" id="cb129"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_ets, forecast_table_total_a)</span>
-<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a>final_fc</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_ets, forecast_table_total_a)</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>final_fc</span></code></pre></div>
 <pre><code>##       Month          PF                            CI      Country
 ## 1  2022 Dec  157.130385 [  69.3527092,  244.908060]90      Germany
 ## 2  2023 Jan  134.065938 [  38.4623689,  229.669508]90      Germany

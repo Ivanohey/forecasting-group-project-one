@@ -2,18 +2,22 @@
 # THINGS THAT NEED TO BE DONE 
 
 In general: 
-
-- URGENT: FIX LICHTENSTEIN + add it to final table (Ok)
---> adjust in forecast the CI
 - Remove all warnings (Done)
-- Complete the Report -> Write specific analysis for different countries
 
 Country specific:
 
 - Explore huge peak in Austria 2002 -> is it an outlier 
-- Explain big drop in Lichtenstein + thought process behind piece-wise model 
+- Explain big drop in Lichtenstein + thought process behind piece-wise model  (Done)
 - Should add piece-wise ets if perform better
-
+3.4: STL decomposition analysis :
+- Germany 
+- France
+- Italy
+- Austria (Done)
+- Lich (Done)
+- Total 
+3.5 Unit Root Test for Stationarity every countries  (Done)
+ 
 # 1. Introduction 
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 
@@ -92,13 +96,12 @@ From this graph, we can visualize autocorrelation. It's clear that the autocorre
 
 Based on the strong and clear presence of autocorrelation, we expect that a model like ARIMA/SARIMA will do a good job to capture this auto-correlation component, and will most likely have the best performance compared to other models. On the contrary, auto-correlation tends to impact the performance of SNAIVE models, as they rely on the assumption that the future values are solely determined by past values without considering any auto-correlation patterns. This suggests that our SNAIVE model will not be fitting the data as well.
 
-## 3.4 Decomposition
+## 3.4 STL Decomposition for all countries {.tabset}
 
-In the final part of our EDA, we decided to perform an STL decomposition, as it can provide valuable insights and help explore and understand any strange patterns in our data. 
+We decided to perform an STL decomposition, as it can provide valuable insights and help explore and understand any strange patterns in our data. 
 
 Overall as you can see below, we observed strong seasonality and trend patterns in each country and all countries together which suggested our models should have a way to capture the presence of seasonality and trend. This can be seen in the trend + season_year graphs which show the trend + seasonal component in relation to the overall variation in the data (this is seen using the grey box on the left of each graph). Finally, we can also see that the "remainder" component is quite significant in size (relative to the overall variation) which makes the time series difficult to predict accurately.
 
-## STL Decomposition for all countries {.tabset}
 ### **Germany**
 ```{r}
 data_elec %>%
@@ -160,7 +163,7 @@ data_elec %>%
 ```
 
 ## 3.5 Unit Root Test for Stationarity {.tabset}
-Investigating the stationarity for different country is necessary before applying any models. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
+In the final part of our EDA, we investigate the stationarity for different country is necessary before applying any models. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
 
 $$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
 As a result All of time series are stationary at `alpha = 0.05`.
