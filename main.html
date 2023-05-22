@@ -305,7 +305,7 @@ country as well as the total. In the final report you are now reading,
 only the most important information is included, and whatever was deemed
 unnecessary for the report you can find in our code files/appendix.</p>
 <p>The forecasting models used in this project are S-Naive, S-ARIMA, ETS
-and a variant of TSLM (piece-wise) for a specific country.</p>
+and a variant of ARIMA piece-wise for a specific country.</p>
 </div>
 <div id="data-processing" class="section level1">
 <h1>2. Data Processing</h1>
@@ -2043,21 +2043,25 @@ Finally, Snaive is selected to forecast in Lichtenstein.</p>
 with the lowest RMSE as shown in the previous section. This is because
 we want our models to be as “accurate” as possible, in away that we
 minimize the error/distance between our forecast values and the actual
-values. In summary, we used SARIMA for Italy and all countries together,
+values. In summary, we used SARIMA for Italy, SNaive for Lichtenstein
 and ETS for all other countries.</p>
 <div id="side-note" class="section level4">
 <h4>Side note:</h4>
 <p>Below, for each country, you can see a residual analysis for the
 every selected model, a graph of the forecast, and finally the forecast
-table.</p>
-<p>The outcome of the residual analysis is to confirm that the model has
-done a good job fitting the data, and more specifically, here’s what we
-obtained from it:</p>
+table. The outcome of the residual analysis is to confirm that the model
+has done a good job fitting the data, and more specifically, here’s what
+we obtained from it:</p>
 <p>A good model fit has the following characteristics in terms of its
-residuals: - The residuals are distributed symmetrically, in a shape
-that resembles a Normal distribution. - Low ACF (autocorrelation) in the
-first few lags. - No Heteroskedasticity: the variance of the residuals
-is constant. - There is no trend in the residuals.</p>
+residuals:</p>
+<ul>
+<li>The residuals are distributed symmetrically, in a shape that
+resembles a Normal distribution.</li>
+<li>Low ACF (autocorrelation) in the first few lags.</li>
+<li>No Heteroskedasticity: the variance of the residuals is
+constant.</li>
+<li>There is no trend in the residuals.</li>
+</ul>
 <p>In essence, what this all means, is that the residuals are white
 noise. Let’s now look at the results for each country, and make some
 more specific comments:</p>
@@ -3305,7 +3309,10 @@ Lichtenstein
 model.</p>
 <div id="checking-residuals-5" class="section level3">
 <h3><strong>Checking Residuals</strong></h3>
-<p>As expected the SNaive</p>
+<p>As expected the SNaive is a relatively simple model, it hardly
+capture all the dynamics in data, since the residuals are not white
+noise. Also, it is not surprising to observe correlation between ts and
+lags, since it is inherent from a Naive models.</p>
 <div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking the residuals before forecasting</span></span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>n_Licht <span class="sc">%&gt;%</span> <span class="fu">gg_tsresiduals</span>(<span class="at">lag_max =</span> <span class="dv">36</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;SNaive Lichtenstein residuals analysis&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-75-1.png" width="768" /></p>
@@ -3803,9 +3810,9 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb1
 <span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(final_fc)) <span class="sc">%&gt;%</span></span>
 <span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;800px&quot;</span>)</span></code></pre></div>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
 <div
-style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:800px; overflow-x: scroll; width:100%; ">
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
