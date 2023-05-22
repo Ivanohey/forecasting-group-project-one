@@ -9,30 +9,10 @@ Lichtenstein_after_2008 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Da
 
 ```
 
-### Unit Root Test for Stationarity 
-
-Investigating the stationarity for Lichtenstein is important since the bahavior of the time series was not In order to observe the stationarity assumption of Lichtenstein time serie. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
-
-$$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
-
-In this case the Unit Root Test was performed on a the data Lichtenstein, and the test statistic was -6.5052. The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Lichtenstein data is a stationary time serie.
-
-```{r, warning=FALSE, echo=FALSE}
-# Load the required package
-library(tseries)
-
-# Convert the data into a time series object
-Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
-ts_Lich <- ts(Lichtenstein_since_2010$Lichtenstein, frequency=12, start=c(2010,1))
-
-# Check for linearity using ADF test
-test_adf<- adf.test(ts_Lich)
-```
-
 
 ### **Testing Models**
-Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. The this code fits an different models to the training data, generates forecasts, and then applies a constraint to the forecasted mean values to ensure they are not negative.
-Based on the previous analysis Lichtenstein data is stationary time series with high presence of trend and seasonality, thus we can consider using a simple ARIMA, ETS, S-naive and Piece-Wise. A Piece-Wise ARIMA approach could be useful when the ts shows different behaviors over different periods. Indeed, we can observe four knots which exhibits different pattern in 2008, 2009,2015,2016. We have selected those date as knots and will observe the result.
+Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. This code fits different models to the training data, generates forecasts, and then applies a constraint to the forecasted mean values to ensure they are not negative.
+Based on the previous analysis Lichtenstein data is stationary time series with high presence of trend and seasonality, thus we can consider using following models to perform our analysis: simple ARIMA, ETS, S-naive and Piece-Wise. A Piece-Wise ARIMA approach could be useful when the ts shows different behaviors over different periods. Indeed, we can observe four knots which exhibits different pattern in 2008, 2009,2015 and 2016. We have selected those date as knots and will observe the result.
 
 ```{r, warning=FALSE, echo=FALSE}
 #Split the data
@@ -86,7 +66,7 @@ data_elec %>% autoplot(Lichtenstein) +
 
 ### **Measuring Model Accuracy**
 In our case S-Naive outperform during the model selection and analysis of accuracy. However S-Naive method may perform well for the time period that we have train our data, but it is important to note that it has some limitations. Indeed, it assumes that historical patterns will repeat exactly in the future, which may not always hold. The S-Naive method may not account for underlying factors or trends that could impact future outcomes. Therefore, there is an increased risk of inaccurate forecasts if the method is blindly applied without considering other relevant factors.
-Thus we've selected ETS based on a trade of between forecasting error and complexity of the model. ETS model has the third lowest RMSE and second lowest MAE which makes him a good candidate. 
+Thus we've selected ETS based on a trade off between forecasting error and complexity of the model. ETS model has the third lowest RMSE and second lowest MAE which makes him a good candidate. 
 
 ```{r, warning=FALSE, echo=FALSE}
 #Accuracy
@@ -104,8 +84,8 @@ Licht_accuracy_table <- rbind(
   data.frame(Licht_accuracy_n),
   data.frame(Licht_accuracy_pw_a))
 #AIC
-report(data_fit_Licht_a)
-report(data_fit_Licht_pw_a)
+#report(data_fit_Licht_a)
+#report(data_fit_Licht_pw_a)
 ```
 
 ```{r, warning=FALSE, echo=FALSE}
@@ -117,11 +97,11 @@ Licht_accuracy_table[ 1:4,1:10] %>%
 ```
 ```{r}
 report(data_fit_Licht_e)
-report(data_fit_Licht_n)
+#report(data_fit_Licht_n)
 ```
 
 ### **Residuals**
-Interesting to examine any outliers or extreme values in the residuals. The ACF analysis for ETS model shows that there's no correlation between the ts and its lagged values. Thus, each observation in the ts can be considered unrelated to the previous values. It suggests that there is no structure in the data that can be exploited for forecasting. Consequently, Lichtenstein ts might need covariate to forecast and analyse it adequately. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero, however those might exhibit autocorrelation or remaining structure.
+It is interesting to examine any outliers or extreme values in the residuals. The ACF analysis for ETS model shows that there's no correlation between the ts and its lagged values. Thus, each observation in the ts can be considered unrelated to the previous values. It suggests that there is no structure in the data that can be exploited for forecasting. Consequently, Lichtenstein ts might need covariate to forecast and analyse it adequately. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero, thus those might shows autocorrelation.
 
 ```{r, warning=FALSE, echo=FALSE}
 #gg_tsresiduals(data_fit_Licht_a) + labs(title = "ARIMA Lichtenstein residuals analysis")

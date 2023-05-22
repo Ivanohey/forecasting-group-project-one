@@ -196,8 +196,9 @@ forecast_table_france_e
 ```
 
 ## 5.5 Lichtenstein{.tabset}
-We fit Total electricity demand data using the ETS model.
-### ETS
+
+We fit Lichtenstein electricity demand data using the ETS model.
+
 ```{r}
 # Modelling ETS automatically
 ets_Licht <- data_elec %>%

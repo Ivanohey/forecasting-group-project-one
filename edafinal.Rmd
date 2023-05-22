@@ -128,6 +128,8 @@ data_elec %>%
 ```
 
 ### **Austria**
+Austria trend undergoes a huge increase during the period 2018-2021, follow by a drastic drop which are not explainable by historical data and strongly suggest that it is affected by a covariate.
+Seasonality is constant and stable over time during the whole period.
 ```{r}
 data_elec %>%
   model(STL(Austria ~ trend(window = 7) + season(window = "periodic"),
@@ -137,6 +139,8 @@ data_elec %>%
 ```
 
 ### **Lichtenstein**
+Lichtenstein trend undergoes a drastical drop during the year of 2008, that is not explainable by historical data and strongly suggest that it is affected by a covariate.
+Seasonality is constant and stable over time during the whole period. Thus we observe that the amplitude and duration of the seasonal patterns remain unchanged over different time periods.
 ```{r}
 data_elec %>%
   model(STL(Lichtenstein ~ trend(window = 7) + season(window = "periodic"),
@@ -156,7 +160,7 @@ data_elec %>%
 ```
 
 ## 3.5 Unit Root Test for Stationarity {.tabset}
-Investigating the stationarity for different country is important in order to observe the stationarity assumption of those time series. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
+Investigating the stationarity for different country is necessary before applying any models. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
 
 $$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
 As a result All of time series are stationary at `alpha = 0.05`.

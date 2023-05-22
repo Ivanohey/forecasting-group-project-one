@@ -12,8 +12,6 @@ We can see strong seasonality and trend in data from our decomposition analysis,
 
 As the most accurate forecast is of interest, we will give more weight to the model with low values of RMSE and MAE, even though another model has a higher AIC (see Appendix 2.).
 
-Lichtenstein Analysis will be described separately.
-
 ## 4.1 Germany{.tabset}
 
 ```{r}
@@ -103,9 +101,6 @@ gg_tsresiduals(data_fit_ge_e) + labs(title = "ETS Germany residuals analysis")
 
 gg_tsresiduals(data_fit_ge_n) + labs(title = "SNAIVE Germany residuals analysis")
 ```
-
-
-
 
 
 
