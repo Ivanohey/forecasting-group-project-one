@@ -2,23 +2,27 @@
 # THINGS THAT NEED TO BE DONE 
 
 In general: 
-
-- URGENT: FIX LICHTENSTEIN + add it to final table (Ok)
---> adjust in forecast the CI
 - Remove all warnings (Done)
-- Complete the Report -> Write specific analysis for different countries
 
 Country specific:
 
 - Explore huge peak in Austria 2002 -> is it an outlier 
-- Explain big drop in Lichtenstein + thought process behind piece-wise model 
+- Explain big drop in Lichtenstein + thought process behind piece-wise model  (Done)
 - Should add piece-wise ets if perform better
-
+3.4: STL decomposition analysis :
+- Germany 
+- France
+- Italy
+- Austria (Done)
+- Lich (Done)
+- Total 
+3.5 Unit Root Test for Stationarity every countries  (Done)
+ 
 # 1. Introduction 
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 
 
-The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of TSLM (piece-wise) for a specific country. 
+The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of ARIMA piece-wise for a specific country. 
 
 
 # 2. Data Processing 
@@ -92,13 +96,12 @@ From this graph, we can visualize autocorrelation. It's clear that the autocorre
 
 Based on the strong and clear presence of autocorrelation, we expect that a model like ARIMA/SARIMA will do a good job to capture this auto-correlation component, and will most likely have the best performance compared to other models. On the contrary, auto-correlation tends to impact the performance of SNAIVE models, as they rely on the assumption that the future values are solely determined by past values without considering any auto-correlation patterns. This suggests that our SNAIVE model will not be fitting the data as well.
 
-## 3.4 Decomposition
+## 3.4 STL Decomposition for all countries {.tabset}
 
-In the final part of our EDA, we decided to perform an STL decomposition, as it can provide valuable insights and help explore and understand any strange patterns in our data. 
+We decided to perform an STL decomposition, as it can provide valuable insights and help explore and understand any strange patterns in our data. 
 
 Overall as you can see below, we observed strong seasonality and trend patterns in each country and all countries together which suggested our models should have a way to capture the presence of seasonality and trend. This can be seen in the trend + season_year graphs which show the trend + seasonal component in relation to the overall variation in the data (this is seen using the grey box on the left of each graph). Finally, we can also see that the "remainder" component is quite significant in size (relative to the overall variation) which makes the time series difficult to predict accurately.
 
-## STL Decomposition for all countries {.tabset}
 ### **Germany**
 ```{r}
 data_elec %>%
@@ -128,6 +131,8 @@ data_elec %>%
 ```
 
 ### **Austria**
+Austria trend undergoes a huge increase during the period 2018-2021, follow by a drastic drop which are not explainable by historical data and strongly suggest that it is affected by a covariate.
+Seasonality is constant and stable over time during the whole period.
 ```{r}
 data_elec %>%
   model(STL(Austria ~ trend(window = 7) + season(window = "periodic"),
@@ -137,6 +142,8 @@ data_elec %>%
 ```
 
 ### **Lichtenstein**
+Lichtenstein trend undergoes a drastical drop during the year of 2008, that is not explainable by historical data and strongly suggest that it is affected by a covariate.
+Seasonality is constant and stable over time during the whole period. Thus we observe that the amplitude and duration of the seasonal patterns remain unchanged over different time periods.
 ```{r}
 data_elec %>%
   model(STL(Lichtenstein ~ trend(window = 7) + season(window = "periodic"),
@@ -155,3 +162,77 @@ data_elec %>%
 
 ```
 
+## 3.5 Unit Root Test for Stationarity {.tabset}
+In the final part of our EDA, we investigate the stationarity for different country is necessary before applying any models. We have run the Unit Root Test which is a statistical test that checks for the presence of a unit root in a time series, which is an indication of non-stationarity.
+
+$$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
+As a result All of time series are stationary at `alpha = 0.05`.
+
+### **Germany**
+The test statistic was -6.0768. The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Germany data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+# Load the required package
+library(tseries)
+
+# Convert the data into a time series object
+G_since_2010 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2010-01-01"))
+ts_g<- ts(G_since_2010$Germany, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_g)
+```
+### **France**
+The test statistic was -4.6123 The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus France data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+
+# Convert the data into a time series object
+F_since_2010 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2010-01-01"))
+ts_F<- ts(F_since_2010$France, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_F)
+```
+### **Italy**
+The test statistic was -6.8897 The p-value of the test was 0.01. Thus Italy data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+
+# Convert the data into a time series object
+I_since_2010 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2010-01-01"))
+ts_I<- ts(I_since_2010$Italy, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_I)
+```
+### **Austria**
+The test statistic was -3.7273 The p-value of the test was 0.02443, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Austria data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+
+# Convert the data into a time series object
+A_since_2010 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2010-01-01"))
+ts_A<- ts(A_since_2010$Austria, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_A)
+```
+### **Lichtenstein**
+The test statistic was -6.5052 The p-value of the test was 0.01. Thus Lichtenstein data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+# Convert the data into a time series object
+Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
+ts_Lich <- ts(Lichtenstein_since_2010$Lichtenstein, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_Lich)
+```
+
+### **Total**
+Finally, The test statistic was -4.0009 The p-value of the test was 0.01103. Thus Total data is a stationary time serie.
+```{r, warning=FALSE, echo=FALSE}
+
+# Convert the data into a time series object
+Tot_since_2010 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2010-01-01"))
+ts_Tot<- ts(Tot_since_2010$Total, frequency=12, start=c(2010,1))
+
+# Check for linearity using ADF test
+adf.test(ts_Tot)
+```

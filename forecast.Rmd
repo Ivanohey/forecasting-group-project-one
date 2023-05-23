@@ -1,14 +1,13 @@
 # 5. Forecast
 
-For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and the actual values. In summary, we used SARIMA for Italy and all countries together, and ETS for all other countries.
+For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that we minimize the error/distance between our forecast values and the actual values. In summary, we used SARIMA for Italy, SNaive for Lichtenstein and ETS for all other countries.
 
 #### Side note: 
 
-Below, for each country, you can see a residual analysis for the every selected model, a graph of the forecast, and finally the forecast table. 
+Below, for each country, you can see a residual analysis for the every selected model, a graph of the forecast, and finally the forecast table. The outcome of the residual analysis is to confirm that the model has done a good job fitting the data, and more specifically, here's what we obtained from it: 
 
-The outcome of the residual analysis is to confirm that the model has done a good job fitting the data, and more specifically, here's what we obtained from it: 
+A good model fit has the following characteristics in terms of its residuals:
 
-A good model fit has the following characteristics in terms of its residuals: 
 - The residuals are distributed symmetrically, in a shape that resembles a Normal distribution. 
 - Low ACF (autocorrelation) in the first few lags. 
 - No Heteroskedasticity: the variance of the residuals is constant. 
@@ -60,7 +59,9 @@ colnames(forecast_table_germany_e)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Germany is shown below. 
 ```{r}
-forecast_table_germany_e
+#forecast_table_germany_e
+kbl(forecast_table_germany_e) %>%
+  kable_styling(fixed_thead = T)
 ```
 
 ## 5.2 Italy{.tabset}
@@ -102,7 +103,9 @@ colnames(forecast_table_italy_a)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Italy is shown below. 
 ```{r}
-forecast_table_italy_a
+#forecast_table_italy_a
+kbl(forecast_table_italy_a) %>%
+  kable_styling(fixed_thead = T)
 ```
 
 ## 5.3 Austria{.tabset}
@@ -144,7 +147,9 @@ colnames(forecast_table_austria_e)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Austria is shown below. 
 ```{r}
-forecast_table_austria_e
+#forecast_table_austria_e
+kbl(forecast_table_austria_e) %>%
+  kable_styling(fixed_thead = T)
 
 ```
 
@@ -191,20 +196,23 @@ colnames(forecast_table_france_e)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for France is shown below. 
 ```{r}
-forecast_table_france_e
+#forecast_table_france_e
+kbl(forecast_table_france_e) %>%
+  kable_styling(fixed_thead = T)
 
 ```
 
-## 5.5 Lichtenstein{.tabset}
-We fit Total electricity demand data using the ETS model.
-### ETS
-```{r}
+## 5.5.1 Lichtenstein{.tabset}
+
+We fit Lichtenstein electricity demand data using the ETS model.
+
+```{r, warning=FALSE, echo=FALSE}
 # Modelling ETS automatically
 ets_Licht <- data_elec %>%
   select(Lichtenstein) %>%
   model(ETS(Lichtenstein))
 # Getting the Accuracy scores for models
-report(ets_Licht)
+#report(ets_Licht)
 
 # Forecasting using the models
 forecast_ets_Licht <- ets_Licht %>% forecast(h = 13) %>% hilo(90)
@@ -238,7 +246,60 @@ colnames(forecast_table_Lichtenstein_ets)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Lichtenstein is shown below. 
 ```{r}
-forecast_table_Lichtenstein_ets
+#forecast_table_Lichtenstein_ets
+kbl(forecast_table_Lichtenstein_ets) %>%
+  kable_styling(fixed_thead = T)
+```
+
+## 5.5.2 Lichtenstein{.tabset}
+
+We fit Lichtenstein electricity demand data using the SNaive model.
+
+```{r, warning=FALSE, echo=FALSE}
+# Modelling SNaive automatically
+n_Licht <- data_elec %>%
+  select(Lichtenstein) %>%
+  model(SNAIVE(Lichtenstein))
+# Getting the Accuracy scores for models
+#report(n_Licht)
+
+# Forecasting using the models
+forecast_n_Licht <- n_Licht %>% forecast(h = 13) %>% hilo(90)
+forecast_n_Licht$.mean <- ifelse(forecast_n_Licht$.mean < 0, 0, forecast_n_Licht$.mean)
+```
+
+### **Checking Residuals**
+As expected the SNaive is a relatively simple model, it hardly capture all the dynamics in data, since the residuals are not white noise. Also, it is not surprising to observe correlation between ts and lags, since it is inherent from a Naive models.
+
+```{r, warning=FALSE}
+#Checking the residuals before forecasting
+n_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "SNaive Lichtenstein residuals analysis")
+```
+
+### **Graphing the forecast**
+
+```{r}
+# Graphing the forecast
+n_Licht %>% forecast(h = 13) %>% autoplot(Lichtenstein_after_2008) +
+  labs(title = "SNaive Forecast for Lichtenstein")
+
+#Extracting the forecasted values
+forecast_table_Lichtenstein_n <- data.frame(Model = c("SNaive"),
+                              Forecast_Values = c(forecast_n_Licht))
+
+forecast_table_Lichtenstein_n <- forecast_table_Lichtenstein_n %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
+forecast_table_Lichtenstein_n$Country <- "Lichtenstein"
+
+colnames(forecast_table_Lichtenstein_n)[1] <- "Month"
+colnames(forecast_table_Lichtenstein_n)[2] <- "PF"
+colnames(forecast_table_Lichtenstein_n)[3] <- "CI"
+```
+### **Forecast Table**
+The resulting forecast table for Lichtenstein is shown below. 
+```{r}
+#forecast_table_Lichtenstein_n
+kbl(forecast_table_Lichtenstein_n) %>%
+  kable_styling(fixed_thead = T)
 ```
 
 ## 5.6 Total{.tabset}
@@ -282,7 +343,9 @@ colnames(forecast_table_total_a)[3] <- "CI"
 ### **Forecast Table**
 The resulting forecast table for Total is shown below. 
 ```{r}
-forecast_table_total_a
+#forecast_table_total_a
+kbl(forecast_table_total_a) %>%
+  kable_styling(fixed_thead = T)
 ```
 
 
@@ -290,12 +353,21 @@ forecast_table_total_a
 Below is the final table containing `Month,` point forecast `PF,` 80% lower and upper confidence levels (see Appendix 3.) interval forecast `CI,` and `Country.`  
 ```{r}
 
-final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_ets, forecast_table_total_a)
+final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)
 
-final_fc
+#final_fc
 
+kbl(cbind(final_fc)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "500px")
 ```
 
 # 6. Challenges and Further Analysis
 
 Some of Germany's and Austria's lower values remain negative with 90% confidence intervals. It may indicate that the forecasting model or method used may not adequately capture the underlying dynamics of electricity demand. Even though the models were chosen based on the accuracy analysis we conducted before. Further investigation and model testing is required.
+
+Further Analysis require introducing covariates, also known as predictors. They capture patterns and external factors that impact the forecasted variable. Adding covariates into forecasting models allows for a better understanding of the underlying dynamics and improves the overall accuracy of predictions.
+
+For instance, in the case of Lichtenstein the SNaive model gives relatively good performance, despite its simplicity. However, to further enhance the forecast, it is essential to consider some covariate which might impact the trend of electricity demand such as economical crisis, technological such as the implementation of wind power which might affect drastically the electricity demand. 
+
+Another example is the case of Austria, it is possible to improve the accuracy and the overall model performance by adding a covariate. Indeed, Austria face a drastic increase during 2018-2021, thus covariate such as weather conditions and economical activities would be interesting to incorporate. 

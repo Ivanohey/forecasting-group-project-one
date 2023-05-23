@@ -12,8 +12,6 @@ We can see strong seasonality and trend in data from our decomposition analysis,
 
 As the most accurate forecast is of interest, we will give more weight to the model with low values of RMSE and MAE, even though another model has a higher AIC (see Appendix 2.).
 
-Lichtenstein Analysis will be described separately.
-
 ## 4.1 Germany{.tabset}
 
 ```{r}
@@ -85,12 +83,23 @@ germany_accuracy_table <- rbind(
 
 
 
+```
+
+```{r, warning=FALSE, echo=FALSE}
+germany_accuracy_table[ 1:3,1:10] %>%
+  kbl() %>%
+  kable_paper(full_width = F) %>%
+  column_spec(4, color = "white",
+              background = spec_color(germany_accuracy_table$RMSE[1:4],end = 0.6)) %>%
+    column_spec(5, color = "white",
+              background = spec_color(germany_accuracy_table$MAE[1:4],end = 0.6))
+```
+
+```{r, warning=FALSE}
+
 #AIC
-germany_accuracy_table
 report(data_fit_ge_a)
 report(data_fit_ge_e)
-
-
 
 ```
 
@@ -103,9 +112,6 @@ gg_tsresiduals(data_fit_ge_e) + labs(title = "ETS Germany residuals analysis")
 
 gg_tsresiduals(data_fit_ge_n) + labs(title = "SNAIVE Germany residuals analysis")
 ```
-
-
-
 
 
 
