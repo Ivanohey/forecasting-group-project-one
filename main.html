@@ -292,27 +292,10 @@ Khryst Amina Ivan
 <div id="main">
 <div id="things-that-need-to-be-done" class="section level1">
 <h1>THINGS THAT NEED TO BE DONE</h1>
-<p>In general: - Add eda.rmd to appendix - Final Forecast Table: replace
-negative values with 0 - In the forecast we show only the final model
-chosen, why show lichtenstein 5.5.1 + 5.5.2?</p>
-<p>Unit root test: - Why is the unit root test showing stationarity? -
-Why in unit root take not all of the data? - Why convert to tsibble when
-it’s already a tsibble ?</p>
-<p>Country specific:</p>
 <ul>
-<li>Explore huge peak in Austria 2002 -&gt; is it an outlier</li>
-<li>Explain big drop in Lichtenstein + thought process behind piece-wise
-model (Done)</li>
-<li>Should add piece-wise ets if perform better 3.4: STL decomposition
-analysis :</li>
-<li>Germany</li>
-<li>France</li>
-<li>Italy</li>
-<li>Austria (Done)</li>
-<li>Lich (Done)</li>
-<li>Total</li>
+<li>In the forecast we show only the final model chosen, why show
+lichtenstein 5.5.1 + 5.5.2?</li>
 </ul>
-<p>3.5 Unit Root Test for Stationarity every countries (Done)</p>
 </div>
 <div id="introduction" class="section level1">
 <h1>1. Introduction</h1>
@@ -523,8 +506,14 @@ alternative hypotheses for this statistical test:</p>
 root\ (non\ stationary)\\ H_1: The\ time\ series\ is\
 stationary\]</span></p>
 <p>After doing the test for all countries, we found that all of the time
-series are stationary at a significance level of:
-<code>alpha = 0.05</code>.</p>
+series (except Lichtenstein) are stationary at a significance level of:
+<code>alpha = 0.05</code>. This is against our initial assumption that
+the data is non-stationary, which was based on the fact that we saw a
+clear trend and seasonality for many of the countries. When the data is
+stationary, any model can be used (stationarity in the data is one of
+the assumptions for NAIVE and ETS models). However for Lichtenstein,
+since the p-value is larger than our significance level of 5%, we have
+to difference or log the Lichtenstein data before using some models.</p>
 <div id="germany-1" class="section level3">
 <h3><strong>Germany</strong></h3>
 <p>The test statistic was -6.0768. The p-value of the test was 0.01,
@@ -538,7 +527,7 @@ stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_g
-## Dickey-Fuller = -6.0768, Lag order = 5, p-value = 0.01
+## Dickey-Fuller = -6.3865, Lag order = 6, p-value = 0.01
 ## alternative hypothesis: stationary</code></pre>
 </div>
 <div id="france-1" class="section level3">
@@ -551,7 +540,7 @@ stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_F
-## Dickey-Fuller = -4.6123, Lag order = 5, p-value = 0.01
+## Dickey-Fuller = -5.671, Lag order = 6, p-value = 0.01
 ## alternative hypothesis: stationary</code></pre>
 </div>
 <div id="italy-1" class="section level3">
@@ -562,7 +551,7 @@ Italy data is a stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_I
-## Dickey-Fuller = -6.8897, Lag order = 5, p-value = 0.01
+## Dickey-Fuller = -6.1852, Lag order = 6, p-value = 0.01
 ## alternative hypothesis: stationary</code></pre>
 </div>
 <div id="austria-1" class="section level3">
@@ -575,7 +564,7 @@ stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_A
-## Dickey-Fuller = -3.7273, Lag order = 5, p-value = 0.02443
+## Dickey-Fuller = -3.6792, Lag order = 6, p-value = 0.02595
 ## alternative hypothesis: stationary</code></pre>
 </div>
 <div id="lichtenstein-1" class="section level3">
@@ -586,7 +575,7 @@ Lichtenstein data is a stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_Lich
-## Dickey-Fuller = -6.5052, Lag order = 5, p-value = 0.01
+## Dickey-Fuller = -3.0063, Lag order = 6, p-value = 0.1521
 ## alternative hypothesis: stationary</code></pre>
 </div>
 <div id="total-1" class="section level3">
@@ -597,7 +586,7 @@ Lichtenstein data is a stationary time series.</p>
 ##  Augmented Dickey-Fuller Test
 ## 
 ## data:  ts_Tot
-## Dickey-Fuller = -4.0009, Lag order = 5, p-value = 0.01103
+## Dickey-Fuller = -4.8658, Lag order = 6, p-value = 0.01
 ## alternative hypothesis: stationary</code></pre>
 </div>
 </div>
@@ -1590,13 +1579,20 @@ noise.</p>
 60-period prediction starting from 2016. This code fits different models
 to the training data, generates forecasts, and then applies a constraint
 to the forecasted mean values to ensure they are not negative. Based on
-the previous analysis Lichtenstein data is stationary time series with
-high presence of trend and seasonality, thus we can consider using
-following models to perform our analysis: simple ARIMA, ETS, S-naive and
-Piece-Wise. A Piece-Wise ARIMA approach could be useful when the ts
-shows different behaviors over different periods. Indeed, we can observe
-four knots which exhibits different pattern in 2008, 2009,2015 and 2016.
-We have selected those date as knots and will observe the result.</p>
+the previous analysis Lichtenstein data is NON stationary time series,
+so we had to difference or log the data to make it stationary before
+using our models. In addition to using ETS, ARIMA and SNAIVE, in the
+Lichtenstein case, a Piece-Wise ARIMA approach could be useful when the
+ts shows different behaviors in different periods. Indeed, we can
+observe four knots which exhibits different pattern in 2008, 2009,2015
+and 2016 (the trend changes at the time periods). We have selected those
+dates as knots and will observe the result.</p>
+<p>Another thing to mention about Lichtenstein, is that for the ETS,
+ARIMA and SNaive models, we decided to train them only after 2010. We
+made this decision because before 2010, the data was very different
+(upward trending at a much higher level) and thought that if the models
+looked at that period, they would probably not produce accurate
+results.</p>
 <p><img src="main_files/figure-html/unnamed-chunk-43-1.png" width="768" /></p>
 </div>
 <div id="measuring-model-accuracy-4" class="section level3">
@@ -1658,13 +1654,13 @@ ARIMA(Lichtenstein)
 Test
 </td>
 <td style="text-align:right;">
-0.201217
+-0.5633207
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(69, 55, 129, 1) !important;">
-4.003959
+<td style="text-align:right;color: white !important;background-color: rgba(67, 62, 133, 1) !important;">
+4.056928
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(38, 130, 142, 1) !important;">
-3.025938
+<td style="text-align:right;color: white !important;background-color: rgba(32, 146, 140, 1) !important;">
+3.232013
 </td>
 <td style="text-align:right;">
 -Inf
@@ -1679,7 +1675,7 @@ NaN
 NaN
 </td>
 <td style="text-align:right;">
-0.4719691
+0.4889277
 </td>
 </tr>
 <tr>
@@ -1690,16 +1686,16 @@ ETS(Lichtenstein)
 Test
 </td>
 <td style="text-align:right;">
-1.458273
+-0.6212997
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(66, 65, 134, 1) !important;">
-4.088135
+<td style="text-align:right;color: white !important;background-color: rgba(64, 70, 136, 1) !important;">
+4.120870
 </td>
-<td style="text-align:right;color: white !important;background-color: rgba(66, 65, 134, 1) !important;">
-2.171460
+<td style="text-align:right;color: white !important;background-color: rgba(31, 154, 138, 1) !important;">
+3.347994
 </td>
 <td style="text-align:right;">
-NaN
+-Inf
 </td>
 <td style="text-align:right;">
 Inf
@@ -1711,7 +1707,7 @@ NaN
 NaN
 </td>
 <td style="text-align:right;">
-0.4446274
+0.4949072
 </td>
 </tr>
 <tr>
@@ -1722,7 +1718,7 @@ SNAIVE(Lichtenstein)
 Test
 </td>
 <td style="text-align:right;">
-0.600000
+0.6000000
 </td>
 <td style="text-align:right;color: white !important;background-color: rgba(68, 1, 84, 1) !important;">
 3.623994
@@ -1754,7 +1750,7 @@ piecewise
 Test
 </td>
 <td style="text-align:right;">
-3.347704
+3.3477041
 </td>
 <td style="text-align:right;color: white !important;background-color: rgba(34, 168, 132, 1) !important;">
 5.070438
@@ -1782,21 +1778,18 @@ NaN
 </table>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="fu">report</span>(data_fit_Licht_e)</span></code></pre></div>
 <pre><code>## Series: Lichtenstein 
-## Model: ETS(A,N,A) 
+## Model: ETS(A,N,N) 
 ##   Smoothing parameters:
-##     alpha = 0.4983791 
-##     gamma = 0.0001000103 
+##     alpha = 0.000100061 
 ## 
 ##   Initial states:
-##     l[0]     s[0]    s[-1]    s[-2]     s[-3]     s[-4]     s[-5]     s[-6]
-##  19.2404 2.656075 3.881139 1.299069 -1.182925 -2.807692 -3.167366 -4.389907
-##      s[-7]     s[-8]    s[-9]   s[-10]  s[-11]
-##  -3.179325 -1.468588 2.114574 2.867806 3.37714
+##      l[0]
+##  3.887968
 ## 
-##   sigma^2:  11.0411
+##   sigma^2:  17.9891
 ## 
 ##      AIC     AICc      BIC 
-## 1486.015 1488.742 1534.878</code></pre>
+## 519.9548 520.3077 526.7848</code></pre>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="co">#report(data_fit_Licht_n)</span></span></code></pre></div>
 </div>
 <div id="residuals-4" class="section level3">
@@ -2054,8 +2047,8 @@ noise.</p>
 Still, our goal is to obtain the most accurate forecast. Therefore, we
 give more weight to RMSE and MAE metrics than AIC. As a result, the
 ARIMA model is selected to forecast the electricity demand in Italy and
-ETS model is selected to forecast in Germany, Austria and France.
-Finally, Snaive is selected to forecast in Lichtenstein.</p>
+the Total, and ETS model is selected to forecast in Germany, Austria and
+France. Finally, S-Naive is selected to forecast in Lichtenstein.</p>
 </div>
 </div>
 <div id="forecast" class="section level1">
@@ -2065,8 +2058,6 @@ with the lowest RMSE as shown in the previous section. This is because
 we want our models to be as “accurate” as possible, in away that
 minimizes the error/distance between our forecast values and the actual
 values.</p>
-<div id="side-note" class="section level4">
-<h4>Side note:</h4>
 <p>Below, for each country, you can see a residual analysis for every
 selected model, a graph of the forecast, and finally the forecast table.
 The outcome of the residual analysis is to confirm that the model has
@@ -2085,7 +2076,6 @@ constant.</li>
 <p>In essence, what this all means, is that the residuals are white
 noise. Let’s now look at the results for each country, and make some
 more specific comments:</p>
-</div>
 <div id="germany-3" class="section level2 tabset">
 <h2 class="tabset">5.1 Germany</h2>
 <p>We fit Germany electricity demand data using the ETS model.</p>

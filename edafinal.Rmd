@@ -1,32 +1,8 @@
 
 # THINGS THAT NEED TO BE DONE 
 
-In general: 
-- Add eda.rmd to appendix 
-- Final Forecast Table: replace negative values with 0
 - In the forecast we show only the final model chosen, why show lichtenstein 5.5.1 + 5.5.2?
 
-Unit root test:
-- Why is the unit root test showing stationarity? 
-- Why in unit root take not all of the data? 
-- Why convert to tsibble when it's already a tsibble ? 
-
-
-Country specific:
-
-- Explore huge peak in Austria 2002 -> is it an outlier 
-- Explain big drop in Lichtenstein + thought process behind piece-wise model  (Done)
-- Should add piece-wise ets if perform better
-3.4: STL decomposition analysis :
-- Germany 
-- France
-- Italy
-- Austria (Done)
-- Lich (Done)
-- Total 
-
-3.5 Unit Root Test for Stationarity every countries  (Done)
- 
 # 1. Introduction 
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 

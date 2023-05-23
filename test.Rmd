@@ -1,0 +1,76 @@
+
+# This is a final test file 
+
+
+```{r}
+#importing data directly from excel
+data_elec <- read_excel("data/Electricity export Switzerland.xlsx", 
+    range = "A6:G280", col_names = FALSE)
+
+#Setting column names
+colnames(data_elec) = c('Date','Germany','France','Italy','Austria','Lichtenstein','Total')
+
+# replace "Oktober" with "October" in the Date column
+data_elec$Date <- str_replace_all(data_elec$Date, "Oktober", "October")
+
+#Convert to tsibble 
+data_elec <- data_elec %>%
+  mutate(Date = yearmonth(Date)) %>% #need to do this before converting to get proper format
+  as_tsibble(index = Date)
+```
+
+The model selected by the function is ARIMA(0,1,3)(2,0,0)[12], which means it has a non-seasonal differencing of order 1 (d = 1), a moving average (MA) component of order 3 (q = 3), and a seasonal AR component of order 2 (P = 2), a seasonal differencing of order 0 (D = 0), and no seasonal MA component (Q = 0).
+
+The coefficients of the model are shown in the table. The values in the first row indicate the parameter estimates for the MA terms (ma1, ma2, ma3), and those in the second row show the parameter estimates for the seasonal AR terms (sar1, sar2). The standard errors of the parameter estimates are shown in the second row of numbers (se.ma1, se.ma2, se.ma3, se.sar1, se.sar2).
+
+
+In terms of the ARIMA model we have, it's not a surprise to see that a differencing of order 1 has been selected. This is because our initial data has both a trend and seasonal component as we have seen in our decomposition. By taking the 1st-order difference of the data, the trend and seasonal components are eliminated making the series stationary, and  allowing the ARIMA model to function.
+
+Let's verify this by looking at the differenced time-series: 
+
+```{r}
+
+#Plotting the differenced time series should show stationarity:
+italy <- data_elec %>% select(Italy) %>% mutate(italy_diff = difference(Italy))
+italy %>% autoplot(italy_diff) + 
+    labs(title = "1st-order Differenced Exports to Italy")
+
+
+
+```
+
+From the graph above, it is obvious that taking the 1st-order difference, we get rid of the trend and seasonality in the data. This creates a stationary times series which can be used in the ARIMA model. 
+
+Let's also look at the ACF plots to confirm it in a different way: 
+
+```{r}
+italyACF <- italy %>% ACF(Italy) %>% autoplot() + labs(title = "ACF Italy")
+
+italydiffACF <- italy %>% mutate(italy_diff = difference(Italy)) %>% ACF(italy_diff) %>% autoplot() + labs(title = "ACF Italy Differenced")
+
+italyACF + italydiffACF
+```
+
+Actually from these two graphs, we see that taking the first difference removes autocorrelation in the first 3-4 lagged periods, but actually seems to increase the autocorrelation of data on a 12-month lagged period. 
+
+Below, you can see the double differenced Italy data. 
+
+I DONT THINK I WANT TO KEEP THIS GRAPH:
+```{r}
+
+#Double differencing 
+italy %>% gg_tsdisplay(difference(Italy, 12) %>% difference(),
+                         plot_type = 'partial', lag = 36) +
+  labs(y = "Double differenced")
+
+```
+
+Finally, let's take a look at the residuals of the SARIMA model: 
+
+```{r}
+
+arima_italy %>% gg_tsresiduals(lag_max = 36) + labs(title = "SARIMA Italy residuals analysis")
+
+
+```
+
