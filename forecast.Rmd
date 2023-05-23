@@ -381,7 +381,12 @@ Below is the final table containing `Month,` point forecast `PF,` 90% lower and 
 
 final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)
 
-#final_fc
+#Rounding all values to 0 significant figures becasue at the moment they have 4 decimals each...
+final_fc$PF <- round(final_fc$PF)
+final_fc$CI <- round(final_fc$CI)
+
+#Removing all non-negative values from the CI column and replacing them by 0. 
+final_fc$CI[final_fc$CI < 0] <- 0
 
 kbl(cbind(final_fc)) %>%
   kable_paper() %>%
@@ -390,10 +395,8 @@ kbl(cbind(final_fc)) %>%
 
 # 6. Challenges and Further Analysis
 
-Some of Germany's and Austria's lower values remain negative with 90% confidence intervals. It may indicate that the forecasting model or method used may not adequately capture the underlying dynamics of electricity demand. Even though the models were chosen based on the accuracy analysis we conducted before. Further investigation and model testing is required.
+In this section we will comment on things didn't go so well in our analysis, and things that could be improved. 
 
-Further Analysis require introducing covariates, also known as predictors. They capture patterns and external factors that impact the forecasted variable. Adding covariates into forecasting models allows for a better understanding of the underlying dynamics and improves the overall accuracy of predictions.
+Firstly, in the confidence bounds, some of Germany's, Lichtenstein's and Austria's lower bound values were negative at the 90% confidence intervals, which you can actually see in the graphs of the forecasts for each country. This was a problem because electricity exports can't physically be negative, and the lowest value they can take is zero. This happened because when fitting the models, we didn't specify that the forecasts shouldn't take negative values, and obviously the models can't know that themselves. To solve this issue, we decided to manually set the lower bounds of these confidence intervals to 0 as it wouldn't make any sense for them to be negative, however we do have to mention that by doing so, the confidence intervals we show are not 90% intervals. 
 
-For instance, in the case of Lichtenstein the SNaive model gives relatively good performance, despite its simplicity. However, to further enhance the forecast, it is essential to consider some covariate which might impact the trend of electricity demand such as economical crisis, technological such as the implementation of wind power which might affect drastically the electricity demand. 
-
-Another example is the case of Austria, it is possible to improve the accuracy and the overall model performance by adding a covariate. Indeed, Austria face a drastic increase during 2018-2021, thus covariate such as weather conditions and economical activities would be interesting to incorporate. 
+Secondly, we decided not to add any covariates to our models, and only use the historical data we were given. Covariates could potentially help our forecasts be more accurate, as they can capture patterns and the effects of external factors which have an impact on electricity demand. An example of such a factor could be monthly average temperature values, because temperature probably plays a big role in energy consumption at the national level. Another example of a factor we could have included in our analysis would be the average hours of sunlight, because people tend to use more energy to light up their house in the winter compared to the summer. Another factor could be the implementation and use of different forms of energy, such as wind energy/nuclear energy to supply power inside a country, rather than simply importing it from Switzerland.
