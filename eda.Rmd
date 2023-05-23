@@ -1,8 +1,6 @@
 
 # 3. Exploratory Data Analysis
 
-In this section you can find 
-
 ```{r EDA, echo=FALSE}
 
 # Plots of exports from Switzerland to all countries over time (recreating those from the slides)

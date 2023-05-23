@@ -1,7 +1,6 @@
-
 ```{r appendix, include=FALSE}
 ```
-# Appendices {.tabset}
+# Appendix {.tabset}
 ## *Appendix 1.Decomposition Comparison*
 
 * Classical Decomposition assumes seasonal component repeats from year to year, which usually is not the case in reality, over smoothes rapid rises (is not recommended to use, but still...).
@@ -12,3 +11,67 @@
 ## *Appendix 2. Accuracy metrics comparison*
 *AIC* criteria are used to assess the goodness of fit of a model, with lower values indicating a better fit.
 *RMSE* and MAE are used to measure the difference between predicted values and actual values. Comparatively lower numbers of these metrics assume a better model's forecast quality potential. 
+
+## Plots of all countries' historical data
+
+```{r EDA, echo=FALSE}
+
+# Plots of exports from Switzerland to all countries over time (recreating those from the slides)
+data_elec %>% autoplot(Germany) + 
+  ggtitle("Exports from Switzerland to Germany") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(France) + 
+  ggtitle("Exports from Switzerland to France") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(Italy) + 
+  ggtitle("Exports from Switzerland to Italy") +
+  ylab("GWt") + xlab("Month")
+
+
+data_elec %>% autoplot(Austria) + 
+  ggtitle("Exports from Switzerland to Austria") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(Lichtenstein) + 
+  ggtitle("Exports from Switzerland to Lichtenstein") +
+  ylab("GWt") + xlab("Month")
+
+data_elec %>% autoplot(Total) + 
+  ggtitle("Exports from Switzerland to All countries") +
+  ylab("GWt") + xlab("Month")
+
+```
+
+## Plots of Seasonal Subseries
+
+```{r}
+#Seasonal Subseries Plots
+
+data_elec %>% gg_subseries(Germany) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Germany")
+
+data_elec %>% gg_subseries(France) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to France")
+
+data_elec %>% gg_subseries(Italy) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Italy")
+
+data_elec %>% gg_subseries(Austria) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Austria")
+
+data_elec %>% gg_subseries(Lichtenstein) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to Lichtenstein")
+
+data_elec %>% gg_subseries(Total) +
+    ylab("GWt") + xlab("Month") +
+    ggtitle("Seasonal subseries plot: Swiss electricity exported to All countries")
+
+```
+
