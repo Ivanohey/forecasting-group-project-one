@@ -294,31 +294,6 @@ colnames(forecast_table_Lichtenstein_n)[1] <- "Month"
 colnames(forecast_table_Lichtenstein_n)[2] <- "PF"
 colnames(forecast_table_Lichtenstein_n)[3] <- "CI"
 
-
-#### TRY TO ADJUST THE CONFIDENCE INTERVAL BY DOING SO::
-
-# Adjusting the lower bound of the 90% confidence interval
-lower_str <- gsub("\\[(.*),.*\\]90", "\\1", forecast_table_Lichtenstein_n$CI)
-upper_str <- gsub("\\[.*, (.*)\\]90", "\\1", forecast_table_Lichtenstein_n$CI)
-ci_str <- gsub("\\[.*\\](90)", "\\1", forecast_table_Lichtenstein_n$CI)
-
-# Converting to numeric values
-lower_bound <- as.numeric(lower_str)
-upper_bound <- as.numeric(upper_str)
-ci <- as.numeric(ci_str)
-
-# Adjusting the lower bound and CI
-lower_bound <- pmax(lower_bound, 0)
-adjusted_ci <- upper_bound - lower_bound
-
-# Creating the data frame
-output_df_lich <- data.frame("Lower Bound" = lower_bound,
-                        "Upper Bound" = upper_bound,
-                        "CI" = adjusted_ci)
-
-# Printing the adjusted output
-print(output_df_lich)
-
 ```
 ### **Forecast Table**
 The resulting forecast table for Lichtenstein is shown below. 
@@ -388,11 +363,30 @@ final_fc$CI <- round(final_fc$CI)
 #Removing all non-negative values from the CI column and replacing them by 0 - With string manipulation bc i can't find another way
 final_fc$CI <- str_replace(final_fc$CI, "\\[(-\\d+),", "[0,")
 
-kbl(cbind(final_fc)) %>%
+
+# creating lower and upper bound
+lower_str_fc <- gsub("\\[(.*),.*\\]90", "\\1", final_fc$CI)
+upper_str_fc <- gsub("\\[.*, (.*)\\]90", "\\1", final_fc$CI)
+
+# Converting to numeric values
+lower_bound <- as.numeric(lower_str_fc)
+upper_bound <- as.numeric(upper_str_fc)
+
+# Creating the data frame
+Correct_final_fc <- data.frame("Coutry" = final_fc$Country,
+                             "Month" = final_fc$Month,
+                             "Point Forecast" = final_fc$PF,
+                             "Lower Interval" = lower_bound,
+                             "Upper Interval" = upper_bound)
+
+# Printing the adjusted output
+#print(Correct_final_fc)
+
+kbl(cbind(Correct_final_fc)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "500px")
 
-#str(final_fc)
+#str(Correct_final_fc)
 ```
 
 # 6. Challenges and Further Analysis
