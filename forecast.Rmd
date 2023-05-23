@@ -385,12 +385,14 @@ final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast
 final_fc$PF <- round(final_fc$PF)
 final_fc$CI <- round(final_fc$CI)
 
-#Removing all non-negative values from the CI column and replacing them by 0. 
-#final_fc$CI[final_fc$CI < 0] <- 0
+#Removing all non-negative values from the CI column and replacing them by 0 - With string manipulation bc i can't find another way
+final_fc$CI <- str_replace(final_fc$CI, "\\[(-\\d+),", "[0,")
 
 kbl(cbind(final_fc)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "500px")
+
+str(final_fc)
 ```
 
 # 6. Challenges and Further Analysis

@@ -261,18 +261,18 @@
       Analysis</a></li>
       <li><a href="#appendix" id="toc-appendix">Appendix</a>
       <ul>
-      <li><a href="#appendix-1.decomposition-comparison"
-      id="toc-appendix-1.decomposition-comparison"><em>Appendix
-      1.Decomposition Comparison</em></a></li>
+      <li><a href="#appendix-1.-decomposition-comparison"
+      id="toc-appendix-1.-decomposition-comparison"><em>Appendix 1.
+      Decomposition Comparison</em></a></li>
       <li><a href="#appendix-2.-accuracy-metrics-comparison"
       id="toc-appendix-2.-accuracy-metrics-comparison"><em>Appendix 2.
       Accuracy metrics comparison</em></a></li>
-      <li><a href="#plots-of-all-countries-historical-data"
-      id="toc-plots-of-all-countries-historical-data">Plots of all
-      countries’ historical data</a></li>
-      <li><a href="#plots-of-seasonal-subseries"
-      id="toc-plots-of-seasonal-subseries">Plots of Seasonal
-      Subseries</a></li>
+      <li><a href="#appendix-3.-plots-of-all-countries-historical-data"
+      id="toc-appendix-3.-plots-of-all-countries-historical-data"><em>Appendix
+      3. Plots of all countries’ historical data</em></a></li>
+      <li><a href="#appendix-4.-plots-of-seasonal-subseries"
+      id="toc-appendix-4.-plots-of-seasonal-subseries"><em>Appendix 4.
+      Plots of Seasonal Subseries</em></a></li>
       </ul></li>
       </ul>
     </div>
@@ -3857,16 +3857,18 @@ forecast <code>CI,</code> and <code>Country.</code></p>
 <div class="sourceCode" id="cb108"><pre
 class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)</span>
 <span id="cb108-2"><a href="#cb108-2" tabindex="-1"></a></span>
-<span id="cb108-3"><a href="#cb108-3" tabindex="-1"></a><span class="co">#Rounding all values to 0 significant figures becasue at the moment they have 4 decimals each...</span></span>
+<span id="cb108-3"><a href="#cb108-3" tabindex="-1"></a><span class="co">#Rounding all values to 0 significant figures because at the moment they have 4 decimals each...</span></span>
 <span id="cb108-4"><a href="#cb108-4" tabindex="-1"></a>final_fc<span class="sc">$</span>PF <span class="ot">&lt;-</span> <span class="fu">round</span>(final_fc<span class="sc">$</span>PF)</span>
 <span id="cb108-5"><a href="#cb108-5" tabindex="-1"></a>final_fc<span class="sc">$</span>CI <span class="ot">&lt;-</span> <span class="fu">round</span>(final_fc<span class="sc">$</span>CI)</span>
 <span id="cb108-6"><a href="#cb108-6" tabindex="-1"></a></span>
-<span id="cb108-7"><a href="#cb108-7" tabindex="-1"></a></span>
-<span id="cb108-8"><a href="#cb108-8" tabindex="-1"></a><span class="co">#final_fc</span></span>
-<span id="cb108-9"><a href="#cb108-9" tabindex="-1"></a></span>
-<span id="cb108-10"><a href="#cb108-10" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(final_fc)) <span class="sc">%&gt;%</span></span>
-<span id="cb108-11"><a href="#cb108-11" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb108-12"><a href="#cb108-12" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
+<span id="cb108-7"><a href="#cb108-7" tabindex="-1"></a><span class="co">#Removing all non-negative values from the CI column and replacing them by 0 - With string manipulation bc i can&#39;t find another way</span></span>
+<span id="cb108-8"><a href="#cb108-8" tabindex="-1"></a>final_fc<span class="sc">$</span>CI <span class="ot">&lt;-</span> <span class="fu">str_replace</span>(final_fc<span class="sc">$</span>CI, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">[(-</span><span class="sc">\\</span><span class="st">d+),&quot;</span>, <span class="st">&quot;[0,&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in stri_replace_first_regex(string, pattern,
+## fix_replacement(replacement), : argument is not an atomic vector; coercing</code></pre>
+<div class="sourceCode" id="cb110"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(final_fc)) <span class="sc">%&gt;%</span></span>
+<span id="cb110-2"><a href="#cb110-2" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb110-3"><a href="#cb110-3" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
@@ -3951,7 +3953,7 @@ Germany
 273
 </td>
 <td style="text-align:left;">
-[-24, 569]90
+[0, 569]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -3965,7 +3967,7 @@ Germany
 490
 </td>
 <td style="text-align:left;">
-[-97, 1077]90
+[0, 1077]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -3979,7 +3981,7 @@ Germany
 429
 </td>
 <td style="text-align:left;">
-[-132, 991]90
+[0, 991]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -3993,7 +3995,7 @@ Germany
 429
 </td>
 <td style="text-align:left;">
-[-178, 1036]90
+[0, 1036]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4007,7 +4009,7 @@ Germany
 398
 </td>
 <td style="text-align:left;">
-[-207, 1004]90
+[0, 1004]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4021,7 +4023,7 @@ Germany
 282
 </td>
 <td style="text-align:left;">
-[-177, 741]90
+[0, 741]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4035,7 +4037,7 @@ Germany
 218
 </td>
 <td style="text-align:left;">
-[-160, 596]90
+[0, 596]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4049,7 +4051,7 @@ Germany
 177
 </td>
 <td style="text-align:left;">
-[-148, 501]90
+[0, 501]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4063,7 +4065,7 @@ Germany
 156
 </td>
 <td style="text-align:left;">
-[-148, 460]90
+[0, 460]90
 </td>
 <td style="text-align:left;">
 Germany
@@ -4595,7 +4597,7 @@ Austria
 108
 </td>
 <td style="text-align:left;">
-[-7, 222]90
+[0, 222]90
 </td>
 <td style="text-align:left;">
 Austria
@@ -4609,7 +4611,7 @@ Austria
 109
 </td>
 <td style="text-align:left;">
-[-9, 227]90
+[0, 227]90
 </td>
 <td style="text-align:left;">
 Austria
@@ -4623,7 +4625,7 @@ Austria
 8
 </td>
 <td style="text-align:left;">
-[-1, 17]90
+[0, 17]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4637,7 +4639,7 @@ Lichtenstein
 7
 </td>
 <td style="text-align:left;">
-[-2, 16]90
+[0, 16]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4651,7 +4653,7 @@ Lichtenstein
 7
 </td>
 <td style="text-align:left;">
-[-2, 16]90
+[0, 16]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4665,7 +4667,7 @@ Lichtenstein
 4
 </td>
 <td style="text-align:left;">
-[-5, 13]90
+[0, 13]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4679,7 +4681,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4693,7 +4695,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4707,7 +4709,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4721,7 +4723,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4735,7 +4737,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4749,7 +4751,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4763,7 +4765,7 @@ Lichtenstein
 0
 </td>
 <td style="text-align:left;">
-[-9, 9]90
+[0, 9]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4777,7 +4779,7 @@ Lichtenstein
 4
 </td>
 <td style="text-align:left;">
-[-5, 13]90
+[0, 13]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4791,7 +4793,7 @@ Lichtenstein
 8
 </td>
 <td style="text-align:left;">
-[-5, 21]90
+[0, 21]90
 </td>
 <td style="text-align:left;">
 Lichtenstein
@@ -4982,6 +4984,13 @@ Total
 </tbody>
 </table>
 </div>
+<div class="sourceCode" id="cb111"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" tabindex="-1"></a><span class="fu">str</span>(final_fc)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    78 obs. of  4 variables:
+##  $ Month  : mth [1:78] 2022 Dec, 2023 Jan, 2023 Feb, 2023 Mar, 2023 Apr, 2023 May,...
+##  $ PF     : num  157 134 105 133 273 490 429 429 398 282 ...
+##  $ CI     : chr  &quot;[69, 245]90&quot; &quot;[38, 230]90&quot; &quot;[16, 194]90&quot; &quot;[4, 263]90&quot; ...
+##  $ Country: chr  &quot;Germany&quot; &quot;Germany&quot; &quot;Germany&quot; &quot;Germany&quot; ...</code></pre>
 </div>
 </div>
 <div id="challenges-and-further-analysis" class="section level1">
@@ -5015,8 +5024,8 @@ simply importing it from Switzerland.</p>
 </div>
 <div id="appendix" class="section level1 tabset">
 <h1 class="tabset">Appendix</h1>
-<div id="appendix-1.decomposition-comparison" class="section level2">
-<h2><em>Appendix 1.Decomposition Comparison</em></h2>
+<div id="appendix-1.-decomposition-comparison" class="section level2">
+<h2><em>Appendix 1. Decomposition Comparison</em></h2>
 <ul>
 <li>Classical Decomposition assumes seasonal component repeats from year
 to year, which usually is not the case in reality, over smoothes rapid
@@ -5040,105 +5049,107 @@ are used to measure the difference between predicted values and actual
 values. Comparatively lower numbers of these metrics assume a better
 model’s forecast quality potential.</p>
 </div>
-<div id="plots-of-all-countries-historical-data" class="section level2">
-<h2>Plots of all countries’ historical data</h2>
+<div id="appendix-3.-plots-of-all-countries-historical-data"
+class="section level2">
+<h2><em>Appendix 3. Plots of all countries’ historical data</em></h2>
 <div id="germany-4" class="section level3">
 <h3><strong>Germany</strong></h3>
-<div class="sourceCode" id="cb109"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Germany) <span class="sc">+</span> </span>
-<span id="cb109-2"><a href="#cb109-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Germany&quot;</span>) <span class="sc">+</span></span>
-<span id="cb109-3"><a href="#cb109-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Germany) <span class="sc">+</span> </span>
+<span id="cb113-2"><a href="#cb113-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Germany&quot;</span>) <span class="sc">+</span></span>
+<span id="cb113-3"><a href="#cb113-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-83-1.png" width="768" /></p>
 </div>
 <div id="france-4" class="section level3">
 <h3><strong>France</strong></h3>
-<div class="sourceCode" id="cb110"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(France) <span class="sc">+</span> </span>
-<span id="cb110-2"><a href="#cb110-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to France&quot;</span>) <span class="sc">+</span></span>
-<span id="cb110-3"><a href="#cb110-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(France) <span class="sc">+</span> </span>
+<span id="cb114-2"><a href="#cb114-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to France&quot;</span>) <span class="sc">+</span></span>
+<span id="cb114-3"><a href="#cb114-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-84-1.png" width="768" /></p>
 </div>
 <div id="italy-4" class="section level3">
 <h3><strong>Italy</strong></h3>
-<div class="sourceCode" id="cb111"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Italy) <span class="sc">+</span> </span>
-<span id="cb111-2"><a href="#cb111-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Italy&quot;</span>) <span class="sc">+</span></span>
-<span id="cb111-3"><a href="#cb111-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Italy) <span class="sc">+</span> </span>
+<span id="cb115-2"><a href="#cb115-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Italy&quot;</span>) <span class="sc">+</span></span>
+<span id="cb115-3"><a href="#cb115-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-85-1.png" width="768" /></p>
 </div>
 <div id="austria-4" class="section level3">
 <h3><strong>Austria</strong></h3>
-<div class="sourceCode" id="cb112"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Austria) <span class="sc">+</span> </span>
-<span id="cb112-2"><a href="#cb112-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Austria&quot;</span>) <span class="sc">+</span></span>
-<span id="cb112-3"><a href="#cb112-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Austria) <span class="sc">+</span> </span>
+<span id="cb116-2"><a href="#cb116-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Austria&quot;</span>) <span class="sc">+</span></span>
+<span id="cb116-3"><a href="#cb116-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-86-1.png" width="768" /></p>
 </div>
 <div id="lichtenstein-5" class="section level3">
 <h3><strong>Lichtenstein</strong></h3>
-<div class="sourceCode" id="cb113"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Lichtenstein) <span class="sc">+</span> </span>
-<span id="cb113-2"><a href="#cb113-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Lichtenstein&quot;</span>) <span class="sc">+</span></span>
-<span id="cb113-3"><a href="#cb113-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Lichtenstein) <span class="sc">+</span> </span>
+<span id="cb117-2"><a href="#cb117-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to Lichtenstein&quot;</span>) <span class="sc">+</span></span>
+<span id="cb117-3"><a href="#cb117-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-87-1.png" width="768" /></p>
 </div>
 <div id="total-4" class="section level3">
 <h3><strong>Total</strong></h3>
-<div class="sourceCode" id="cb114"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total) <span class="sc">+</span> </span>
-<span id="cb114-2"><a href="#cb114-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to All countries&quot;</span>) <span class="sc">+</span></span>
-<span id="cb114-3"><a href="#cb114-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>(Total) <span class="sc">+</span> </span>
+<span id="cb118-2"><a href="#cb118-2" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Exports from Switzerland to All countries&quot;</span>) <span class="sc">+</span></span>
+<span id="cb118-3"><a href="#cb118-3" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-88-1.png" width="768" /></p>
 </div>
 </div>
-<div id="plots-of-seasonal-subseries" class="section level2">
-<h2>Plots of Seasonal Subseries</h2>
+<div id="appendix-4.-plots-of-seasonal-subseries"
+class="section level2">
+<h2><em>Appendix 4. Plots of Seasonal Subseries</em></h2>
 <div id="germany-5" class="section level3">
 <h3><strong>Germany</strong></h3>
-<div class="sourceCode" id="cb115"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Germany) <span class="sc">+</span></span>
-<span id="cb115-2"><a href="#cb115-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb115-3"><a href="#cb115-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Germany&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Germany) <span class="sc">+</span></span>
+<span id="cb119-2"><a href="#cb119-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb119-3"><a href="#cb119-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Germany&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-89-1.png" width="768" /></p>
 </div>
 <div id="france-5" class="section level3">
 <h3><strong>France</strong></h3>
-<div class="sourceCode" id="cb116"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(France) <span class="sc">+</span></span>
-<span id="cb116-2"><a href="#cb116-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb116-3"><a href="#cb116-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to France&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(France) <span class="sc">+</span></span>
+<span id="cb120-2"><a href="#cb120-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb120-3"><a href="#cb120-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to France&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-90-1.png" width="768" /></p>
 </div>
 <div id="italy-5" class="section level3">
 <h3><strong>Italy</strong></h3>
-<div class="sourceCode" id="cb117"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Italy) <span class="sc">+</span></span>
-<span id="cb117-2"><a href="#cb117-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb117-3"><a href="#cb117-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Italy&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Italy) <span class="sc">+</span></span>
+<span id="cb121-2"><a href="#cb121-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb121-3"><a href="#cb121-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Italy&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-91-1.png" width="768" /></p>
 </div>
 <div id="austria-5" class="section level3">
 <h3><strong>Austria</strong></h3>
-<div class="sourceCode" id="cb118"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Austria) <span class="sc">+</span></span>
-<span id="cb118-2"><a href="#cb118-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb118-3"><a href="#cb118-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Austria&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Austria) <span class="sc">+</span></span>
+<span id="cb122-2"><a href="#cb122-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb122-3"><a href="#cb122-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Austria&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-92-1.png" width="768" /></p>
 </div>
 <div id="lichtenstein-6" class="section level3">
 <h3><strong>Lichtenstein</strong></h3>
-<div class="sourceCode" id="cb119"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Lichtenstein) <span class="sc">+</span></span>
-<span id="cb119-2"><a href="#cb119-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb119-3"><a href="#cb119-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Lichtenstein&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Lichtenstein) <span class="sc">+</span></span>
+<span id="cb123-2"><a href="#cb123-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb123-3"><a href="#cb123-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to Lichtenstein&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-93-1.png" width="768" /></p>
 </div>
 <div id="total-5" class="section level3">
 <h3><strong>Total</strong></h3>
-<div class="sourceCode" id="cb120"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Total) <span class="sc">+</span></span>
-<span id="cb120-2"><a href="#cb120-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
-<span id="cb120-3"><a href="#cb120-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to All countries&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre
+class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span> <span class="fu">gg_subseries</span>(Total) <span class="sc">+</span></span>
+<span id="cb124-2"><a href="#cb124-2" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;GWt&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb124-3"><a href="#cb124-3" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Seasonal subseries plot: Swiss electricity exported to All countries&quot;</span>)</span></code></pre></div>
 <p><img src="main_files/figure-html/unnamed-chunk-94-1.png" width="768" /></p>
 </div>
 </div>

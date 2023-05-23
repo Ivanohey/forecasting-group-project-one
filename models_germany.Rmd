@@ -1,14 +1,16 @@
 # 4. Model Selection
 
 ## Methodology
-To evaluate the forecast accuracy, we will test how a model performs on new data not used during the fitting phase.
-We split our data into training and test set. The first one we will use to estimate any parameters of the forecasting method, and the second - is to define the model's accuracy. 
-We fit the training data to models selected (ARIMA, ETS, SNAIVE) to forecast 60 following periods (in our case, months). 
-We refit our models with test data and calculate the accuracy of the forecast. 
-We select the model with the lowest accuracy metrics for further forecast. Low metric values indicate the better predictive performance of the model, with a value of 0 indicating a perfect fit between the predicted and actual values. 
+Before creating forecasts, we wanted to discover which model fits our data the best. To evaluate this, we have decided to fit different models for each country, and then pick the best one.
+
+To do this, we split our data into a training and a test set. The first one we will use to estimate any parameters of the forecasting model, and the second is to examine each model's accuracy. The training set for all countries is basically a long time period, from the beginning of our data until the end of 2015, and then the rest of the data is used in the test set. 
+
+The different models we decided to explore are S-ARIMA, ETS, S-NAIVE and TSLM, and we used them to forecast 60 periods (months) and then compare those with the data in the test set. 
+
+For each country, we selected the model with the best accuracy metrics, as we will explain below. Some of the metrics we will look at are RMSE and MAE and low metric values indicate a better predictive performance of the model. A value of 0 indicates a perfect fit between the predicted and actual values. 
 Residuals analysis is also going to be plotted to see how well the model captures the dynamics of the data. Good models' residuals should be stationary (white noise) and have no patterns. 
 
-We can see strong seasonality and trend in data from our decomposition analysis, so we tested ARIMA, ETS, and Seasonal NAIVE models as we assume these models can handle these types of data the best. 
+We can see strong seasonality and trend in data from our decomposition analysis, which is why we selected the models mentioned above. We expect these models can handle these types of data the best. 
 
 As the most accurate forecast is of interest, we will give more weight to the model with low values of RMSE and MAE, even though another model has a higher AIC (see Appendix 2.).
 

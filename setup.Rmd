@@ -24,6 +24,7 @@ library(patchwork)
 library(fable)
 
 #Tables
+library(stringr)
 library(knitr)
 library(fable)
 library(kableExtra)
