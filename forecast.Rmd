@@ -381,12 +381,12 @@ Below is the final table containing `Month,` point forecast `PF,` 90% lower and 
 
 final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)
 
-#Rounding all values to 0 significant figures becasue at the moment they have 4 decimals each...
+#Rounding all values to 0 significant figures because at the moment they have 4 decimals each...
 final_fc$PF <- round(final_fc$PF)
 final_fc$CI <- round(final_fc$CI)
 
 #Removing all non-negative values from the CI column and replacing them by 0. 
-final_fc$CI[final_fc$CI < 0] <- 0
+#final_fc$CI[final_fc$CI < 0] <- 0
 
 kbl(cbind(final_fc)) %>%
   kable_paper() %>%
