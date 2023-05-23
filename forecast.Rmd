@@ -2,8 +2,6 @@
 
 For each of our country forecasts, we have decided to use the model with the lowest RMSE as shown in the previous section. This is because we want our models to be as "accurate" as possible, in away that minimizes the error/distance between our forecast values and the actual values.
 
-#### Side note: 
-
 Below, for each country, you can see a residual analysis for every selected model, a graph of the forecast, and finally the forecast table. The outcome of the residual analysis is to confirm that the model has done a good job fitting the data, and more specifically, here's what we obtained from it: 
 
 A good model fit has the following characteristics in terms of its residuals:

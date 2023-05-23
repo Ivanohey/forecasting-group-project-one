@@ -177,7 +177,7 @@ In the final part of our EDA, we wanted to confirm our suspicion of the presence
 
 $$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
 
-After doing the test for all countries, we found that all of the time series are stationary at a significance level of: `alpha = 0.05`.
+After doing the test for all countries, we found that all of the time series (except Lichtenstein) are stationary at a significance level of: `alpha = 0.05`. This is against our initial assumption that the data is non-stationary, which was based on the fact that we saw a clear trend and seasonality for many of the countries. When the data is stationary, any model can be used (stationarity in the data is one of the assumptions for NAIVE and ETS models). However for Lichtenstein, since the p-value is larger than our significance level of 5%, we have to difference or log the Lichtenstein data before using some models. 
 
 
 ### **Germany**
@@ -186,9 +186,9 @@ The test statistic was -6.0768. The p-value of the test was 0.01, which indicate
 # Load the required package
 library(tseries)
 
-# Convert the data into a time series object
-G_since_2010 <- data_elec %>% select(Date,Germany) %>% filter(Date >= as.Date("2010-01-01"))
-ts_g<- ts(G_since_2010$Germany, frequency=12, start=c(2010,1))
+
+G_since_2000 <- data_elec %>% select(Date,Germany) #%>% filter(Date >= as.Date("2010-01-01"))
+ts_g<- ts(G_since_2000$Germany, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_g)
@@ -197,9 +197,9 @@ adf.test(ts_g)
 The test statistic was -4.6123 The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus France data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
-# Convert the data into a time series object
-F_since_2010 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2010-01-01"))
-ts_F<- ts(F_since_2010$France, frequency=12, start=c(2010,1))
+
+F_since_2000 <- data_elec %>% select(Date,France) %>% filter(Date >= as.Date("2000-01-01"))
+ts_F<- ts(F_since_2000$France, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_F)
@@ -208,9 +208,9 @@ adf.test(ts_F)
 The test statistic was -6.8897 The p-value of the test was 0.01. Thus Italy data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
-# Convert the data into a time series object
-I_since_2010 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2010-01-01"))
-ts_I<- ts(I_since_2010$Italy, frequency=12, start=c(2010,1))
+
+I_since_2000 <- data_elec %>% select(Date,Italy) %>% filter(Date >= as.Date("2000-01-01"))
+ts_I<- ts(I_since_2000$Italy, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_I)
@@ -219,9 +219,9 @@ adf.test(ts_I)
 The test statistic was -3.7273 The p-value of the test was 0.02443, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Austria data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
-# Convert the data into a time series object
-A_since_2010 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2010-01-01"))
-ts_A<- ts(A_since_2010$Austria, frequency=12, start=c(2010,1))
+
+A_since_2000 <- data_elec %>% select(Date,Austria) %>% filter(Date >= as.Date("2000-01-01"))
+ts_A<- ts(A_since_2000$Austria, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_A)
@@ -229,9 +229,9 @@ adf.test(ts_A)
 ### **Lichtenstein**
 The test statistic was -6.5052 The p-value of the test was 0.01. Thus Lichtenstein data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
-# Convert the data into a time series object
-Lichtenstein_since_2010 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01"))
-ts_Lich <- ts(Lichtenstein_since_2010$Lichtenstein, frequency=12, start=c(2010,1))
+
+Lichtenstein_since_2000 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2000-01-01"))
+ts_Lich <- ts(Lichtenstein_since_2000$Lichtenstein, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_Lich)
@@ -241,9 +241,9 @@ adf.test(ts_Lich)
 Finally, The test statistic was -4.0009 The p-value of the test was 0.01103. Thus Total data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
-# Convert the data into a time series object
-Tot_since_2010 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2010-01-01"))
-ts_Tot<- ts(Tot_since_2010$Total, frequency=12, start=c(2010,1))
+
+Tot_since_2000 <- data_elec %>% select(Date,Total) %>% filter(Date >= as.Date("2000-01-01"))
+ts_Tot<- ts(Tot_since_2000$Total, frequency=12, start=c(2000,1))
 
 # Check for linearity using ADF test
 adf.test(ts_Tot)
