@@ -19,12 +19,28 @@ Lichtenstein_2010_2016$Lichtenstein <- log(Lichtenstein_2010_2016$Lichtenstein)
 # Change "-Inf" to 0 in the "Lichtenstein" column
 Lichtenstein_2010_2016$Lichtenstein[Lichtenstein_2010_2016$Lichtenstein == -Inf] <- 0
 
+
+
+
+
+#just log of all data for licht
+Lichtenstein_log <- data_elec %>% select(Date,Lichtenstein)
+#taking the log of the values of lichtenstein -> careful because log(0) = -infinity
+Lichtenstein_log$Lichtenstein <- log(Lichtenstein_log$Lichtenstein)
+
+# Change "-Inf" to 0 in the "Lichtenstein" column
+Lichtenstein_log$Lichtenstein[Lichtenstein_log$Lichtenstein == -Inf] <- 0
+
+#This will be our new test set
+logfrom2016 <- Lichtenstein_log %>% filter(Date >= as.Date("2016-01-01"))
+
+
 ```
 
 
 ### **Testing Models**
 Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. This code fits different models to the training data, generates forecasts, and then applies a constraint to the forecasted mean values to ensure they are not negative.
-Based on the previous analysis Lichtenstein data is NON stationary time series, so we had to difference or log the data to make it stationary before using our models. We tried both, and it seemed like using the log of the data worked best. In addition to using ETS, ARIMA and SNAIVE, in the Lichtenstein case, a Piece-Wise ARIMA approach could be useful when the ts shows different behaviors in different periods. Indeed, we can observe four knots which exhibits different pattern in 2008, 2009,2015 and 2016 (the trend changes at the time periods). We have selected those dates as knots and will observe the result.
+Based on the previous analysis Lichtenstein data is NON stationary time series, so we had to difference or log the data to make it stationary before using our models. We tried both, and it seemed like using the log of the data worked best.
 
 Another thing to mention about Lichtenstein, is that for the ETS, ARIMA and SNaive models, we decided to train them only after 2010. We made this decision because before 2010, the data was very different (upward trending at a much higher level) and thought that if the models looked at that period, they would probably not produce accurate results.
 
@@ -35,44 +51,35 @@ test_Licht <- data_elec %>% select(Date, Lichtenstein) %>% filter(Date >= as.Dat
 
 
 # Fit ARIMA model and generate forecasts
-data_fit_Licht_a <- Lichtenstein_2010_2016 %>%
+data_fit_Licht_a <- Lichtenstein_2010_2016 %>% #the training for arima is the logged values from 2010-2016
   model(ARIMA(Lichtenstein))
 forecasts_Licht_a <- data_fit_Licht_a %>%
   forecast(h = 60)
 
 
 # Fit ETS model and generate forecasts
-data_fit_Licht_e <- Lichtenstein_2010_2016 %>%
+data_fit_Licht_e <- Lichtenstein_2010_2016 %>% #the training for ets is the logged values from 2010-2016
   model(ETS(Lichtenstein))
 forecasts_Licht_e <- data_fit_Licht_e %>%
   forecast(h = 60)
 forecasts_Licht_e$.mean <- ifelse(forecasts_Licht_e$.mean < 0, 0, forecasts_Licht_e$.mean)
 
 # Fit seasonal naive model and generate forecasts
-data_fit_Licht_n <- Lichtenstein_2010_2016 %>%
+data_fit_Licht_n <- Lichtenstein_2010_2016 %>% #the training for SNAIVE is the logged values from 2010-2016
   model(SNAIVE(Lichtenstein))
 forecasts_Licht_n <- data_fit_Licht_n %>%
   forecast(h = 60)
 forecasts_Licht_n$.mean <- ifelse(forecasts_Licht_n$.mean < 0, 0, forecasts_Licht_n$.mean)
 
 
-# Fit piece wise ARIMA model and generate forecasts
-data_fit_Licht_pw_a <- training_Licht %>%
-  model(piecewise = ARIMA(Lichtenstein ~ trend(knots = c(2008, 2009,2015,2016))))
-forecasts_Licht_pw_a <- data_fit_Licht_pw_a%>%
-  forecast(h = 60)
-forecasts_Licht_pw_a$.mean <- ifelse(forecasts_Licht_pw_a$.mean < 0, 0, forecasts_Licht_pw_a$.mean)
-
-
 # Combine forecasts into a single data frame
 all_forecasts_Licht <- bind_rows(
   data.frame(Date = forecasts_Licht_a$Date, Method = "ARIMA", Forecast = forecasts_Licht_a$.mean),
   data.frame(Date = forecasts_Licht_e$Date, Method = "ETS", Forecast = forecasts_Licht_e$.mean),
-  data.frame(Date = forecasts_Licht_n$Date, Method = "SNAIVE", Forecast = forecasts_Licht_n$.mean),
-  data.frame(Date = forecasts_Licht_pw_a$Date, Method = "Piece Wise ARIMA", Forecast = forecasts_Licht_pw_a$.mean))
+  data.frame(Date = forecasts_Licht_n$Date, Method = "SNAIVE", Forecast = forecasts_Licht_n$.mean))
 
 # Plot all three sets of forecasts together
-data_elec %>% autoplot(log(Lichtenstein)) +
+Lichtenstein_log %>% autoplot(Lichtenstein) +
   geom_line(data = all_forecasts_Licht, aes(x = Date, y = Forecast, color = Method)) +
   labs(title = "Electricity Demand in Lichtenstein")
 
@@ -84,26 +91,25 @@ ETS could be great models based on a trade off between forecasting error and com
 
 ```{r, warning=FALSE, echo=FALSE}
 #Accuracy
-Licht_accuracy_a <- accuracy(forecasts_Licht_a, test_Licht)
+Licht_accuracy_a <- accuracy(forecasts_Licht_a, logfrom2016)
 
-Licht_accuracy_e <-accuracy(forecasts_Licht_e, test_Licht)
+Licht_accuracy_e <-accuracy(forecasts_Licht_e, logfrom2016)
 
-Licht_accuracy_n <-accuracy(forecasts_Licht_n, test_Licht)
+Licht_accuracy_n <-accuracy(forecasts_Licht_n, logfrom2016)
 
-Licht_accuracy_pw_a <- accuracy(forecasts_Licht_pw_a, test_Licht)
+#Licht_accuracy_pw_a <- accuracy(forecasts_Licht_pw_a, logfrom2016)
 
 Licht_accuracy_table <- rbind(
   data.frame(Licht_accuracy_a),
   data.frame(Licht_accuracy_e),
-  data.frame(Licht_accuracy_n),
-  data.frame(Licht_accuracy_pw_a))
+  data.frame(Licht_accuracy_n))
 #AIC
 #report(data_fit_Licht_a)
 #report(data_fit_Licht_pw_a)
 ```
 
 ```{r, warning=FALSE, echo=FALSE}
-Licht_accuracy_table[ 1:4,1:10] %>%
+Licht_accuracy_table[ 1:3,1:10] %>%
   kbl() %>%
   kable_paper(full_width = F) %>%
   column_spec(4, color = "white",
@@ -112,7 +118,7 @@ Licht_accuracy_table[ 1:4,1:10] %>%
               background = spec_color(Licht_accuracy_table$MAE[1:4],end = 0.6))
 ```
 ```{r}
-report(data_fit_Licht_e)
+#report(data_fit_Licht_e)
 #report(data_fit_Licht_n)
 ```
 
@@ -122,6 +128,6 @@ It is interesting to examine any outliers or extreme values in the residuals. Th
 ```{r, warning=FALSE, echo=FALSE}
 #gg_tsresiduals(data_fit_Licht_a) + labs(title = "ARIMA Lichtenstein residuals analysis")
 gg_tsresiduals(data_fit_Licht_n) + labs(title = "SNAIVE Lichtenstein residuals analysis")
-gg_tsresiduals(data_fit_Licht_e) + labs(title = "ETS Lichtenstein residuals analysis")
+#gg_tsresiduals(data_fit_Licht_e) + labs(title = "ETS Lichtenstein residuals analysis")
 #gg_tsresiduals(data_fit_Licht_pw_a) + labs(title = "PIECE WISE Lichtenstein residuals analysis")
 ```

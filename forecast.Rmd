@@ -200,62 +200,15 @@ kbl(forecast_table_france_e) %>%
 
 ```
 
-## 5.5.1 Lichtenstein{.tabset}
-
-We fit Lichtenstein electricity demand data using the ETS model.
-
-```{r, warning=FALSE, echo=FALSE}
-# Modelling ETS automatically
-ets_Licht <- data_elec %>%
-  select(Lichtenstein) %>%
-  model(ETS(Lichtenstein))
-# Getting the Accuracy scores for models
-#report(ets_Licht)
-
-# Forecasting using the models
-forecast_ets_Licht <- ets_Licht %>% forecast(h = 13) %>% hilo(90)
-forecast_ets_Licht$.mean <- ifelse(forecast_ets_Licht$.mean < 0, 0, forecast_ets_Licht$.mean)
-```
-
-### **Checking Residuals**
-```{r}
-#Checking the residuals before forecasting
-ets_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "ETS Lichtenstein residuals analysis")
-```
-
-### **Graphing the forecast**
-
-```{r}
-# Graphing the forecast
-ets_Licht %>% forecast(h = 13) %>% autoplot(Lichtenstein_after_2008) +
-  labs(title = "ETS Forecast for Lichtenstein")
-
-#Extracting the forecasted values
-forecast_table_Lichtenstein_ets <- data.frame(Model = c("ETS"),
-                              Forecast_Values = c(forecast_ets_Licht))
-
-forecast_table_Lichtenstein_ets <- forecast_table_Lichtenstein_ets %>% select(Forecast_Values.Date,Forecast_Values..mean, Forecast_Values.90.)
-forecast_table_Lichtenstein_ets$Country <- "Lichtenstein"
-
-colnames(forecast_table_Lichtenstein_ets)[1] <- "Month"
-colnames(forecast_table_Lichtenstein_ets)[2] <- "PF"
-colnames(forecast_table_Lichtenstein_ets)[3] <- "CI"
-```
-### **Forecast Table**
-The resulting forecast table for Lichtenstein is shown below. 
-```{r}
-#forecast_table_Lichtenstein_ets
-kbl(forecast_table_Lichtenstein_ets) %>%
-  kable_styling(fixed_thead = T)
-```
-
-## 5.5.2 Lichtenstein{.tabset}
+## 5.5 Lichtenstein{.tabset}
 
 We fit Lichtenstein electricity demand data using the SNaive model.
 
 ```{r, warning=FALSE, echo=FALSE}
+lich_log_2010_2022 <- Lichtenstein_log %>% filter(Date >= as.Date("2010-01-01"))
+
 # Modelling SNaive automatically
-n_Licht <- data_elec %>%
+n_Licht <- lich_log_2010_2022%>%
   select(Lichtenstein) %>%
   model(SNAIVE(Lichtenstein))
 # Getting the Accuracy scores for models
@@ -278,7 +231,7 @@ n_Licht %>% gg_tsresiduals(lag_max = 36) + labs(title = "SNaive Lichtenstein res
 
 ```{r}
 # Graphing the forecast
-n_Licht %>% forecast(h = 13) %>% autoplot(Lichtenstein_after_2008) +
+n_Licht %>% forecast(h = 13) %>% autoplot(lich_log_2010_2022) +
   labs(title = "SNaive Forecast for Lichtenstein")
 
 #Extracting the forecasted values

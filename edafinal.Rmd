@@ -1,8 +1,4 @@
 
-# THINGS THAT NEED TO BE DONE 
-
-- In the forecast we show only the final model chosen, why show lichtenstein 5.5.1 + 5.5.2?
-
 # 1. Introduction 
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 
