@@ -3,7 +3,7 @@
 
 This project is a forecasting analysis for the electricity exports from Switzerland to several European countries. The data used was all provided by the professor and no additional datasets were used. We have selected the models that fit each country the best (based on some performance metrics) and have created forecasts and CI's for each country as well as the total. In the final report you are now reading, only the most important information is included, and whatever was deemed unnecessary for the report you can find in our code files/appendix. 
 
-The forecasting models used in this project are S-Naive, S-ARIMA, ETS and a variant of ARIMA piece-wise for a specific country. 
+The forecasting models used in this project are S-Naive, S-ARIMA and ETS. 
 
 
 # 2. Data Processing 
@@ -37,7 +37,7 @@ In this section you can find an example of the exploratory analysis we did to id
 
 For example, we noticed irregularities in the amplitudes of seasonality over time. For countries like Germany and France, the amplitude of the seasonality seemed to increase towards the most recent years. Based on this, we decided to do a seasonal/trend decomposition for each country to further analyze this.
 
-Furthermore, for Lichtenstein, we noticed a huge drop in exports after 2008-2009, which indicated that we should try different models like the piece-wise model to separate the differences in trend over time. 
+Furthermore, for Lichtenstein, we noticed a huge drop in exports after 2008-2009, which can not be explain by the historical data. In order to handle it, we use different approachs such as splitting the data or implementing piece wise model.
 
 ## 3.2 Seasonal Sub-series plots 
 
@@ -112,7 +112,7 @@ data_elec %>%
 ```
 
 ### **Austria**
-Austria trend undergoes a huge increase during the period 2018-2021, follow by a drastic drop which are not explainable by historical data and strongly suggest that it is affected by a covariate.
+Austria trend undergoes a huge increase during the period 2018-2021, follow by a significant drop which are not explainable by historical data and strongly suggest that it is affected by a covariate.
 Seasonality is constant and stable over time during the whole period.
 ```{r}
 data_elec %>%
@@ -153,7 +153,7 @@ After doing the test for all countries, we found that all of the time series (ex
 
 
 ### **Germany**
-The test statistic was -6.0768. The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Germany data is a stationary time series.
+The test statistic was -6.3865. The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Germany data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 # Load the required package
 library(tseries)
@@ -166,7 +166,7 @@ ts_g<- ts(G_since_2000$Germany, frequency=12, start=c(2000,1))
 adf.test(ts_g)
 ```
 ### **France**
-The test statistic was -4.6123 The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus France data is a stationary time series.
+The test statistic was -5.671 The p-value of the test was 0.01, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus France data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
 
@@ -177,7 +177,7 @@ ts_F<- ts(F_since_2000$France, frequency=12, start=c(2000,1))
 adf.test(ts_F)
 ```
 ### **Italy**
-The test statistic was -6.8897 The p-value of the test was 0.01. Thus Italy data is a stationary time series.
+The test statistic was -6.1852 The p-value of the test was 0.01. Thus Italy data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
 
@@ -188,7 +188,7 @@ ts_I<- ts(I_since_2000$Italy, frequency=12, start=c(2000,1))
 adf.test(ts_I)
 ```
 ### **Austria**
-The test statistic was -3.7273 The p-value of the test was 0.02443, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Austria data is a stationary time series.
+The test statistic was -3.6792 The p-value of the test was 0.02595, which indicates strong evidence to reject the null hypothesis of non-stationarity at `alpha = 0.05`. Thus Austria data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
 
@@ -199,7 +199,7 @@ ts_A<- ts(A_since_2000$Austria, frequency=12, start=c(2000,1))
 adf.test(ts_A)
 ```
 ### **Lichtenstein**
-The test statistic was -6.5052 The p-value of the test was 0.01. Thus Lichtenstein data is a stationary time series.
+The test statistic was -3.0063. The p-value of the test was 0.1521. Thus Lichtenstein data is a NON stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
 Lichtenstein_since_2000 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2000-01-01"))
@@ -210,7 +210,7 @@ adf.test(ts_Lich)
 ```
 
 ### **Total**
-Finally, The test statistic was -4.0009 The p-value of the test was 0.01103. Thus Total data is a stationary time series.
+Finally, The test statistic was -4.8658 The p-value of the test was 0.01. Thus Total data is a stationary time series.
 ```{r, warning=FALSE, echo=FALSE}
 
 
