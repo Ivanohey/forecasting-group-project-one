@@ -81,7 +81,7 @@ report(data_fit_tot_e)
 
 ### **Residuals**
 The output below also suggests that the ARIMA model did well in capturing all the dynamics in data, as the residuals seem to be white noise.
-```{r}
+```{r, warning=FALSE}
 gg_tsresiduals(data_fit_tot_a) + labs(title = "ARIMA Total residuals analysis")
 
 gg_tsresiduals(data_fit_tot_e) + labs(title = "ETS Total residuals analysis")

@@ -81,7 +81,7 @@ all_forecasts_Licht <- bind_rows(
 # Plot all three sets of forecasts together
 Lichtenstein_log %>% autoplot(Lichtenstein) +
   geom_line(data = all_forecasts_Licht, aes(x = Date, y = Forecast, color = Method)) +
-  labs(title = "Electricity Demand in Lichtenstein")
+  labs(title = "Log of Electricity Demand in Lichtenstein")
 
 ```
 

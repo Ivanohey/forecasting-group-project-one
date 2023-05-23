@@ -201,9 +201,6 @@
     <h2><a href="#content">Forecasting Project 1 - Group 7</a></h2>
     <div id="toc">
       <ul>
-      <li><a href="#things-that-need-to-be-done"
-      id="toc-things-that-need-to-be-done">THINGS THAT NEED TO BE
-      DONE</a></li>
       <li><a href="#introduction" id="toc-introduction">1.
       Introduction</a></li>
       <li><a href="#data-processing" id="toc-data-processing">2. Data
@@ -288,13 +285,6 @@ Khryst Amina Ivan
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
-<div id="things-that-need-to-be-done" class="section level1">
-<h1>THINGS THAT NEED TO BE DONE</h1>
-<ul>
-<li>In the forecast we show only the final model chosen, why show
-lichtenstein 5.5.1 + 5.5.2?</li>
-</ul>
-</div>
 <div id="introduction" class="section level1">
 <h1>1. Introduction</h1>
 <p>This project is a forecasting analysis for the electricity exports
@@ -305,8 +295,8 @@ performance metrics) and have created forecasts and CI’s for each
 country as well as the total. In the final report you are now reading,
 only the most important information is included, and whatever was deemed
 unnecessary for the report you can find in our code files/appendix.</p>
-<p>The forecasting models used in this project are S-Naive, S-ARIMA, ETS
-and a variant of ARIMA piece-wise for a specific country.</p>
+<p>The forecasting models used in this project are S-Naive, S-ARIMA and
+ETS.</p>
 </div>
 <div id="data-processing" class="section level1">
 <h1>2. Data Processing</h1>
@@ -333,9 +323,9 @@ amplitude of the seasonality seemed to increase towards the most recent
 years. Based on this, we decided to do a seasonal/trend decomposition
 for each country to further analyze this.</p>
 <p>Furthermore, for Lichtenstein, we noticed a huge drop in exports
-after 2008-2009, which indicated that we should try different models
-like the piece-wise model to separate the differences in trend over
-time.</p>
+after 2008-2009, which can not be explain by the historical data. In
+order to handle it, we use different approachs such as splitting the
+data or implementing piece wise model.</p>
 </div>
 <div id="seasonal-sub-series-plots" class="section level2">
 <h2>3.2 Seasonal Sub-series plots</h2>
@@ -457,9 +447,10 @@ accurately.</p>
 <div id="austria" class="section level3">
 <h3><strong>Austria</strong></h3>
 <p>Austria trend undergoes a huge increase during the period 2018-2021,
-follow by a drastic drop which are not explainable by historical data
-and strongly suggest that it is affected by a covariate. Seasonality is
-constant and stable over time during the whole period.</p>
+follow by a significant drop which are not explainable by historical
+data and strongly suggest that it is affected by a covariate.
+Seasonality is constant and stable over time during the whole
+period.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>data_elec <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">model</span>(<span class="fu">STL</span>(Austria <span class="sc">~</span> <span class="fu">trend</span>(<span class="at">window =</span> <span class="dv">7</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="at">window =</span> <span class="st">&quot;periodic&quot;</span>),</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -514,7 +505,7 @@ since the p-value is larger than our significance level of 5%, we have
 to difference or log the Lichtenstein data before using some models.</p>
 <div id="germany-1" class="section level3">
 <h3><strong>Germany</strong></h3>
-<p>The test statistic was -6.0768. The p-value of the test was 0.01,
+<p>The test statistic was -6.3865. The p-value of the test was 0.01,
 which indicates strong evidence to reject the null hypothesis of
 non-stationarity at <code>alpha = 0.05</code>. Thus Germany data is a
 stationary time series.</p>
@@ -530,8 +521,8 @@ stationary time series.</p>
 </div>
 <div id="france-1" class="section level3">
 <h3><strong>France</strong></h3>
-<p>The test statistic was -4.6123 The p-value of the test was 0.01,
-which indicates strong evidence to reject the null hypothesis of
+<p>The test statistic was -5.671 The p-value of the test was 0.01, which
+indicates strong evidence to reject the null hypothesis of
 non-stationarity at <code>alpha = 0.05</code>. Thus France data is a
 stationary time series.</p>
 <pre><code>## 
@@ -543,7 +534,7 @@ stationary time series.</p>
 </div>
 <div id="italy-1" class="section level3">
 <h3><strong>Italy</strong></h3>
-<p>The test statistic was -6.8897 The p-value of the test was 0.01. Thus
+<p>The test statistic was -6.1852 The p-value of the test was 0.01. Thus
 Italy data is a stationary time series.</p>
 <pre><code>## 
 ##  Augmented Dickey-Fuller Test
@@ -554,7 +545,7 @@ Italy data is a stationary time series.</p>
 </div>
 <div id="austria-1" class="section level3">
 <h3><strong>Austria</strong></h3>
-<p>The test statistic was -3.7273 The p-value of the test was 0.02443,
+<p>The test statistic was -3.6792 The p-value of the test was 0.02595,
 which indicates strong evidence to reject the null hypothesis of
 non-stationarity at <code>alpha = 0.05</code>. Thus Austria data is a
 stationary time series.</p>
@@ -567,8 +558,8 @@ stationary time series.</p>
 </div>
 <div id="lichtenstein-1" class="section level3">
 <h3><strong>Lichtenstein</strong></h3>
-<p>The test statistic was -6.5052 The p-value of the test was 0.01. Thus
-Lichtenstein data is a stationary time series.</p>
+<p>The test statistic was -3.0063. The p-value of the test was 0.1521.
+Thus Lichtenstein data is a NON stationary time series.</p>
 <pre><code>## 
 ##  Augmented Dickey-Fuller Test
 ## 
@@ -578,8 +569,8 @@ Lichtenstein data is a stationary time series.</p>
 </div>
 <div id="total-1" class="section level3">
 <h3><strong>Total</strong></h3>
-<p>Finally, The test statistic was -4.0009 The p-value of the test was
-0.01103. Thus Total data is a stationary time series.</p>
+<p>Finally, The test statistic was -4.8658 The p-value of the test was
+0.01. Thus Total data is a stationary time series.</p>
 <pre><code>## 
 ##  Augmented Dickey-Fuller Test
 ## 
@@ -1597,13 +1588,12 @@ time period that we have train our data, but it is important to note
 that it has some limitations. Indeed, it assumes that historical
 patterns will repeat exactly in the future, which may not always hold.
 The S-Naive method may not account for underlying factors or trends that
-could impact future outcomes. Therefore, there is an increased risk of
-inaccurate forecasts if the method is blindly applied without
-considering other relevant factors. ETS could be great models based on a
-trade off between forecasting error and complexity of the model. ETS
-model has the third lowest RMSE and second lowest MAE which makes him a
-good candidate. In order to select a model, we can analyse residuals of
-those models</p>
+could impact future outcomes. Thus, there is an increased risk of
+inaccurate forecasts if the method is blindly applied. ETS could be
+great models based on a trade off between forecasting error and model
+complexity. ETS model has the second lowest RMSE and MAE which makes him
+a good candidate. In order to select a model, we can analyse residuals
+of those models</p>
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1738,20 +1728,20 @@ NaN
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co">#report(data_fit_Licht_e)</span></span>
-<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="co">#report(data_fit_Licht_n)</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co">#report(data_fit_Licht_n)</span></span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="co">#report(data_fit_Licht_e)</span></span></code></pre></div>
 </div>
 <div id="residuals-4" class="section level3">
 <h3><strong>Residuals</strong></h3>
 <p>It is interesting to examine any outliers or extreme values in the
 residuals. The ACF analysis for SNaive shows Positive correlations
-between the ts and its lags. In opposite ETS model shows that there’s no
-correlation between thoses values. Thus, each observation in the ts can
-be considered unrelated to the previous values. Consequently,
-Lichtenstein ts might need covariate to forecast and analyse it
-adequately. Concerning the residual, it should ideally appear random, in
-our case residuals are chinked around zero for both models (SNaive &amp;
-ETS), thus those might shows autocorrelation.</p>
+between the ts and its lags. The result shows that there’s correlation
+between thoses values. Thus, each observation in the ts can be
+considered related to the previous values. Consequently, Lichtenstein ts
+might need covariate to forecast and analyse it adequately. Concerning
+the residual, it should ideally appear random, in our case residuals are
+chinked around zero for SNaive model, thus those might shows
+autocorrelation.</p>
 <p><img src="main_files/figure-html/unnamed-chunk-47-1.png" width="768" /></p>
 </div>
 </div>
@@ -3518,6 +3508,9 @@ Total
 <p>Below is the final table containing <code>Month,</code> point
 forecast <code>PF,</code> 90% lower and upper confidence levels interval
 forecast <code>CI,</code> and <code>Country.</code></p>
+<p>For Lichtenstein, since we logged the data to make the forecasts
+earlier, we have to use its inverse function (exponent) to bring the
+values back to their original magnitude.</p>
 <div class="sourceCode" id="cb101"><pre
 class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" tabindex="-1"></a>final_fc <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)</span>
 <span id="cb101-2"><a href="#cb101-2" tabindex="-1"></a></span>
@@ -3538,25 +3531,45 @@ class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb1
 <span id="cb101-17"><a href="#cb101-17" tabindex="-1"></a>upper_bound <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(upper_str_fc)</span>
 <span id="cb101-18"><a href="#cb101-18" tabindex="-1"></a></span>
 <span id="cb101-19"><a href="#cb101-19" tabindex="-1"></a><span class="co"># Creating the data frame</span></span>
-<span id="cb101-20"><a href="#cb101-20" tabindex="-1"></a>Correct_final_fc <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;Coutry&quot;</span> <span class="ot">=</span> final_fc<span class="sc">$</span>Country,</span>
+<span id="cb101-20"><a href="#cb101-20" tabindex="-1"></a>Correct_final_fc <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;Country&quot;</span> <span class="ot">=</span> final_fc<span class="sc">$</span>Country,</span>
 <span id="cb101-21"><a href="#cb101-21" tabindex="-1"></a>                             <span class="st">&quot;Month&quot;</span> <span class="ot">=</span> final_fc<span class="sc">$</span>Month,</span>
 <span id="cb101-22"><a href="#cb101-22" tabindex="-1"></a>                             <span class="st">&quot;Point Forecast&quot;</span> <span class="ot">=</span> final_fc<span class="sc">$</span>PF,</span>
 <span id="cb101-23"><a href="#cb101-23" tabindex="-1"></a>                             <span class="st">&quot;Lower Interval&quot;</span> <span class="ot">=</span> lower_bound,</span>
 <span id="cb101-24"><a href="#cb101-24" tabindex="-1"></a>                             <span class="st">&quot;Upper Interval&quot;</span> <span class="ot">=</span> upper_bound)</span>
 <span id="cb101-25"><a href="#cb101-25" tabindex="-1"></a></span>
-<span id="cb101-26"><a href="#cb101-26" tabindex="-1"></a><span class="co"># Printing the adjusted output</span></span>
-<span id="cb101-27"><a href="#cb101-27" tabindex="-1"></a><span class="co">#print(Correct_final_fc)</span></span>
-<span id="cb101-28"><a href="#cb101-28" tabindex="-1"></a></span>
-<span id="cb101-29"><a href="#cb101-29" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(Correct_final_fc)) <span class="sc">%&gt;%</span></span>
-<span id="cb101-30"><a href="#cb101-30" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb101-31"><a href="#cb101-31" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
+<span id="cb101-26"><a href="#cb101-26" tabindex="-1"></a><span class="co">#Correct_final_fc &lt;- Correct_final_fc %&gt;%</span></span>
+<span id="cb101-27"><a href="#cb101-27" tabindex="-1"></a><span class="co">#  mutate(</span></span>
+<span id="cb101-28"><a href="#cb101-28" tabindex="-1"></a><span class="co">#    Point.Forecast = ifelse(Country == &quot;Lichtenstein&quot;, exp(Point.Forecast), Point.Forecast),</span></span>
+<span id="cb101-29"><a href="#cb101-29" tabindex="-1"></a><span class="co">#    Lower.Interval = ifelse(Country == &quot;Lichtenstein&quot;, exp(Lower.Interval), Lower.Interval),</span></span>
+<span id="cb101-30"><a href="#cb101-30" tabindex="-1"></a><span class="co">#    Upper.Interval = ifelse(Country == &quot;Lichtenstein&quot;, exp(Upper.Interval), Upper.Interval)</span></span>
+<span id="cb101-31"><a href="#cb101-31" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb101-32"><a href="#cb101-32" tabindex="-1"></a></span>
+<span id="cb101-33"><a href="#cb101-33" tabindex="-1"></a>Correct_final_fc <span class="ot">&lt;-</span> Correct_final_fc <span class="sc">%&gt;%</span></span>
+<span id="cb101-34"><a href="#cb101-34" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb101-35"><a href="#cb101-35" tabindex="-1"></a>    <span class="at">Point.Forecast =</span> <span class="fu">ifelse</span>(Country <span class="sc">==</span> <span class="st">&quot;Lichtenstein&quot;</span> <span class="sc">&amp;</span> Point.Forecast <span class="sc">!=</span> <span class="dv">0</span>, <span class="fu">exp</span>(Point.Forecast), Point.Forecast),</span>
+<span id="cb101-36"><a href="#cb101-36" tabindex="-1"></a>    <span class="at">Lower.Interval =</span> <span class="fu">ifelse</span>(Country <span class="sc">==</span> <span class="st">&quot;Lichtenstein&quot;</span> <span class="sc">&amp;</span> Point.Forecast <span class="sc">!=</span> <span class="dv">0</span>, <span class="fu">exp</span>(Lower.Interval), Lower.Interval),</span>
+<span id="cb101-37"><a href="#cb101-37" tabindex="-1"></a>    <span class="at">Upper.Interval =</span> <span class="fu">ifelse</span>(Country <span class="sc">==</span> <span class="st">&quot;Lichtenstein&quot;</span> <span class="sc">&amp;</span> Point.Forecast <span class="sc">!=</span> <span class="dv">0</span>, <span class="fu">exp</span>(Upper.Interval), Upper.Interval)</span>
+<span id="cb101-38"><a href="#cb101-38" tabindex="-1"></a>  )</span>
+<span id="cb101-39"><a href="#cb101-39" tabindex="-1"></a></span>
+<span id="cb101-40"><a href="#cb101-40" tabindex="-1"></a></span>
+<span id="cb101-41"><a href="#cb101-41" tabindex="-1"></a><span class="co">#Rounding the values again </span></span>
+<span id="cb101-42"><a href="#cb101-42" tabindex="-1"></a>Correct_final_fc<span class="sc">$</span>Point.Forecast <span class="ot">&lt;-</span> <span class="fu">round</span>(Correct_final_fc<span class="sc">$</span>Point.Forecast)</span>
+<span id="cb101-43"><a href="#cb101-43" tabindex="-1"></a>Correct_final_fc<span class="sc">$</span>Lower.Interval <span class="ot">&lt;-</span> <span class="fu">round</span>(Correct_final_fc<span class="sc">$</span>Lower.Interval)</span>
+<span id="cb101-44"><a href="#cb101-44" tabindex="-1"></a>Correct_final_fc<span class="sc">$</span>Upper.Interval <span class="ot">&lt;-</span> <span class="fu">round</span>(Correct_final_fc<span class="sc">$</span>Upper.Interval)</span>
+<span id="cb101-45"><a href="#cb101-45" tabindex="-1"></a></span>
+<span id="cb101-46"><a href="#cb101-46" tabindex="-1"></a><span class="co"># Printing the adjusted output</span></span>
+<span id="cb101-47"><a href="#cb101-47" tabindex="-1"></a><span class="co">#print(Correct_final_fc)</span></span>
+<span id="cb101-48"><a href="#cb101-48" tabindex="-1"></a></span>
+<span id="cb101-49"><a href="#cb101-49" tabindex="-1"></a><span class="fu">kbl</span>(<span class="fu">cbind</span>(Correct_final_fc)) <span class="sc">%&gt;%</span></span>
+<span id="cb101-50"><a href="#cb101-50" tabindex="-1"></a>  <span class="fu">kable_paper</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb101-51"><a href="#cb101-51" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">&quot;100%&quot;</span>, <span class="at">height =</span> <span class="st">&quot;500px&quot;</span>)</span></code></pre></div>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
 <table class=" lightable-paper" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-Coutry
+Country
 </th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 Month
@@ -4465,13 +4478,13 @@ Lichtenstein
 2022 Dec
 </td>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
+7
 </td>
 <td style="text-align:right;">
 3
+</td>
+<td style="text-align:right;">
+20
 </td>
 </tr>
 <tr>
@@ -4482,13 +4495,13 @@ Lichtenstein
 2023 Jan
 </td>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
+7
 </td>
 <td style="text-align:right;">
 3
+</td>
+<td style="text-align:right;">
+20
 </td>
 </tr>
 <tr>
@@ -4499,13 +4512,13 @@ Lichtenstein
 2023 Feb
 </td>
 <td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
+7
 </td>
 <td style="text-align:right;">
 3
+</td>
+<td style="text-align:right;">
+20
 </td>
 </tr>
 <tr>
@@ -4516,13 +4529,13 @@ Lichtenstein
 2023 Mar
 </td>
 <td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
+20
 </td>
 </tr>
 <tr>
@@ -4652,13 +4665,13 @@ Lichtenstein
 2023 Nov
 </td>
 <td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
+20
 </td>
 </tr>
 <tr>
@@ -4669,13 +4682,13 @@ Lichtenstein
 2023 Dec
 </td>
 <td style="text-align:right;">
-2
+7
 </td>
 <td style="text-align:right;">
-0
+1
 </td>
 <td style="text-align:right;">
-4
+55
 </td>
 </tr>
 <tr>
