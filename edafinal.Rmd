@@ -177,7 +177,7 @@ In the final part of our EDA, we wanted to confirm our suspicion of the presence
 
 $$H_0: The\ time\ series\ has\ a\ unit\ root\ (non\ stationary)\\ H_1: The\ time\ series\ is\ stationary$$
 
-After doing the test for all countries, we found that all of the time series are stationary at a significance level of: `alpha = 0.05`.
+After doing the test for all countries, we found that all of the time series (except Lichtenstein) are stationary at a significance level of: `alpha = 0.05`. This is against our initial assumption that the data is non-stationary, which was based on the fact that we saw a clear trend and seasonality for many of the countries. When the data is stationary, any model can be used (stationarity in the data is one of the assumptions for NAIVE and ETS models). However for Lichtenstein, since the p-value is larger than our significance level of 5%, we have to difference or log the Lichtenstein data before using some models. 
 
 
 ### **Germany**

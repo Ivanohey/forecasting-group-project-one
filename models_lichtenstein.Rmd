@@ -7,12 +7,16 @@ Lichtenstein_before_2008 <- data_elec %>% select(Date,Lichtenstein) %>% filter(D
 # Investigating Lichtenstein closely after 2008
 Lichtenstein_after_2008 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2008-01-01"))
 
+Lichtenstein_2010_2016 <- data_elec %>% select(Date,Lichtenstein) %>% filter(Date >= as.Date("2010-01-01") & Date <= as.Date("2015-12-31"))
+
 ```
 
 
 ### **Testing Models**
 Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. This code fits different models to the training data, generates forecasts, and then applies a constraint to the forecasted mean values to ensure they are not negative.
-Based on the previous analysis Lichtenstein data is stationary time series with high presence of trend and seasonality, thus we can consider using following models to perform our analysis: simple ARIMA, ETS, S-naive and Piece-Wise. A Piece-Wise ARIMA approach could be useful when the ts shows different behaviors over different periods. Indeed, we can observe four knots which exhibits different pattern in 2008, 2009,2015 and 2016. We have selected those date as knots and will observe the result.
+Based on the previous analysis Lichtenstein data is NON stationary time series, so we had to difference or log the data to make it stationary before using our models. In addition to using ETS, ARIMA and SNAIVE, in the Lichtenstein case, a Piece-Wise ARIMA approach could be useful when the ts shows different behaviors in different periods. Indeed, we can observe four knots which exhibits different pattern in 2008, 2009,2015 and 2016 (the trend changes at the time periods). We have selected those dates as knots and will observe the result.
+
+Another thing to mention about Lichtenstein, is that for the ETS, ARIMA and SNaive models, we decided to train them only after 2010. We made this decision because before 2010, the data was very different (upward trending at a much higher level) and thought that if the models looked at that period, they would probably not produce accurate results.
 
 ```{r, warning=FALSE, echo=FALSE}
 #Split the data
@@ -21,21 +25,21 @@ test_Licht <- data_elec %>% select(Date, Lichtenstein) %>% filter(Date >= as.Dat
 
 
 # Fit ARIMA model and generate forecasts
-data_fit_Licht_a <- training_Licht %>%
+data_fit_Licht_a <- Lichtenstein_2010_2016 %>%
   model(ARIMA(Lichtenstein))
 forecasts_Licht_a <- data_fit_Licht_a %>%
   forecast(h = 60)
 
 
 # Fit ETS model and generate forecasts
-data_fit_Licht_e <- training_Licht %>%
+data_fit_Licht_e <- Lichtenstein_2010_2016 %>%
   model(ETS(Lichtenstein))
 forecasts_Licht_e <- data_fit_Licht_e %>%
   forecast(h = 60)
 forecasts_Licht_e$.mean <- ifelse(forecasts_Licht_e$.mean < 0, 0, forecasts_Licht_e$.mean)
 
 # Fit seasonal naive model and generate forecasts
-data_fit_Licht_n <- training_Licht %>%
+data_fit_Licht_n <- Lichtenstein_2010_2016 %>%
   model(SNAIVE(Lichtenstein))
 forecasts_Licht_n <- data_fit_Licht_n %>%
   forecast(h = 60)
