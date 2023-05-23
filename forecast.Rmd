@@ -340,6 +340,12 @@ Correct_final_fc <- data.frame("Country" = final_fc$Country,
 #    Upper.Interval = ifelse(Country == "Lichtenstein", exp(Upper.Interval), Upper.Interval)
 # )
 
+Correct_final_fc <- Correct_final_fc %>%
+  mutate(
+    Point.Forecast = ifelse(Country == "Lichtenstein" & Point.Forecast != 0, exp(Point.Forecast), Point.Forecast),
+    Lower.Interval = ifelse(Country == "Lichtenstein" & Point.Forecast != 0, exp(Lower.Interval), Lower.Interval),
+    Upper.Interval = ifelse(Country == "Lichtenstein" & Point.Forecast != 0, exp(Upper.Interval), Upper.Interval)
+  )
 
 
 #Rounding the values again 
