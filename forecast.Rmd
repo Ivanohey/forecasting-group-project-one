@@ -302,7 +302,10 @@ kbl(forecast_table_total_a) %>%
 
 
 ## Combining all forecasts into one table: 
-Below is the final table containing `Month,` point forecast `PF,` 90% lower and upper confidence levels interval forecast `CI,` and `Country.`  
+Below is the final table containing `Month,` point forecast `PF,` 90% lower and upper confidence levels interval forecast `CI,` and `Country.`
+
+For Lichtenstein, since we logged the data to make the forecasts earlier, we have to use its inverse function (exponent) to bring the values back to their original magnitude. 
+
 ```{r, warning=FALSE}
 
 final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)
@@ -324,11 +327,25 @@ lower_bound <- as.numeric(lower_str_fc)
 upper_bound <- as.numeric(upper_str_fc)
 
 # Creating the data frame
-Correct_final_fc <- data.frame("Coutry" = final_fc$Country,
+Correct_final_fc <- data.frame("Country" = final_fc$Country,
                              "Month" = final_fc$Month,
                              "Point Forecast" = final_fc$PF,
                              "Lower Interval" = lower_bound,
                              "Upper Interval" = upper_bound)
+
+#Correct_final_fc <- Correct_final_fc %>%
+#  mutate(
+#    Point.Forecast = ifelse(Country == "Lichtenstein", exp(Point.Forecast), Point.Forecast),
+#    Lower.Interval = ifelse(Country == "Lichtenstein", exp(Lower.Interval), Lower.Interval),
+#    Upper.Interval = ifelse(Country == "Lichtenstein", exp(Upper.Interval), Upper.Interval)
+# )
+
+
+
+#Rounding the values again 
+Correct_final_fc$Point.Forecast <- round(Correct_final_fc$Point.Forecast)
+Correct_final_fc$Lower.Interval <- round(Correct_final_fc$Lower.Interval)
+Correct_final_fc$Upper.Interval <- round(Correct_final_fc$Upper.Interval)
 
 # Printing the adjusted output
 #print(Correct_final_fc)
