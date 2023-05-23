@@ -2,7 +2,8 @@
 # THINGS THAT NEED TO BE DONE 
 
 In general: 
-- Remove all warnings (Done)
+- Data Processing: Remove warnings 
+- Final Forecast Table: replace negative values with 0
 
 Country specific:
 
@@ -16,6 +17,7 @@ Country specific:
 - Austria (Done)
 - Lich (Done)
 - Total 
+
 3.5 Unit Root Test for Stationarity every countries  (Done)
  
 # 1. Introduction 

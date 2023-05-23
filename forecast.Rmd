@@ -350,7 +350,7 @@ kbl(forecast_table_total_a) %>%
 
 
 ## Combining all forecasts into one table: 
-Below is the final table containing `Month,` point forecast `PF,` 80% lower and upper confidence levels (see Appendix 3.) interval forecast `CI,` and `Country.`  
+Below is the final table containing `Month,` point forecast `PF,` 90% lower and upper confidence levels interval forecast `CI,` and `Country.`  
 ```{r}
 
 final_fc <- bind_rows(forecast_table_germany_e, forecast_table_italy_a, forecast_table_france_e, forecast_table_austria_e,forecast_table_Lichtenstein_n, forecast_table_total_a)

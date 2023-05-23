@@ -1,5 +1,7 @@
-# Appendix {.tabset}
 
+```{r appendix, include=FALSE}
+```
+# Appendices {.tabset}
 ## *Appendix 1.Decomposition Comparison*
 
 * Classical Decomposition assumes seasonal component repeats from year to year, which usually is not the case in reality, over smoothes rapid rises (is not recommended to use, but still...).
