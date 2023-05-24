@@ -7,7 +7,7 @@ output:
   rmdformats::readthedown:
     code_folding: hide #We can set this to show to automatically show all the code
     highlight: espresso #we can change this to kate, tango, pygments, haddock. 
-    self_contained: false
+    self_contained: true
     mathjax: false
 warnings: false
 ---

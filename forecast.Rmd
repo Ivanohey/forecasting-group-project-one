@@ -302,9 +302,9 @@ kbl(forecast_table_total_a) %>%
 
 
 ## Combining all forecasts into one table: 
-Below is the final table containing `Month,` point forecast `PF,` 90% lower and upper confidence levels interval forecast `CI,` and `Country.`
+Below is the final table containing `Country`, `Month`,`Point.Forecast`, and the 90% lower and upper bounds `Upper.Interval` and `Lower.Interval`.
 
-For Lichtenstein, since we logged the data to make the forecasts earlier, we have to use its inverse function (exponent) to bring the values back to their original magnitude. 
+For Lichtenstein, since we logged the data to make the forecasts earlier, we have used its inverse function (exponent) to bring the values back to their original magnitude. 
 
 ```{r, warning=FALSE}
 
@@ -333,12 +333,6 @@ Correct_final_fc <- data.frame("Country" = final_fc$Country,
                              "Lower Interval" = lower_bound,
                              "Upper Interval" = upper_bound)
 
-#Correct_final_fc <- Correct_final_fc %>%
-#  mutate(
-#    Point.Forecast = ifelse(Country == "Lichtenstein", exp(Point.Forecast), Point.Forecast),
-#    Lower.Interval = ifelse(Country == "Lichtenstein", exp(Lower.Interval), Lower.Interval),
-#    Upper.Interval = ifelse(Country == "Lichtenstein", exp(Upper.Interval), Upper.Interval)
-# )
 
 Correct_final_fc <- Correct_final_fc %>%
   mutate(
@@ -361,6 +355,12 @@ kbl(cbind(Correct_final_fc)) %>%
   scroll_box(width = "100%", height = "500px")
 
 #str(Correct_final_fc)
+
+library(writexl)
+
+# Export the table to Excel
+write_xlsx(Correct_final_fc, "finalforecast.xlsx")
+
 ```
 
 # 6. Challenges and Further Analysis
@@ -369,4 +369,4 @@ In this section we will comment on things didn't go so well in our analysis, and
 
 Firstly, in the confidence bounds, some of Germany's, Lichtenstein's and Austria's lower bound values were negative at the 90% confidence intervals, which you can actually see in the graphs of the forecasts for each country. This was a problem because electricity exports can't physically be negative, and the lowest value they can take is zero. This happened because when fitting the models, we didn't specify that the forecasts shouldn't take negative values, and obviously the models can't know that themselves. To solve this issue, we decided to manually set the lower bounds of these confidence intervals to 0 as it wouldn't make any sense for them to be negative, however we do have to mention that by doing so, the confidence intervals we show are not 90% intervals. 
 
-Secondly, we decided not to add any covariates to our models, and only use the historical data we were given. Covariates could potentially help our forecasts be more accurate, as they can capture patterns and the effects of external factors which have an impact on electricity demand. An example of such a factor could be monthly average temperature values, because temperature probably plays a big role in energy consumption at the national level. Another example of a factor we could have included in our analysis would be the average hours of sunlight, because people tend to use more energy to light up their house in the winter compared to the summer. Another factor could be the implementation and use of different forms of energy, such as wind energy/nuclear energy to supply power inside a country, rather than simply importing it from Switzerland.
+Secondly, we decided not to add any covariates to our models, and only used the historical data we were given. Covariates could potentially help our forecasts be more accurate, as they can capture patterns and the effects of external factors which have an impact on electricity demand. An example of such a factor could be monthly average temperature values, because temperature probably plays a big role in energy consumption at the national level. Another example of a factor we could have included in our analysis would be the average hours of sunlight, because people tend to use more energy to light up their house in the winter compared to the summer. Another factor could be the implementation and use of different forms of energy, such as wind energy/nuclear energy to supply power inside a country, rather than simply importing it from Switzerland.

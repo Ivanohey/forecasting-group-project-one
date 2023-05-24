@@ -39,8 +39,8 @@ logfrom2016 <- Lichtenstein_log %>% filter(Date >= as.Date("2016-01-01"))
 
 
 ### **Testing Models**
-Below is the plot of how well each model fits the data based on a 60-period prediction starting from 2016. This code fits different models to the training data, generates forecasts, and then applies a constraint to the forecasted mean values to ensure they are not negative.
-Based on the previous analysis Lichtenstein data is NON stationary time series, so we had to difference or log the data to make it stationary before using our models. We tried both, and it seemed like using the log of the data worked best.
+
+Based on the previous analysis Lichtenstein data is a NON stationary time series, so we had to difference or log the data to make it stationary before using our models. We tried both, and it seemed like using the log of the data worked best.
 
 Another thing to mention about Lichtenstein, is that for the ETS, ARIMA and SNaive models, we decided to train them only after 2010. We made this decision because before 2010, the data was very different (upward trending at a much higher level) and thought that if the models looked at that period, they would probably not produce accurate results.
 
@@ -87,7 +87,7 @@ Lichtenstein_log %>% autoplot(Lichtenstein) +
 
 ### **Measuring Model Accuracy**
 In our case S-Naive outperform during the model selection and analysis of accuracy. However S-Naive method may perform well for the time period that we have train our data, but it is important to note that it has some limitations. Indeed, it assumes that historical patterns will repeat exactly in the future, which may not always hold. The S-Naive method may not account for underlying factors or trends that could impact future outcomes. Thus, there is an increased risk of inaccurate forecasts if the method is blindly applied.
-ETS could be great models based on a trade off between forecasting error and model complexity. ETS model has the second lowest RMSE and MAE which makes him a good candidate. In order to select a model, we can analyse residuals of those models
+ETS could be great models based on a trade off between forecasting error and model complexity. ETS model has the second lowest RMSE and MAE which makes him a good candidate. In order to select a model, we can analyse residuals of Snaive.
 
 ```{r, warning=FALSE, echo=FALSE}
 #Accuracy
@@ -123,7 +123,7 @@ Licht_accuracy_table[ 1:3,1:10] %>%
 ```
 
 ### **Residuals**
-It is interesting to examine any outliers or extreme values in the residuals. The ACF analysis for SNaive shows Positive correlations between the ts and its lags. The result shows that there's correlation between thoses values. Thus, each observation in the ts can be considered related to the previous values. Consequently, Lichtenstein ts might need covariate to forecast and analyse it adequately. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero for SNaive model, thus those might shows autocorrelation.
+It is interesting to examine any outliers or extreme values in the residuals. The ACF analysis for SNaive shows Positive correlations between the ts and its lags. The result shows that there's correlation between thoses values. Thus, each observation in the ts can be considered related to the previous values. Concerning the residual, it should ideally appear random, in our case residuals are chinked around zero for SNaive model, thus those might shows autocorrelation.
 
 ```{r, warning=FALSE, echo=FALSE}
 #gg_tsresiduals(data_fit_Licht_a) + labs(title = "ARIMA Lichtenstein residuals analysis")
